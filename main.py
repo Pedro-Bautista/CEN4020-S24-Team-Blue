@@ -8,12 +8,7 @@ import incollege.controllers.AuthController as Auth
 DB.create_tables()
 
 
-print(Auth.signup('austin', '1234'))
-print(Auth.signup('bob', '4321'))
-print(Auth.signup('alice', '4321'))
-print(Auth.signup('jane', '4321'))
-print(Auth.signup('clifford', '4321'))
-print(Auth.signup('sina', '1234'))
+print(Auth.signup('austin', 'sp3ci@L8'))
 
 
 # Close database connection
