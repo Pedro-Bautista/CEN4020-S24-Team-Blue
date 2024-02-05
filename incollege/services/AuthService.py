@@ -15,7 +15,8 @@ def login(username, password):
     return stored_hash == hash_password(password)
 
 def signup(username, password):
-    if not username or not password or AuthRepository.user_exists(username):
+    if not username or not password or AuthRepository.user_exists(username) \
+            or AuthRepository.get_user_count() >= Config.USER_LIMIT:
         return False
     AuthRepository.create_user(username, hash_password(password))
     return True
