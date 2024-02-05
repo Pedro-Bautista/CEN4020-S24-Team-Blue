@@ -1,5 +1,8 @@
 # Authentication Service
 # Handles sign in and sign up requests at the data layer - verifies if users exists and matches password
+import datetime
+
+import jwt
 
 import incollege.config.Config as Config
 import hashlib
@@ -17,13 +20,28 @@ def hash_password(password):
 
 def login(username, password):
     if not username or not password:
-        return False
+        return None
     stored_hash = AuthRepository.get_password_hash(username)
-    return stored_hash == hash_password(password)
+    if stored_hash == hash_password(password):
+        return create_token(username)
+    return None
 
 def signup(username, password):
     if not username or not password or AuthRepository.user_exists(username) \
             or not validate_password(password) or AuthRepository.get_user_count() >= Config.USER_LIMIT:
-        return False
+        return None
     AuthRepository.create_user(username, hash_password(password))
-    return True
+    return create_token(username)
+
+def create_token(username):
+    payload = {
+        'usr': username,
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=Config.TOKEN_DURATION)
+    }
+    return jwt.encode(payload, Config.SECRET, algorithm='HS512')
+
+def decode_token(token):
+    try:
+        return jwt.decode(token, Config.SECRET, algorithm='HS512')
+    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
+        return None

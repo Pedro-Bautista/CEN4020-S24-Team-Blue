@@ -8,7 +8,7 @@ import incollege.controllers.AuthController as Auth
 DB.create_tables()
 
 
-print(Auth.signup('austin', 'sp3ci@L8'))
+print(Auth.login('austin', 'sp3ci@L8'))
 
 
 # Close database connection
