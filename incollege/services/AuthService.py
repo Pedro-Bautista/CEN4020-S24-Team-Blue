@@ -42,6 +42,6 @@ def create_token(username):
 
 def decode_token(token):
     try:
-        return jwt.decode(token, Config.SECRET, algorithm='HS512')
-    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
+        return jwt.decode(token, Config.SECRET, algorithms=['HS512'])
+    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError) as error:
         return None
