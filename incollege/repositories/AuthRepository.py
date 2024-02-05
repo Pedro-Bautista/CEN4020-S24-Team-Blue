@@ -4,6 +4,13 @@
 import sqlite3
 from incollege.repositories.DBConnector import get_connection
 
+def get_user_count():
+    cursor = get_connection().cursor()
+    result = cursor.execute('''
+        SELECT COUNT (*) FROM auth
+    ''').fetchone()
+    return result[0]
+
 def get_password_hash(username):
     cursor = get_connection().cursor()
     result = cursor.execute('''

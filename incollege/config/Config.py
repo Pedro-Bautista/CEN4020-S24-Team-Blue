@@ -3,3 +3,4 @@
 
 DATABASE_NAME = 'InCollege.db'
 SALT = '1234'
+USER_LIMIT = 5
