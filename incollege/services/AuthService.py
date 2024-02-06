@@ -19,20 +19,38 @@ def hash_password(password):
     return hashlib.sha512(str.encode(password+Config.SALT)).digest()
 
 def login(username, password):
-    if not username or not password:
-        return None
-    stored_hash = AuthRepository.get_password_hash(username)
-    if stored_hash == hash_password(password):
-        return create_token(username)
-    return None
+    try:
+        if not username or not password:
+            raise ValueError("Username or password are not provided")
 
-def signup(username, password):
-    if not username or not password or AuthRepository.user_exists(username) \
-            or not validate_password(password) or AuthRepository.get_user_count() >= Config.USER_LIMIT:
-        return None
-    AuthRepository.create_user(username, hash_password(password))
-    return create_token(username)
+        stored_hash = AuthRepository.get_password_hash(username)
+        if stored_hash == hash_password(password):
+            return (True, create_token(username))
+        raise ValueError("Invalid username or password")
+    except Exception as e:
+        print(f"Login failed: {e}")
+        return (False, str(e))
 
+def signup(username, password) -> (bool, str) :
+    try:
+        if not username or not password:
+            raise ValueError("Username or password are not provided")
+          
+        if not validate_password(password):
+            raise ValueError("Password does not meet requirements")
+
+        if AuthRepository.user_exists(username):
+            raise ValueError("Username already exists")
+
+        if AuthRepository.get_user_count() >= Config.USER_LIMIT:
+            raise ValueError("User limit reached")
+
+        AuthRepository.create_user(username, hash_password(password))
+        return (True, create_token(username))
+    except Exception as e:
+        print(f"Signup failed: {e}")
+        return (False, str(e))
+    
 def create_token(username):
     payload = {
         'usr': username,
