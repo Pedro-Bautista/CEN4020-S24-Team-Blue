@@ -1,7 +1,6 @@
 # Authentication Repository
 # Stores and retrieves existing user and password data
 
-import sqlite3
 from incollege.repositories.DBConnector import get_connection
 
 def get_user_count():

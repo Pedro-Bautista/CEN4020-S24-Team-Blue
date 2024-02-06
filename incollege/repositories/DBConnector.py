@@ -6,14 +6,17 @@ import incollege.config.Config as Config
 
 conn = None
 
+
 def get_connection():
     global conn
     if conn is None:
         conn = sqlite3.connect(Config.DATABASE_NAME, check_same_thread=False)
     return conn
 
+
 def close_connection():
     conn.close()
+
 
 def create_tables():
     cursor = get_connection().cursor()
