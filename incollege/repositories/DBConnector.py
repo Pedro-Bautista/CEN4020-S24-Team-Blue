@@ -4,16 +4,19 @@
 import sqlite3
 import incollege.config.Config as Config
 
-conn = sqlite3.connect(Config.DATABASE_NAME)
+conn = None
 
 def get_connection():
+    global conn
+    if conn is None:
+        conn = sqlite3.connect(Config.DATABASE_NAME)
     return conn
 
 def close_connection():
     conn.close()
 
 def create_tables():
-    cursor = conn.cursor()
+    cursor = get_connection().cursor()
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS auth (
