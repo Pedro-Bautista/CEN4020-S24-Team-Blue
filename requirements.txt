@@ -1,2 +1,3 @@
 PyJWT
 Flask
+flask-cors

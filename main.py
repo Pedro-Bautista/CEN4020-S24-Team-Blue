@@ -3,6 +3,7 @@
 
 from flask import Flask, jsonify
 from werkzeug.exceptions import BadRequest
+from flask_cors import CORS
 
 import incollege.repositories.DBConnector as DB
 from incollege.controllers.AuthController import configure_auth_routes
@@ -10,6 +11,7 @@ from incollege.exceptions import EndpointException
 
 # Configure endpoints
 app = Flask(__name__)
+CORS(app)
 configure_auth_routes(app)
 
 
