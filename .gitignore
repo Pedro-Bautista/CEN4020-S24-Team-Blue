@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# rest client files
+api_test.rest
+
 # Distribution / packaging
 .Python
 build/

@@ -9,7 +9,7 @@ conn = None
 def get_connection():
     global conn
     if conn is None:
-        conn = sqlite3.connect(Config.DATABASE_NAME)
+        conn = sqlite3.connect(Config.DATABASE_NAME, check_same_thread=False)
     return conn
 
 def close_connection():
