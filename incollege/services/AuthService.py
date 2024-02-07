@@ -13,9 +13,7 @@ from incollege.exceptions.AuthException import AuthException
 
 # This should ideally be on the user interface end, but that does not exist, so it's here
 def validate_password(password):
-    length_check = 8 <= len(password) <= 12
-    types_check = bool(re.search(r'(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[A-Z])', password))
-    return length_check and types_check
+    return bool(re.search(r'(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[A-Z])(^.{8,12}$)', password))
 
 
 def hash_password(password):
