@@ -11,7 +11,6 @@ import incollege.repositories.AuthRepository as AuthRepository
 from incollege.exceptions.AuthException import AuthException
 
 
-# This should ideally be on the user interface end, but that does not exist, so it's here
 def validate_password(password):
     return bool(re.search(r'(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[A-Z])(^.{8,12}$)', password))
 
