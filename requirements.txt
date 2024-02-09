@@ -1,3 +1,6 @@
+werkzeug
 PyJWT
 Flask
 flask-cors
+pytest
+pytest-flask

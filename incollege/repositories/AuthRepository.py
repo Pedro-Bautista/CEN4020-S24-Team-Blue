@@ -24,9 +24,9 @@ def get_password_hash(username):
 def user_exists(username):
     cursor = get_connection().cursor()
     result = cursor.execute('''
-        SELECT COUNT (*) FROM auth WHERE username = (?)
+        SELECT COUNT (*) FROM auth WHERE username = (?) LIMIT 1
     ''', (username,)).fetchone()
-    return result is not 0
+    return result[0] >= 1
 
 
 def create_user(username, password_hash):
