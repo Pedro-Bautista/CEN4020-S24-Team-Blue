@@ -16,12 +16,12 @@ def validate_password(password):
 
 
 def hash_password(password):
-    return hashlib.sha512(str.encode(password + Config.SALT)).digest()
+    return hashlib.sha512(str.encode(password + Config.SALT)).hexdigest()
 
 
 def login(username, password):
     if not username or not password:
-        raise AuthException("Username or password are not provided")
+        raise AuthException("Username or password are not provided.")
 
     stored_hash = AuthRepository.get_password_hash(username)
     if stored_hash != hash_password(password):
@@ -30,7 +30,7 @@ def login(username, password):
     return create_token(username)
 
 
-def signup(username, password) -> (bool, str):
+def signup(username, password):
     if not username or not password:
         raise AuthException("Username or password are not provided.")
     if not validate_password(password):
