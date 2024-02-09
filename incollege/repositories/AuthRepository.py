@@ -3,12 +3,14 @@
 
 from incollege.repositories.DBConnector import get_connection
 
+
 def get_user_count():
     cursor = get_connection().cursor()
     result = cursor.execute('''
         SELECT COUNT (*) FROM auth
     ''').fetchone()
     return result[0]
+
 
 def get_password_hash(username):
     cursor = get_connection().cursor()
@@ -17,6 +19,7 @@ def get_password_hash(username):
     ''', (username,)).fetchone()
     if result:
         return result[0]
+
 
 def user_exists(username):
     cursor = get_connection().cursor()
@@ -28,12 +31,14 @@ def user_exists(username):
     else:
         return False
 
+
 def create_user(username, password_hash):
     cursor = get_connection().cursor()
     cursor.execute('''
         INSERT INTO auth (username, password_hash) VALUES (?,?)
     ''', (username, password_hash,))
     get_connection().commit()
+
 
 def delete_user(username):
     cursor = get_connection().cursor()
