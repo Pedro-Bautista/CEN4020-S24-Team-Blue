@@ -24,4 +24,4 @@ def configure_auth_routes(app):
         username = data.get('username')
         password = data.get('password')
 
-        return jsonify({'token': AuthService.signup(username, password)})
+        return jsonify({'token': AuthService.signup(username, password)}), 201

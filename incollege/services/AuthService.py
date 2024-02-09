@@ -21,7 +21,7 @@ def hash_password(password):
 
 def login(username, password):
     if not username or not password:
-        raise AuthException("Username or password are not provided.")
+        raise AuthException("Username or password are not provided.", 400)
 
     stored_hash = AuthRepository.get_password_hash(username)
     if stored_hash != hash_password(password):
@@ -32,13 +32,13 @@ def login(username, password):
 
 def signup(username, password):
     if not username or not password:
-        raise AuthException("Username or password are not provided.")
+        raise AuthException("Username or password are not provided.", 400)
     if not validate_password(password):
-        raise AuthException("Password does not meet requirements.")
+        raise AuthException("Password does not meet requirements.", 400)
     if AuthRepository.user_exists(username):
-        raise AuthException("Username already exists.")
+        raise AuthException("Username already exists.", 409)
     if AuthRepository.get_user_count() >= Config.USER_LIMIT:
-        raise AuthException("User limit reached.")
+        raise AuthException("User limit reached.", 507)
 
     AuthRepository.create_user(username, hash_password(password))
     return create_token(username)
