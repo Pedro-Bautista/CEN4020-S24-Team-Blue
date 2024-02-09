@@ -14,7 +14,7 @@ CORS(app)
 configure_auth_routes(app)
 
 # Controller Error Handler
-configure_controller_advice()
+configure_controller_advice(app)
 
 # Initialize database
 DB.create_tables()
