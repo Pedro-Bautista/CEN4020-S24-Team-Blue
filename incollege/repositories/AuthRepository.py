@@ -11,6 +11,13 @@ def get_user_count():
     ''').fetchone()
     return result[0]
 
+def get_job_count():
+    cursor = get_connection().cursor()
+    result = cursor.execute('''
+        SELECT COUNT (*) FROM jobs
+    ''').fetchone()
+    return result[0]
+
 
 def get_password_hash(username):
     cursor = get_connection().cursor()
@@ -28,13 +35,27 @@ def user_exists(username):
     ''', (username,)).fetchone()
     return result[0] >= 1
 
+def name_exists(first_name, last_name):
+    cursor = get_connection().cursor()
+    result = cursor.execute('''
+        SELECT COUNT (*) FROM auth WHERE first_name = (?) AND last_name = (?) LIMIT 1
+    ''', (first_name, last_name)).fetchone()
+    return result[0] >= 1
 
-def create_user(username, password_hash):
+def create_user(username, password_hash, first_name, last_name):
     cursor = get_connection().cursor()
     cursor.execute('''
-        INSERT INTO auth (username, password_hash) VALUES (?,?)
-    ''', (username, password_hash,))
+        INSERT INTO auth (username, password_hash, first_name, last_name) VALUES (?,?,?,?)
+    ''', (username, password_hash, first_name, last_name,))
     get_connection().commit()
+    
+def create_job(title, desc, employer, location, salary):
+    cursor = get_connection().cursor()
+    cursor.execute('''
+        INSERT INTO jobs (title, desc, employer, location, salary) VALUES (?,?,?,?,?)
+    ''', (title, desc, employer, location, salary,))
+    get_connection().commit()
+    
 
 
 def delete_user(username):
