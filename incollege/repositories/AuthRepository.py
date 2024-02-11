@@ -39,7 +39,7 @@ def name_exists(first_name, last_name):
     cursor = get_connection().cursor()
     result = cursor.execute('''
         SELECT COUNT (*) FROM auth WHERE first_name = (?) AND last_name = (?) LIMIT 1
-    ''', (first_name, last_name)).fetchone()
+    ''', (first_name, last_name,)).fetchone()
     return result[0] >= 1
 
 def create_user(username, password_hash, first_name, last_name):
@@ -55,6 +55,13 @@ def create_job(title, desc, employer, location, salary):
         INSERT INTO jobs (title, desc, employer, location, salary) VALUES (?,?,?,?,?)
     ''', (title, desc, employer, location, salary,))
     get_connection().commit()
+    
+def search_for_user(first_name, last_name): 
+    cursor = get_connection().cursor()
+    result = cursor.execute('''
+        SELECT COUNT (*) FROM auth WHERE first_name = (?) AND last_name = (?) LIMIT 1
+    ''', (first_name, last_name,)).fetchone()
+    return result[0] >= 1
     
 
 

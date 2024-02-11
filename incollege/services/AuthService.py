@@ -38,7 +38,7 @@ def signup(username, password, first_name, last_name):
     if AuthRepository.user_exists(username):
         raise AuthException("Username already exists.", 409)
     if AuthRepository.name_exists(first_name, last_name):
-        raise AuthException("User with first name and last name already exists.", 400)
+        raise AuthException("User with first name and last name already exists.", 409)
     if AuthRepository.get_user_count() >= Config.USER_LIMIT:
         raise AuthException("User limit reached.", 507)
 
@@ -52,7 +52,12 @@ def job_post(title, desc, employer, location, salary):
         raise AuthException("Job posting limit reached.", 507)
     
     AuthRepository.create_job(title, desc, employer, location, salary)
-    return
+    
+def find_user_name(first_name, last_name):
+    if AuthRepository.search_for_user(first_name, last_name):
+        return "They are a part of the InCollege system"
+    else:
+        return "They are not yet a part of the InCollege system"
 
 def create_token(username):
     payload = {

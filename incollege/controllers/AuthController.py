@@ -37,5 +37,14 @@ def configure_auth_routes(app):
         location = data.get('location')
         salary = data.get('salary')
             
-        return jsonify({'token': AuthService.job_post(title, desc, employer, location, salary)}), 201
+        AuthService.job_post(title, desc, employer, location, salary)
+    
+        return jsonify({'message': 'Job posted successfully'}), 201
         
+    @app.route('/user_search', methods=['POST']) 
+    def handle_user_search():
+        data = request.get_json()
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        
+        return jsonify({'message': AuthService.find_user_name(first_name, last_name)}), 200
