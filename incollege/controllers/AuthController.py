@@ -23,5 +23,19 @@ def configure_auth_routes(app):
         data = request.get_json()
         username = data.get('username')
         password = data.get('password')
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
 
-        return jsonify({'token': AuthService.signup(username, password)}), 201
+        return jsonify({'token': AuthService.signup(username, password, first_name, last_name)}), 201
+
+    @app.route('/job_post', methods=['POST']) 
+    def handle_job_post():
+        data = request.get_json()
+        title = data.get('title')
+        desc = data.get('desc')
+        employer = data.get('employer')
+        location = data.get('location')
+        salary = data.get('salary')
+            
+        return jsonify({'token': AuthService.job_post(title, desc, employer, location, salary)}), 201
+        

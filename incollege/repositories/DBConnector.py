@@ -24,7 +24,20 @@ def create_tables():
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS auth (
             username TEXT,
-            password_hash TEXT
+            password_hash TEXT,
+            first_name TEXT,
+            last_name TEXT
         )
     ''')
+    
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS jobs (
+            title TEXT,
+            desc TEXT, 
+            employer TEXT,
+            location TEXT, 
+            salary REAL
+        )
+    ''')
+    
     conn.commit()
