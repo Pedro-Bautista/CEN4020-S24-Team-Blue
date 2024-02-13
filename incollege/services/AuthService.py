@@ -33,6 +33,8 @@ def login(username, password):
 def signup(username, password, first_name, last_name):
     if not username or not password:
         raise AuthException("Username or password are not provided.", 400)
+    if not first_name or not last_name:
+        raise AuthException("First or last name are not provided", 400)
     if not validate_password(password):
         raise AuthException("Password does not meet requirements.", 400)
     if AuthRepository.user_exists(username):
