@@ -18,11 +18,12 @@ export const AuthWrapper = () => {
 		}
 	}, []);
 
-	const signup = async (username, password) => {
+	const signup = async (formData) => {
 		try {
-			const response = await api.signup({ username, password })
+			const response = await api.signup(formData)
 
 			const token = response.data.token
+			const username = formData.username
 			localStorage.setItem("token", token)
 			localStorage.setItem("username", username)
 			setUser({ token, username })
