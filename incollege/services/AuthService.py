@@ -59,7 +59,7 @@ def find_user_name(first_name, last_name):
     if AuthRepository.search_for_user(first_name, last_name):
         return "They are a part of the InCollege system"
     else:
-        return "They are not yet a part of the InCollege system"
+        raise AuthException("They are not yet a part of the InCollege system", 400)
 
 
 def create_token(username):
