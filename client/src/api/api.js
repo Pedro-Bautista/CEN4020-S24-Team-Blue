@@ -29,7 +29,29 @@ const signup = async (userData) => {
     }
 }
 
+const searchForPeople = async (searchData) => {
+    try {
+        const response = await api.post('/user_search', searchData);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
+
+const postJob = async (jobData) => {
+	try {
+		const response = await api.post('/job_post', jobData);
+		return response.data;
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+};
+
 export default {
 	login,
 	signup,
+	searchForPeople,
+	postJob,
 }

@@ -25,10 +25,20 @@ export const Login = () => {
 			<h2>Login</h2>
 			<div className="inputs">
 				<div className="input">
-					<input value={formData.userName} onChange={(e) => setFormData({ userName: e.target.value })} type="text" />
+					<input
+						value={formData.userName}
+						onChange={(e) => setFormData({ userName: e.target.value })}
+						type="text"
+						placeholder="Username"
+					/>
 				</div>
 				<div className="input">
-					<input value={formData.password} onChange={(e) => setFormData({ password: e.target.value })} type="password" />
+					<input
+						value={formData.password}
+						onChange={(e) => setFormData({ password: e.target.value })}
+						type="password"
+						placeholder="Password"
+					/>
 				</div>
 				<div className="button">
 					<button onClick={handleLogin}>Log in</button>
