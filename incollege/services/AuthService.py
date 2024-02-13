@@ -45,19 +45,22 @@ def signup(username, password, first_name, last_name):
     AuthRepository.create_user(username, hash_password(password), first_name, last_name)
     return create_token(username)
 
+
 def job_post(title, desc, employer, location, salary):
-    if not title or desc or employer or location or salary:
+    if not title or not desc or not employer or not location or not salary:
         raise AuthException("Required job posting information not provided.", 400)
     if AuthRepository.get_job_count() >= Config.JOB_LIMIT:
         raise AuthException("Job posting limit reached.", 507)
-    
+
     AuthRepository.create_job(title, desc, employer, location, salary)
-    
+
+
 def find_user_name(first_name, last_name):
     if AuthRepository.search_for_user(first_name, last_name):
         return "They are a part of the InCollege system"
     else:
         return "They are not yet a part of the InCollege system"
+
 
 def create_token(username):
     payload = {
