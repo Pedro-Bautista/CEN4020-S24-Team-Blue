@@ -33,7 +33,7 @@ def test_client():
 
 # User 1 -> austin
 def test_001_handle_signup_valid(test_client):
-    data = {'username': 'austin', 'password': '@W93GW1s&0GO'}
+    data = {'username': 'austin', 'password': '@W93GW1s&0GO', 'first_name': 'austin', 'last_name': 'Holmes'}
     response = test_client.post('/signup', json=data)
 
     assert response.status_code == 201
@@ -43,7 +43,7 @@ def test_001_handle_signup_valid(test_client):
 
 
 def test_002_handle_signup_duplicate_user_failed(test_client):
-    data = {'username': 'austin', 'password': '54a8&9$HM@'}
+    data = {'username': 'austin', 'password': '54a8&9$HM@', 'first_name': 'austin', 'last_name': 'Holmes'}
 
     response = test_client.post('/signup', json=data)
     verify_expected_error(response, 'Username already exists.', 409)
@@ -66,7 +66,7 @@ def test_004_handle_login_invalid_password(test_client):
 
 # User 2 -> clifford
 def test_005_handle_signup_valid_create_test_user2(test_client):
-    data = {'username': 'clifford', 'password': '?0y8~16Nfhg%'}
+    data = {'username': 'clifford', 'password': '?0y8~16Nfhg%', 'first_name': 'Cliff', 'last_name': 'Barnes'}
     response = test_client.post('/signup', json=data)
     assert response.status_code == 201
 
@@ -76,7 +76,7 @@ def test_005_handle_signup_valid_create_test_user2(test_client):
 
 # User 3 -> T-Bone
 def test_006_handle_signup_valid_create_test_user3(test_client):
-    data = {'username': 'T-Bone', 'password': '1oT;8Jg5J3w4'}
+    data = {'username': 'T-Bone', 'password': '1oT;8Jg5J3w4', 'first_name': 'T-Bone', 'last_name': 'Steak'}
     response = test_client.post('/signup', json=data)
     assert response.status_code == 201
 
@@ -86,7 +86,7 @@ def test_006_handle_signup_valid_create_test_user3(test_client):
 
 # User 4 -> Cleo
 def test_007_handle_signup_valid_create_test_user4(test_client):
-    data = {'username': 'Cleo', 'password': '988a8&9#HM@'}
+    data = {'username': 'Cleo', 'password': '988a8&9#HM@', 'first_name': 'Cleo', 'last_name': 'Patra'}
     response = test_client.post('/signup', json=data)
     assert response.status_code == 201
 
@@ -96,7 +96,8 @@ def test_007_handle_signup_valid_create_test_user4(test_client):
 
 # User 5 -> Machiavelli
 def test_008_handle_signup_valid_create_test_user5(test_client):
-    data = {'username': 'Machiavelli', 'password': '18v3@8Q3"j|X'}
+    data = {'username': 'Machiavelli', 'password': '18v3@8Q3"j|X', 'first_name': 'Machiavelli',
+            'last_name': 'Donatella'}
     response = test_client.post('/signup', json=data)
     assert response.status_code == 201
 
@@ -105,7 +106,7 @@ def test_008_handle_signup_valid_create_test_user5(test_client):
 
 
 def test_009_handle_signup_max_users_reached(test_client):
-    data = {'username': 'Hamburger', 'password': 'DOFp6(YF%22u'}
+    data = {'username': 'Hamburger', 'password': 'DOFp6(YF%22u', 'first_name': 'Cheese', 'last_name': 'Hamburger'}
     response = test_client.post('/signup', json=data)
     verify_expected_error(response, 'User limit reached.', 507)
 
