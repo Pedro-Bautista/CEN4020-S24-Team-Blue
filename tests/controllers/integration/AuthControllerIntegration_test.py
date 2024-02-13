@@ -218,3 +218,36 @@ def test_009_handle_Max_Job_Posted_Reached(test_client):
             'location': 'Silicon Valley', 'salary': '150000'}
     response = test_client.post('/job_post', json=data)
     verify_expected_error(response, 'Job posting limit reached.', 507)
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# User Search Testing
+
+def test_001_handle_User_Search_Invalid_Name(test_client):
+    data = {'first_name': 'John', 'last_name': 'Doe'}
+    response = test_client.post('/user_search', json=data)
+    verify_expected_error(response, 'They are not yet a part of the InCollege system', 400)
+
+
+def test_002_handle_User_Search_Invalid_First_Name(test_client):
+    data = {'first_name': 'John', 'last_name': 'Holmes'}
+    response = test_client.post('/user_search', json=data)
+    verify_expected_error(response, 'They are not yet a part of the InCollege system', 400)
+
+
+def test_003_handle_User_Search_Invalid_Last_Name(test_client):
+    data = {'first_name': 'T-Bone', 'last_name': 'Doe'}
+    response = test_client.post('/user_search', json=data)
+    verify_expected_error(response, 'They are not yet a part of the InCollege system', 400)
+
+
+def test_004_handle_User_Search_Valid_Name_1(test_client):
+    data = {'first_name': 'Cliff', 'last_name': 'Barnes'}
+    response = test_client.post('/user_search', json=data)
+    assert response.status_code == 200
+
+
+def test_005_handle_User_Search_Valid_Name_1(test_client):
+    data = {'first_name': 'Machiavelli', 'last_name': 'Donatella'}
+    response = test_client.post('/user_search', json=data)
+    assert response.status_code == 200
