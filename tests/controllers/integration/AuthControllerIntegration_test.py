@@ -126,3 +126,95 @@ def verify_expected_error(response, expected, expected_http_code=None):
     assert expected == actual
     if expected is not None:
         assert response.status_code == expected_http_code
+
+
+# -----------------------------------------------------------------------------------------------------------#
+# Job Post Testing
+# Job 1-> IT Job Post
+def test_001_handle_JobPost_valid(test_client):
+    data = {'title': 'IT', 'desc': 'User Support', 'employer': 'USF', 'location': 'Tampa,Fl', 'salary': '50000'}
+    response = test_client.post('/job_post', json=data)
+    assert response.status_code == 201
+
+
+def test_002_handle_job_post_Missing_Title(test_client):
+    data = {'title': '', 'desc': 'Tester', 'employer': 'USF', 'location': 'Tampa,Fl', 'salary': '55000'}
+
+    response = test_client.post('/job_post', json=data)
+    verify_expected_error(response, 'Required job posting information not provided.', 400)
+
+
+def test_003_handle_job_post_Missing_Desc(test_client):
+    data = {'title': 'Programmer', 'desc': '', 'employer': 'Epic Games', 'location': 'Charlotte NC', 'salary': '120000'}
+
+    response = test_client.post('/job_post', json=data)
+    verify_expected_error(response, 'Required job posting information not provided.', 400)
+
+
+def test_004_handle_job_post_Missing_Employer(test_client):
+    data = {'title': 'Tester', 'desc': 'Make sure code it working well', 'employer': '', 'location': 'Atlanta,GA',
+            'salary': '90000'}
+
+    response = test_client.post('/job_post', json=data)
+    verify_expected_error(response, 'Required job posting information not provided.', 400)
+
+
+def test_005_handle_job_post_Missing_Location(test_client):
+    data = {'title': 'Designer', 'desc': 'Draft Cad drawings', 'employer': 'Nvidia', 'location': '', 'salary': '130000'}
+
+    response = test_client.post('/job_post', json=data)
+    verify_expected_error(response, 'Required job posting information not provided.', 400)
+
+
+def test_006_handle_job_post_Missing_Salary(test_client):
+    data = {'title': 'Waiter', 'desc': 'Serve Food', 'employer': 'Cheescake Factory', 'location': 'Sarasota,Fl',
+            'salary': ''}
+
+    response = test_client.post('/job_post', json=data)
+    verify_expected_error(response, 'Required job posting information not provided.', 400)
+
+
+def test_006_handle_job_post_Missing_Everything(test_client):
+    data = {'title': '', 'desc': '', 'employer': '', 'location': '', 'salary': ''}
+
+    response = test_client.post('/job_post', json=data)
+    verify_expected_error(response, 'Required job posting information not provided.', 400)
+
+
+# Job 2-> Software Lead
+def test_007_handle_JobPost_valid_2(test_client):
+    data = {'title': 'Software Lead', 'desc': 'Help teammates with programming', 'employer': 'Facebook',
+            'location': 'Dallas,Tx', 'salary': '80000'}
+    response = test_client.post('/job_post', json=data)
+    assert response.status_code == 201
+
+
+def test_008_handle_JobPost_valid_3(test_client):
+    data = {'title': 'Database assistant', 'desc': 'Help manage database', 'employer': 'Microsoft',
+            'location': 'Houston,Tx', 'salary': '95000'}
+    response = test_client.post('/job_post', json=data)
+
+    assert response.status_code == 201
+
+
+def test_009_handle_JobPost_valid_4(test_client):
+    data = {'title': 'CEO', 'desc': 'Run the Business', 'employer': 'Twitter', 'location': 'California',
+            'salary': '1500000'}
+    response = test_client.post('/job_post', json=data)
+
+    assert response.status_code == 201
+
+
+def test_010_handle_JobPost_valid_3(test_client):
+    data = {'title': 'TechnoKing', 'desc': 'Better Than CEO', 'employer': 'Tesla', 'location': 'Your mind',
+            'salary': '35000000'}
+    response = test_client.post('/job_post', json=data)
+
+    assert response.status_code == 201
+
+
+def test_009_handle_Max_Job_Posted_Reached(test_client):
+    data = {'title': 'Manager', 'desc': 'Handle project and team development', 'employer': 'Google',
+            'location': 'Silicon Valley', 'salary': '150000'}
+    response = test_client.post('/job_post', json=data)
+    verify_expected_error(response, 'Job posting limit reached.', 507)
