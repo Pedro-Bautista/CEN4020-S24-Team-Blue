@@ -39,11 +39,9 @@ def signup(username, password, first_name, last_name):
         raise AuthException("Password does not meet requirements.", 400)
     if AuthRepository.user_exists(username):
         raise AuthException("Username already exists.", 409)
-    if AuthRepository.name_exists(first_name, last_name):
-        raise AuthException("User with first name and last name already exists.", 409)
     if AuthRepository.get_user_count() >= Config.USER_LIMIT:
         raise AuthException("User limit reached.", 507)
-
+    
     AuthRepository.create_user(username, hash_password(password), first_name, last_name)
     return create_token(username)
 
