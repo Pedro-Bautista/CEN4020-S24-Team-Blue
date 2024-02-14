@@ -1,6 +1,17 @@
 import json
 import os
 
+import sys
+
+# ---------- path config --------------------------------------------------------------------#
+# Get the parent directory of the current directory (tests/controllers/integration)
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+
+# Add the parent directory to the Python path
+sys.path.append(parent_dir)
+# ---------- path config --------------------------------------------------------------------#
+
+
 import pytest
 from flask import Flask, request
 
@@ -8,6 +19,7 @@ from incollege.config import Config
 from incollege.controllers.AuthController import *
 from incollege.controllers.ControllerAdvice import configure_controller_advice
 from incollege.repositories.DBConnector import create_tables
+
 
 
 @pytest.fixture(scope='module')
@@ -29,6 +41,35 @@ def test_client():
     with test_app.test_client() as test_client:
         with test_app.app_context():
             yield test_client
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# Log-in screen extended --> TBD ON RETURNS??
+
+def verify_token_DNE(response):
+    response_data = json.loads(response.get_data(as_text=True))
+    assert response_data.get('token') is None or response_data.get('token') == ""
+
+def test_001_verify_logged_out(test_client):
+    data = {'username': '', 'password': ''}
+    response = test_client.post('/login', json=data)
+    verify_expected_error(response, 'Username or password are not provided.', 400)
+    verify_token_DNE(response)
+
+def test_002_verify_success_story(test_client):
+    # waiting on return 
+    assert None is None
+
+def test_003_verify_video(test_client):
+    # waiting on return
+    assert None is None
+
+
+# ----------------------------------------------------------------------------------------------------------------
+
+
+
+
 
 
 # User 1 -> austin
@@ -251,3 +292,4 @@ def test_005_handle_User_Search_Valid_Name_1(test_client):
     data = {'first_name': 'Machiavelli', 'last_name': 'Donatella'}
     response = test_client.post('/user_search', json=data)
     assert response.status_code == 200
+

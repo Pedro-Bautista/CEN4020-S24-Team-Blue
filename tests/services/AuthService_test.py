@@ -2,6 +2,19 @@ from unittest import mock
 
 import pytest
 
+import os
+
+import sys
+
+# ---------- path config --------------------------------------------------------------------#
+# Get the parent directory of the current directory (tests/controllers/integration)
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+
+# Add the parent directory to the Python path
+sys.path.append(parent_dir)
+# ---------- path config --------------------------------------------------------------------#
+
+
 from incollege.services.AuthService import *
 
 
@@ -88,7 +101,7 @@ def test_login_no_input(mock_create_token, mock_hash_password, mock_get_password
 @mock.patch('incollege.repositories.AuthRepository.get_user_count', return_value=Config.USER_LIMIT - 1)
 @mock.patch('incollege.repositories.AuthRepository.user_exists', return_value=False)
 def test_signup_success(mock_user_exists, mock_get_user_count, mock_create_user):
-    result = signup('austin', 'vAl1d-p@ss')
+    result = signup('austin', 'vAl1d-p@ss','austin', 'holmes')
 
     assert result is not None
     mock_user_exists.assert_called_once_with('austin')
@@ -101,7 +114,7 @@ def test_signup_success(mock_user_exists, mock_get_user_count, mock_create_user)
 @mock.patch('incollege.repositories.AuthRepository.user_exists', return_value=False)
 def test_signup_no_password(mock_user_exists, mock_get_user_count, mock_create_user):
     with pytest.raises(AuthException) as e_info:
-        signup('austin', '')
+        signup('austin', '', 'austin', 'holmes')
         assert e_info.value == 'Username or password not provided.'
     mock_user_exists.assert_not_called()
     mock_get_user_count.assert_not_called()
@@ -113,7 +126,7 @@ def test_signup_no_password(mock_user_exists, mock_get_user_count, mock_create_u
 @mock.patch('incollege.repositories.AuthRepository.user_exists', return_value=False)
 def test_signup_no_username(mock_user_exists, mock_get_user_count, mock_create_user):
     with pytest.raises(AuthException) as e_info:
-        signup('', 'vAl1d-p@ss')
+        signup('', 'vAl1d-p@ss', 'austin', 'holmes')
         assert e_info.value == 'Username or password not provided.'
     mock_user_exists.assert_not_called()
     mock_get_user_count.assert_not_called()
@@ -125,7 +138,7 @@ def test_signup_no_username(mock_user_exists, mock_get_user_count, mock_create_u
 @mock.patch('incollege.repositories.AuthRepository.user_exists', return_value=False)
 def test_signup_invalid_password(mock_user_exists, mock_get_user_count, mock_create_user):
     with pytest.raises(AuthException) as e_info:
-        signup('austin', 'password')
+        signup('austin', 'password', 'austin', 'holmes')
         assert e_info.value == 'Password does not meet requirements.'
     mock_user_exists.assert_not_called()
     mock_get_user_count.assert_not_called()
@@ -137,19 +150,36 @@ def test_signup_invalid_password(mock_user_exists, mock_get_user_count, mock_cre
 @mock.patch('incollege.repositories.AuthRepository.user_exists', return_value=True)
 def test_signup_user_exists(mock_user_exists, mock_get_user_count, mock_create_user):
     with pytest.raises(AuthException) as e_info:
-        signup('austin', 'vAl1d-p@ss')
+        signup('austin', 'vAl1d-p@ss', 'austin', 'holmes')
         assert e_info.value == 'Username already exists.'
     mock_user_exists.assert_called_once_with('austin')
     mock_get_user_count.assert_not_called()
     mock_create_user.assert_not_called()
 
 
+# ----------------------------------------------------------------------------------------------------------------
+# signup extended
+    
+@mock.patch('incollege.repositories.AuthRepository.create_user', return_value='SOME_TOKEN')
+@mock.patch('incollege.repositories.AuthRepository.get_user_count', return_value=Config.USER_LIMIT - 1)
+@mock.patch('incollege.repositories.AuthRepository.user_exists', return_value=True)
+def test_signup_no_name(mock_user_exists, mock_get_user_count, mock_create_user):
+    with pytest.raises(AuthException) as e_info:
+        signup('austin', 'vAl1d-p@ss', '', '')
+        assert e_info.value == 'First or last name are not provided.'
+    mock_get_user_count.assert_not_called()
+    mock_create_user.assert_not_called()
+
+
+
+# ----------------------------------------------------------------------------------------------------------------
+
 @mock.patch('incollege.repositories.AuthRepository.create_user', return_value='SOME_TOKEN')
 @mock.patch('incollege.repositories.AuthRepository.get_user_count', return_value=Config.USER_LIMIT)
 @mock.patch('incollege.repositories.AuthRepository.user_exists', return_value=False)
 def test_signup_user_limit_reached(mock_user_exists, mock_get_user_count, mock_create_user):
     with pytest.raises(AuthException) as e_info:
-        signup('austin', 'vAl1d-p@ss')
+        signup('austin', 'vAl1d-p@ss', 'austin', 'holmes')
         assert e_info.value == 'User limit reached.'
     mock_user_exists.assert_called_once_with('austin')
     mock_get_user_count.assert_called_once()
