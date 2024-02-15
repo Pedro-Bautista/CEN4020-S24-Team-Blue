@@ -101,12 +101,12 @@ def test_login_no_input(mock_create_token, mock_hash_password, mock_get_password
 @mock.patch('incollege.repositories.AuthRepository.get_user_count', return_value=Config.USER_LIMIT - 1)
 @mock.patch('incollege.repositories.AuthRepository.user_exists', return_value=False)
 def test_signup_success(mock_user_exists, mock_get_user_count, mock_create_user):
-    result = signup('austin', 'vAl1d-p@ss','austin', 'holmes')
+    result = signup('austin', 'vAl1d-p@ss', 'austin', 'holmes')
 
     assert result is not None
     mock_user_exists.assert_called_once_with('austin')
     mock_get_user_count.assert_called_once()
-    mock_create_user.assert_called_once_with('austin', hash_password('vAl1d-p@ss'))
+    mock_create_user.assert_called_once_with('austin', hash_password('vAl1d-p@ss'), 'austin', 'holmes')
 
 
 @mock.patch('incollege.repositories.AuthRepository.create_user', return_value='SOME_TOKEN')
