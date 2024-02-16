@@ -23,10 +23,27 @@ def create_tables():
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS auth (
+            user_id TEXT PRIMARY KEY,
             username TEXT,
             password_hash TEXT,
+            permissions_group TEXT
+        )
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            user_id TEXT PRIMARY KEY,
+            username TEXT,
             first_name TEXT,
             last_name TEXT
+        )
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS connections (
+            connections_index_id TEXT PRIMARY KEY,
+            user_id TEXT,
+            connection_id TEXT
         )
     ''')
     
