@@ -8,7 +8,7 @@ def test_get_user_count(mock_get_connection):
     mock_cursor = mock_get_connection.return_value.cursor.return_value
     mock_cursor.execute.return_value.fetchone.return_value = (3, )
 
-    result = get_user_count()
+    result = get_auth_user_count()
 
     assert result == 3
 
@@ -28,7 +28,7 @@ def test_user_exists_true(mock_get_connection):
     mock_cursor = mock_get_connection.return_value.cursor.return_value
     mock_cursor.execute.return_value.fetchone.return_value = (1, )
 
-    result = user_exists('austin')
+    result = auth_user_exists('austin')
 
     assert result is True
 
@@ -38,7 +38,7 @@ def test_user_exists_false(mock_get_connection):
     mock_cursor = mock_get_connection.return_value.cursor.return_value
     mock_cursor.execute.return_value.fetchone.return_value = (0, )
 
-    result = user_exists('austin')
+    result = auth_user_exists('austin')
 
     assert result is False
 
@@ -47,11 +47,11 @@ def test_user_exists_false(mock_get_connection):
 def test_user_exists_false(mock_get_connection):
     mock_cursor = mock_get_connection.return_value.cursor.return_value
 
-    create_user('austin', 'some_hash')
+    create_auth_user('austin', 'some_hash')
 
 
 @mock.patch('incollege.repositories.AuthRepository.get_connection')
 def test_user_exists_false(mock_get_connection):
     mock_cursor = mock_get_connection.return_value.cursor.return_value
 
-    delete_user('austin')
+    delete_auth_user('austin')

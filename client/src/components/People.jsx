@@ -17,7 +17,10 @@ export const People = () => {
         setErrorMessage("");
         try {
             const data = await api.searchForPeople(searchParams);
-            setUserFound(true);
+            console.log(data);
+            if (data.message) {
+                setUserFound(true);
+            }
 			console.log(user);
         } catch (error) {
             console.error("Search error:", error);
@@ -51,6 +54,18 @@ export const People = () => {
             {userFound && (
                 <div className="login-signup-prompt">
                     <p>They are a part of the InCollege system.</p>
+					{!user.token && (
+						<>
+							<p>If you haven't signed in yet, please do so.</p>
+							<Link to="/login"><button>Login</button></Link>
+							<Link to="/signup"><button>Sign Up</button></Link>
+						</>
+					)}
+                </div>
+            )}
+            {!userFound && (
+                <div className="login-signup-prompt">
+                    <p>They are not part of the InCollege system.</p>
 					{!user.token && (
 						<>
 							<p>If you haven't signed in yet, please do so.</p>
