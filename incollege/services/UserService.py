@@ -14,3 +14,5 @@ def update_preferences(user_id, preference, on):
         return {'message': f'{preference} preference updated successfully'}
     except ValueError as e:
         return {'error': str(e)}
+    
+    

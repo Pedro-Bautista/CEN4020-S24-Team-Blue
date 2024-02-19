@@ -9,16 +9,6 @@ export const GuestControls = () => {
     const [smsEnabled, setSmsEnabled] = useState(false);
     const [targetedAdEnabled, setTargetedAdEnabled] = useState(false);
 
-    const updatePref = async (prefData) => {
-        try {
-            const response = await api.post('/update_preferences', prefData);
-            return response.data;
-        } catch (error) {
-            console.log(error);
-            throw error;
-        }
-    };
-
     const updateDatabase = async (option, value) => {
         try {
             if (user.token) {
@@ -29,7 +19,7 @@ export const GuestControls = () => {
                     toggle: value
                 };
 
-                await updatePref(prefData);
+                await api.updatePref(prefData);
 
                 console.log(`Updated ${option} to ${value} in the database`);
             }
@@ -64,7 +54,6 @@ export const GuestControls = () => {
     return (
         <div className="page">
             <h2>InCollege Guest Controls</h2>
-            <p>Under Construction</p>
             
             {user.token ? (
                 <div>
@@ -73,7 +62,7 @@ export const GuestControls = () => {
                     <ToggleOption label="Targeted Ad" enabled={targetedAdEnabled} toggle={() => handleToggle("targetedAd", !targetedAdEnabled)} />
                 </div>
             ) : (
-                <p> </p>
+                <p> Under Construction </p>
             )}
         </div>
     );

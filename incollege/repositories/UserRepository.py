@@ -27,12 +27,14 @@ def update_pref(user_id, preference, state):
     db_column = {
         'email': 'email_pref',
         'sms': 'SMS_pref',
-        'targetedAd': 'targeted_adv'
+        'targetedAd': 'targeted_adv',
+        'spanish': 'language'
     }.get(preference)
 
     if db_column:
         # update the preference column for the user
         UNIVERSAL.update_object({'user_id': user_id}, {db_column: 1 if state else 0})
         print_users_table()
+        
     else:
         raise ValueError("Invalid preference name")
