@@ -34,7 +34,6 @@ def update_pref(user_id, preference, state):
     if db_column:
         # update the preference column for the user
         UNIVERSAL.update_object({'user_id': user_id}, {db_column: 1 if state else 0})
-        print_users_table()
         
     else:
         raise ValueError("Invalid preference name")
