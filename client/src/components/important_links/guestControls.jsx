@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { AuthData } from "../../auth/AuthWrapper";
-import { useNavigate } from "react-router-dom"
 import api from "../../api/api"; 
 
 export const GuestControls = () => {
@@ -41,6 +40,7 @@ export const GuestControls = () => {
 
 	const handleToggle = (option, enabled) => {
         if (user.token) {
+            
             switch (option) {
                 case "email":
                     setEmailEnabled(enabled);
@@ -65,7 +65,7 @@ export const GuestControls = () => {
         <div className="page">
             <h2>InCollege Guest Controls</h2>
             <p>Under Construction</p>
-
+            
             {user.token ? (
                 <div>
                     <ToggleOption label="Email" enabled={emailEnabled} toggle={() => handleToggle("email", !emailEnabled)} />
@@ -79,7 +79,7 @@ export const GuestControls = () => {
     );
 };
 
-// Component for toggle option
+
 const ToggleOption = ({ label, enabled, toggle }) => {
     return (
         <div className="toggle-option">
