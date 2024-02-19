@@ -1,0 +1,41 @@
+login screen extended:
+
+useful links (group 1)
+    - general 
+        - sign up 
+        - help center
+        - about
+        - press 
+        - blog
+        - careers 
+        - developers 
+
+    - browse incollege
+    - business solutions
+    - directories 
+
+inCollege Important Linkes (group 2)
+    - copyright notice 
+    - about 
+    - accessibility 
+    - user agreement
+    - privacy policy 
+        - guest control
+    - cookie policy 
+    - copyright policy
+    - brand policy 
+    - guest controls 
+        signed in:
+            - turn on/off email 
+            - sms
+            - targeted ad 
+            (auto turned on)
+            (changes have to be stored for the future)
+    - languages 
+        signed in:
+            - english and spanish 
+            (autoset to english)
+
+available before and after sign in 
+RETURN OPTION ON ALL PAGES??
+

@@ -62,3 +62,15 @@ def create_tables():
     ''')
     
     conn.commit()
+
+
+def print_users_table():
+
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM users')
+    users = cursor.fetchall()
+    conn.close()
+
+    # Print out the table
+    for user in users:
+        print(user)
