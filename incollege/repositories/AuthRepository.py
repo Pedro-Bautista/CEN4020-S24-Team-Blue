@@ -27,7 +27,7 @@ def get_permissions_group(user_id):
     result = UNIVERSAL.get_objects({'user_id': user_id})
     if result:
         return result[0].permissions_group
-
+    
 
 def create_auth_user(user_id, username, password_hash, permissions_group):
     auth_user = AuthUser(user_id, username, password_hash, permissions_group)

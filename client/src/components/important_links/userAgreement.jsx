@@ -1,4 +1,4 @@
-export const userAgreement = () => {
+export const UserAgreement = () => {
 	
 	return (
 		<div className="page">

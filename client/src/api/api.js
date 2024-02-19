@@ -49,9 +49,22 @@ const postJob = async (jobData) => {
 	}
 };
 
+const updatePref = async (prefData) => {
+    
+	try {
+		const response = await api.post('/update_preferences', prefData);
+		return response.data;
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+};
+
+
 export default {
 	login,
 	signup,
 	searchForPeople,
 	postJob,
+    updatePref,
 }

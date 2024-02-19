@@ -1,4 +1,4 @@
-export const copyrightPolicy = () => {
+export const CopyrightPolicy = () => {
 	
 	return (
 		<div className="page">

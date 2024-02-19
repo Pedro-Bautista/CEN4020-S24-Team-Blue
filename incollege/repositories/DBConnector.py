@@ -36,6 +36,10 @@ def create_tables():
             username TEXT,
             first_name TEXT,
             last_name TEXT
+            language TEXT,
+            email_pref INT,
+            SMS_pref INT, 
+            targeted_adv INT
         )
     ''')
 
@@ -58,3 +62,4 @@ def create_tables():
     ''')
     
     conn.commit()
+

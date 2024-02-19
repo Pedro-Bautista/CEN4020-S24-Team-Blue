@@ -1,4 +1,4 @@
-export const privacyPolicy = () => {
+export const PrivacyPolicy = () => {
 	
 	return (
 		<div className="page">

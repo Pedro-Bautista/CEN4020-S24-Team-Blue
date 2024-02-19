@@ -1,4 +1,4 @@
-export const accessibility = () => {
+export const Accessibility = () => {
 	
 	return (
 		<div className="page">

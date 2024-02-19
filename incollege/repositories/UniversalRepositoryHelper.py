@@ -79,3 +79,18 @@ class UniversalRepositoryHelper:
 
     def create_dict(self, obj):
         return copy.copy(vars(obj))
+    
+    def update_object(self, keys, update_data):
+       
+        set_clause = ", ".join([f"{column} = ?" for column, value in update_data.items()])
+        condition_string = self.create_condition_string(keys)
+
+        query = f"UPDATE {self.TABLE_NAME} SET {set_clause} WHERE {condition_string}"
+        values_tuple = tuple(update_data.values()) + tuple(keys.values())
+        
+        cursor = get_connection().cursor()
+        cursor.execute(query, values_tuple)
+
+        get_connection().commit()
+
+    

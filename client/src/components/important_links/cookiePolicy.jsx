@@ -1,4 +1,4 @@
-export const cookiePolicy = () => {
+export const CookiePolicy = () => {
 	
 	return (
 		<div className="page">
