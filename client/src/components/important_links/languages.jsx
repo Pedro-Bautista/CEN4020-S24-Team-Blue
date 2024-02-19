@@ -1,4 +1,4 @@
-export const languages = () => {
+export const Languages = () => {
 	
 	return (
 		<div className="page">

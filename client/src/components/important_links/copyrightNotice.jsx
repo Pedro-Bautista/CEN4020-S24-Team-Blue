@@ -1,4 +1,4 @@
-export const copyrightNotice = () => {
+export const CopyrightNotice = () => {
 	
 	return (
 		<div className="page">

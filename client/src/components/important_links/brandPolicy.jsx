@@ -1,4 +1,4 @@
-export const brandPolicy = () => {
+export const BrandPolicy = () => {
 	
 	return (
 		<div className="page">

@@ -1,4 +1,4 @@
-export const guestControls = () => {
+export const GuestControls = () => {
 	
 	return (
 		<div className="page">
