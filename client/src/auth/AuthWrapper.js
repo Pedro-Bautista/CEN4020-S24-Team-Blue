@@ -12,9 +12,8 @@ export const AuthWrapper = () => {
 
 	useEffect(() => {
 		const token = localStorage.getItem("token")
-		const username = localStorage.getItem("username")
-		if (token && username) {
-			setUser({ token, username })
+		if (token) {
+			setUser({ token })
 		}
 	}, []);
 
@@ -25,7 +24,6 @@ export const AuthWrapper = () => {
 			const token = response.data.token
 			const username = formData.username
 			localStorage.setItem("token", token)
-			localStorage.setItem("username", username)
 			setUser({ token, username })
 
 			return response
@@ -42,7 +40,6 @@ export const AuthWrapper = () => {
 
 			const token = response.data.token
 			localStorage.setItem("token", token)
-			localStorage.setItem("username", username)
 			setUser({ token, username })
 
 			return response
@@ -56,7 +53,6 @@ export const AuthWrapper = () => {
 
 	const logout = () => {
 		localStorage.removeItem("token")
-		localStorage.removeItem("username")
 		setUser({ token: null, username: null })
 	}
 
