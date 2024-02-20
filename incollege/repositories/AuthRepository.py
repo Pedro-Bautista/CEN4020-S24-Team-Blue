@@ -4,7 +4,7 @@ from incollege.entity.AuthUser import AuthUser
 from incollege.repositories.UniversalRepositoryHelper import UniversalRepositoryHelper
 
 
-UNIVERSAL = UniversalRepositoryHelper('auth', AuthUser)
+UNIVERSAL = UniversalRepositoryHelper('auth', AuthUser, ['user_id'])
 
 
 def get_auth_user_count():

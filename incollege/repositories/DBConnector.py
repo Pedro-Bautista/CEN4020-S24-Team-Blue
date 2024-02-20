@@ -15,7 +15,8 @@ def get_connection():
 
 
 def close_connection():
-    conn.close()
+    if conn is not None:
+        conn.close()
 
 
 def create_tables():
@@ -35,11 +36,11 @@ def create_tables():
             user_id TEXT PRIMARY KEY,
             username TEXT,
             first_name TEXT,
-            last_name TEXT
-            language TEXT,
-            email_pref INT,
-            SMS_pref INT, 
-            targeted_adv INT
+            last_name TEXT,
+            language_pref TEXT,
+            email_pref TEXT,
+            sms_pref TEXT, 
+            targeted_adv_pref TEXT
         )
     ''')
 
@@ -53,6 +54,7 @@ def create_tables():
     
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS jobs (
+            job_id TEXT PRIMARY KEY,
             title TEXT,
             desc TEXT, 
             employer TEXT,

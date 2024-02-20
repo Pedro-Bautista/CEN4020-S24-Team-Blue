@@ -2,6 +2,7 @@
 # Provides endpoints for interacting with user data
 from flask import jsonify, request
 
+from incollege.annotations.TokenRequired import token_required
 from incollege.services import UserService
 
 
@@ -17,16 +18,13 @@ def configure_user_routes(app):
 
 
     @app.route('/update_preferences', methods=['POST'])
-    def handle_update_pref():
-        try:
-            data = request.get_json()
-            preference_name = data.get('preference')
-            on = data.get('toggle')
-            user_id = data.get('user_id')
+    @token_required
+    def handle_update_pref(token_data):
+        data = request.get_json()
+        preference_name = data.get('preference_name')
+        preference_value = data.get('preference_value')
+        user_id = token_data['usr']
 
-            # how to pass user_id??
-            result = UserService.update_preferences(user_id, preference_name, on)
-            
-            return jsonify(result)
-        except Exception as e:
-            return jsonify({'error': str(e)})
+        result = UserService.update_preference(user_id, preference_name, preference_value)
+
+        return jsonify(result)

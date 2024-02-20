@@ -7,32 +7,23 @@ export const Languages = () => {
 	const [language, setSpanish] = useState(false);
 
 
-	const updateDatabase = async (option, value) => {
+	const updatePreference = async (name, value) => {
         try {
-            if (user.token) {
-                // using username for now (assuming all unique usernames)
-                const prefData = {
-                    user_id: user.user_id,
-                    preference: option,
-                    toggle: value
-                };
+            const prefData = {
+                preference_name: name,
+                preference_value: value
+            };
 
-                await api.updatePref(prefData);
-
-                console.log(`Updated ${option} to ${value} in the database`);
-            }
+            await api.updatePref(prefData);
         } catch (error) {
             console.log(error);
         }
     };
 
 	const handleToggle = (option, enabled) => {
-        if (user.token) {
-            
-			setSpanish(enabled)
-            // call update to db
-            updateDatabase(option, enabled ? 1 : 0);
-        }
+        setSpanish(enabled)
+        // call update to db
+        updatePreference(option, enabled ? "spanish" : "english");
     };
 
 	return (
@@ -40,7 +31,7 @@ export const Languages = () => {
 			<h2>Languages</h2>
 			{user.token ? (
                 <div>
-                    <ToggleOption label="Spanish" enabled={language} toggle={() => handleToggle("spanish", !language)} />
+                    <ToggleOption label="Spanish" enabled={language} toggle={() => handleToggle("language_pref", !language)} />
                 </div>
             ) : (
                 <p> Under Construction </p>
