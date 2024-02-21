@@ -43,11 +43,17 @@ class UniversalRepositoryHelper:
 
     def is_alive(self):
         query = f"SELECT 1"
-        return get_connection().cursor().execute(query).fetchone()[0] == 1
+        cursor = get_connection().cursor()
+        cursor.execute(query)
+        result = cursor.fetchone()[0]
+        return result == 1
 
     def get_record_count(self):
         query = f"SELECT COUNT(1) FROM {self.TABLE_NAME}"
-        return get_connection().cursor().execute(query).fetchone()[0]
+        cursor = get_connection().cursor()
+        cursor.execute(query)
+        result = cursor.fetchone()
+        return result[0]
 
     def get_objects(self, keys):
         condition_string = create_condition_string(keys)
@@ -70,14 +76,16 @@ class UniversalRepositoryHelper:
         condition_string = create_condition_string(keys)
         query = f"SELECT COUNT(*) FROM {self.TABLE_NAME} WHERE {condition_string}"
         cursor = get_connection().cursor()
-        result = cursor.execute(query, create_tuple(keys))
+        cursor.execute(query, create_tuple(keys))
+        result = cursor.fetchall()
         return result[0] >= 1
 
     def create_object(self, obj):
         dictionary = create_dict(obj)
         placeholders_string, keys_string = generate_input_parameters(dictionary)
         query = f"INSERT INTO {self.TABLE_NAME} {keys_string} VALUES {placeholders_string}"
-        get_connection().cursor().execute(query, create_tuple(dictionary))
+        cursor = get_connection().cursor()
+        cursor.execute(query, create_tuple(dictionary))
         get_connection().commit()
 
     def __update_keys(self, keys, update_data):
@@ -85,7 +93,8 @@ class UniversalRepositoryHelper:
         condition_string = create_condition_string(keys)
         query = f"UPDATE {self.TABLE_NAME} SET {set_clause} WHERE {condition_string}"
         values_tuple = tuple(update_data.values()) + tuple(keys.values())
-        get_connection().cursor().execute(query, values_tuple)
+        cursor = get_connection().cursor()
+        cursor.execute(query, values_tuple)
         get_connection().commit()
 
     def insert_update_object(self, mutated):
@@ -103,7 +112,8 @@ class UniversalRepositoryHelper:
     def delete_entry(self, keys):
         condition_string = create_condition_string(keys)
         query = f"DELETE FROM {self.TABLE_NAME} WHERE {condition_string}"
-        get_connection().cursor().execute(query, create_tuple(keys))
+        cursor = get_connection().cursor()
+        cursor.execute(query, create_tuple(keys))
         get_connection().commit()
 
     def __convert_to_instance(self, data):
