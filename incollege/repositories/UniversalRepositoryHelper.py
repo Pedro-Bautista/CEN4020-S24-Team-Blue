@@ -66,8 +66,10 @@ class UniversalRepositoryHelper:
 
         if results:
             column_names = [description[0] for description in cursor.description]
-            result_list = [dict(zip(column_names, row)) for row in results]
-
+            if len(results) > 1:
+                result_list = [dict(zip(column_names, row[0])) for row in results]
+            else:
+                result_list = [dict(zip(column_names, row)) for row in results]
             return [self.__convert_to_instance(data) for data in result_list]
         else:
             return []
