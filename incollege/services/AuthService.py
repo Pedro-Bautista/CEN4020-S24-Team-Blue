@@ -11,6 +11,7 @@ import re
 import incollege.repositories.AuthRepository as AuthRepository
 import incollege.repositories.JobRepository
 import incollege.repositories.UserRepository
+from incollege.entity.AuthUser import AuthUser
 from incollege.entity.User import User
 from incollege.exceptions.AuthException import AuthException
 from incollege.repositories import UserRepository
@@ -47,7 +48,7 @@ def signup(username, password, first_name, last_name):
     if not username or not password:
         raise AuthException("Username or password are not provided.", 400)
     if not first_name or not last_name:
-        raise AuthException("First or last name are not provided", 400)
+        raise AuthException("First or last name are not provided.", 400)
     if not validate_password(password):
         raise AuthException("Password does not meet requirements.", 400)
     if AuthRepository.get_user_id(username):
@@ -56,7 +57,9 @@ def signup(username, password, first_name, last_name):
         raise AuthException("User limit reached.", 507)
 
     user_id = create_user_id()
-    AuthRepository.create_auth_user(user_id, username, hash_password(password), 'users')
+
+    auth_user = AuthUser(user_id, username, hash_password(password), 'users')
+    AuthRepository.create_auth_user(auth_user)
 
     user = User(user_id, username, first_name, last_name)
     UserRepository.create_user(user)

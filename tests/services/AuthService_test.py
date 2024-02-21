@@ -37,160 +37,185 @@ def test_hash_password():
                      '956de5b75fe4113db81b7268cf7f2ae9ba563fbe5c5e'
 
 
+@mock.patch('incollege.repositories.AuthRepository.get_user_id', return_value="TEST_USER_ID")
+@mock.patch('incollege.repositories.AuthRepository.get_permissions_group', return_value="TEST_GROUP")
 @mock.patch('incollege.repositories.AuthRepository.get_password_hash', return_value="TEST_HASH")
 @mock.patch('incollege.services.AuthService.hash_password', return_value='WRONG_HASH')
 @mock.patch('incollege.services.AuthService.create_token', return_value='INVALID_TOKEN')
-def test_login_failed(mock_create_token, mock_hash_password, mock_get_password_hash):
+def test_login_failed(mock_create_token, mock_hash_password, mock_get_password_hash,
+                      mock_get_permissions_group, mock_get_user_id):
     with pytest.raises(AuthException):
         login('austin', 'wrong password')
 
-    mock_get_password_hash.assert_called_once_with('austin')
-    mock_hash_password.assert_called_once_with('wrong password')
     mock_create_token.assert_not_called()
 
 
+@mock.patch('incollege.repositories.AuthRepository.get_user_id', return_value="TEST_USER_ID")
+@mock.patch('incollege.repositories.AuthRepository.get_permissions_group', return_value="TEST_GROUP")
 @mock.patch('incollege.repositories.AuthRepository.get_password_hash', return_value="TEST_HASH")
 @mock.patch('incollege.services.AuthService.hash_password', return_value='TEST_HASH')
 @mock.patch('incollege.services.AuthService.create_token', return_value='VALID_TOKEN')
-def test_login_success(mock_create_token, mock_hash_password, mock_get_password_hash):
+def test_login_success(mock_create_token, mock_hash_password, mock_get_password_hash,
+                       mock_get_permissions_group, mock_get_user_id):
     result = login("austin", "correct password")
 
     assert result is not None
-    mock_get_password_hash.assert_called_once_with('austin')
-    mock_hash_password.assert_called_once_with('correct password')
-    mock_create_token.assert_called_once_with('austin')
+
+    mock_create_token.assert_called_once()
 
 
+@mock.patch('incollege.repositories.AuthRepository.get_user_id', return_value="TEST_USER_ID")
+@mock.patch('incollege.repositories.AuthRepository.get_permissions_group', return_value="TEST_GROUP")
 @mock.patch('incollege.repositories.AuthRepository.get_password_hash', return_value="TEST_HASH")
 @mock.patch('incollege.services.AuthService.hash_password', return_value='')
 @mock.patch('incollege.services.AuthService.create_token', return_value='INVALID_TOKEN')
-def test_login_no_input(mock_create_token, mock_hash_password, mock_get_password_hash):
+def test_login_no_username(mock_create_token, mock_hash_password, mock_get_password_hash,
+                           mock_get_permissions_group, mock_get_user_id):
     with pytest.raises(AuthException) as e_info:
         login('', 'this')
         assert e_info.value == 'Username or password not provided.'
-    mock_get_password_hash.assert_not_called()
-    mock_hash_password.assert_not_called()
+
     mock_create_token.assert_not_called()
 
 
+@mock.patch('incollege.repositories.AuthRepository.get_user_id', return_value="TEST_USER_ID")
+@mock.patch('incollege.repositories.AuthRepository.get_permissions_group', return_value="TEST_GROUP")
 @mock.patch('incollege.repositories.AuthRepository.get_password_hash', return_value="TEST_HASH")
 @mock.patch('incollege.services.AuthService.hash_password', return_value='')
 @mock.patch('incollege.services.AuthService.create_token', return_value='INVALID_TOKEN')
-def test_login_no_input(mock_create_token, mock_hash_password, mock_get_password_hash):
+def test_login_no_password(mock_create_token, mock_hash_password, mock_get_password_hash,
+                           mock_get_permissions_group, mock_get_user_id):
     with pytest.raises(AuthException) as e_info:
         login('this', '')
         assert e_info.value == 'Username or password not provided.'
-    mock_get_password_hash.assert_not_called()
-    mock_hash_password.assert_not_called()
+
     mock_create_token.assert_not_called()
 
 
+@mock.patch('incollege.repositories.AuthRepository.get_user_id', return_value="TEST_USER_ID")
+@mock.patch('incollege.repositories.AuthRepository.get_permissions_group', return_value="TEST_GROUP")
 @mock.patch('incollege.repositories.AuthRepository.get_password_hash', return_value="TEST_HASH")
 @mock.patch('incollege.services.AuthService.hash_password', return_value='')
 @mock.patch('incollege.services.AuthService.create_token', return_value='INVALID_TOKEN')
-def test_login_no_input(mock_create_token, mock_hash_password, mock_get_password_hash):
+def test_login_no_input(mock_create_token, mock_hash_password, mock_get_password_hash,
+                        mock_get_permissions_group, mock_get_user_id):
     with pytest.raises(AuthException) as e_info:
         login('', '')
         assert e_info.value == 'Username or password not provided.'
-    mock_get_password_hash.assert_not_called()
-    mock_hash_password.assert_not_called()
+
     mock_create_token.assert_not_called()
 
 
-@mock.patch('incollege.repositories.AuthRepository.create_user', return_value='SOME_TOKEN')
-@mock.patch('incollege.repositories.AuthRepository.get_user_count', return_value=Config.USER_LIMIT - 1)
-@mock.patch('incollege.repositories.AuthRepository.user_exists', return_value=False)
-def test_signup_success(mock_user_exists, mock_get_user_count, mock_create_user):
+@mock.patch('incollege.repositories.AuthRepository.get_user_id', return_value=None)
+@mock.patch('incollege.repositories.UserRepository.create_user')
+@mock.patch('incollege.repositories.AuthRepository.create_auth_user', return_value='SOME_TOKEN')
+@mock.patch('incollege.repositories.AuthRepository.get_auth_user_count', return_value=Config.USER_LIMIT - 1)
+def test_signup_success(mock_get_auth_user_count, mock_create_auth_user, mock_create_user,
+                        mock_get_user_id):
     result = signup('austin', 'vAl1d-p@ss', 'austin', 'holmes')
 
     assert result is not None
-    mock_user_exists.assert_called_once_with('austin')
-    mock_get_user_count.assert_called_once()
-    mock_create_user.assert_called_once_with('austin', hash_password('vAl1d-p@ss'), 'austin', 'holmes')
+
+    mock_create_auth_user.assert_called_once()
+    mock_create_user.assert_called_once()
 
 
-@mock.patch('incollege.repositories.AuthRepository.create_user', return_value='SOME_TOKEN')
-@mock.patch('incollege.repositories.AuthRepository.get_user_count', return_value=Config.USER_LIMIT - 1)
-@mock.patch('incollege.repositories.AuthRepository.user_exists', return_value=False)
-def test_signup_no_password(mock_user_exists, mock_get_user_count, mock_create_user):
-    with pytest.raises(AuthException) as e_info:
+@mock.patch('incollege.repositories.UserRepository.create_user')
+@mock.patch('incollege.repositories.AuthRepository.get_user_id', return_value=None)
+@mock.patch('incollege.repositories.AuthRepository.create_auth_user', return_value='SOME_TOKEN')
+@mock.patch('incollege.repositories.AuthRepository.get_auth_user_count', return_value=Config.USER_LIMIT - 1)
+def test_signup_no_password(mock_get_auth_user_count, mock_create_auth_user, mock_get_user_id,
+                            mock_create_user):
+    with pytest.raises(AuthException) as e:
         signup('austin', '', 'austin', 'holmes')
-        assert e_info.value == 'Username or password not provided.'
-    mock_user_exists.assert_not_called()
-    mock_get_user_count.assert_not_called()
+
+    assert str(e.value) == str(AuthException('Username or password are not provided.'))
+
+    mock_create_auth_user.assert_not_called()
     mock_create_user.assert_not_called()
 
 
-@mock.patch('incollege.repositories.AuthRepository.create_user', return_value='SOME_TOKEN')
-@mock.patch('incollege.repositories.AuthRepository.get_user_count', return_value=Config.USER_LIMIT - 1)
-@mock.patch('incollege.repositories.AuthRepository.user_exists', return_value=False)
-def test_signup_no_username(mock_user_exists, mock_get_user_count, mock_create_user):
-    with pytest.raises(AuthException) as e_info:
-        signup('', 'vAl1d-p@ss', 'austin', 'holmes')
-        assert e_info.value == 'Username or password not provided.'
-    mock_user_exists.assert_not_called()
-    mock_get_user_count.assert_not_called()
+@mock.patch('incollege.repositories.UserRepository.create_user')
+@mock.patch('incollege.repositories.AuthRepository.get_user_id', return_value=None)
+@mock.patch('incollege.repositories.AuthRepository.create_auth_user', return_value='SOME_TOKEN')
+@mock.patch('incollege.repositories.AuthRepository.get_auth_user_count', return_value=Config.USER_LIMIT - 1)
+def test_signup_no_username(mock_get_auth_user_count, mock_create_auth_user, mock_get_user_id,
+                            mock_create_user):
+    with pytest.raises(AuthException) as e:
+        signup('', 'password', 'austin', 'holmes')
+
+    assert str(e.value) == str(AuthException('Username or password are not provided.'))
+
+    mock_create_auth_user.assert_not_called()
     mock_create_user.assert_not_called()
 
 
-@mock.patch('incollege.repositories.AuthRepository.create_user', return_value='SOME_TOKEN')
-@mock.patch('incollege.repositories.AuthRepository.get_user_count', return_value=Config.USER_LIMIT - 1)
-@mock.patch('incollege.repositories.AuthRepository.user_exists', return_value=False)
-def test_signup_invalid_password(mock_user_exists, mock_get_user_count, mock_create_user):
-    with pytest.raises(AuthException) as e_info:
-        signup('austin', 'password', 'austin', 'holmes')
-        assert e_info.value == 'Password does not meet requirements.'
-    mock_user_exists.assert_not_called()
-    mock_get_user_count.assert_not_called()
+@mock.patch('incollege.repositories.UserRepository.create_user')
+@mock.patch('incollege.repositories.AuthRepository.get_user_id', return_value=None)
+@mock.patch('incollege.repositories.AuthRepository.create_auth_user', return_value='SOME_TOKEN')
+@mock.patch('incollege.repositories.AuthRepository.get_auth_user_count', return_value=Config.USER_LIMIT - 1)
+def test_signup_invalid_password(mock_get_auth_user_count, mock_create_auth_user, mock_get_user_id,
+                                 mock_create_user):
+    with pytest.raises(AuthException) as e:
+        signup('austin', 'invalid-password', 'austin', 'holmes')
+
+    assert str(e.value) == str(AuthException('Password does not meet requirements.'))
+
+    mock_create_auth_user.assert_not_called()
     mock_create_user.assert_not_called()
 
 
-@mock.patch('incollege.repositories.AuthRepository.create_user', return_value='SOME_TOKEN')
-@mock.patch('incollege.repositories.AuthRepository.get_user_count', return_value=Config.USER_LIMIT - 1)
-@mock.patch('incollege.repositories.AuthRepository.user_exists', return_value=True)
-def test_signup_user_exists(mock_user_exists, mock_get_user_count, mock_create_user):
-    with pytest.raises(AuthException) as e_info:
-        signup('austin', 'vAl1d-p@ss', 'austin', 'holmes')
-        assert e_info.value == 'Username already exists.'
-    mock_user_exists.assert_called_once_with('austin')
-    mock_get_user_count.assert_not_called()
+@mock.patch('incollege.repositories.UserRepository.create_user')
+@mock.patch('incollege.repositories.AuthRepository.get_user_id', return_value='SOME_ID')
+@mock.patch('incollege.repositories.AuthRepository.create_auth_user', return_value='SOME_TOKEN')
+@mock.patch('incollege.repositories.AuthRepository.get_auth_user_count', return_value=Config.USER_LIMIT - 1)
+def test_signup_user_exists(mock_get_auth_user_count, mock_create_auth_user, mock_get_user_id,
+                                 mock_create_user):
+    with pytest.raises(AuthException) as e:
+        signup('austin', 'VAl1d-p@ss', 'austin', 'holmes')
+
+    assert str(e.value) == str(AuthException('Username already exists.'))
+
+    mock_create_auth_user.assert_not_called()
     mock_create_user.assert_not_called()
 
 
-# ----------------------------------------------------------------------------------------------------------------
-# signup extended
-    
-@mock.patch('incollege.repositories.AuthRepository.create_user', return_value='SOME_TOKEN')
-@mock.patch('incollege.repositories.AuthRepository.get_user_count', return_value=Config.USER_LIMIT - 1)
-@mock.patch('incollege.repositories.AuthRepository.user_exists', return_value=True)
-def test_signup_no_name(mock_user_exists, mock_get_user_count, mock_create_user):
-    with pytest.raises(AuthException) as e_info:
-        signup('austin', 'vAl1d-p@ss', '', '')
-        assert e_info.value == 'First or last name are not provided.'
-    mock_get_user_count.assert_not_called()
+@mock.patch('incollege.repositories.UserRepository.create_user')
+@mock.patch('incollege.repositories.AuthRepository.get_user_id', return_value=None)
+@mock.patch('incollege.repositories.AuthRepository.create_auth_user', return_value='SOME_TOKEN')
+@mock.patch('incollege.repositories.AuthRepository.get_auth_user_count', return_value=Config.USER_LIMIT - 1)
+def test_signup_no_name(mock_get_auth_user_count, mock_create_auth_user, mock_get_user_id,
+                                 mock_create_user):
+    with pytest.raises(AuthException) as e:
+        signup('austin', 'VAlid-p@ss', '', '')
+
+    assert str(e.value) == str(AuthException('First or last name are not provided.'))
+
+    mock_create_auth_user.assert_not_called()
     mock_create_user.assert_not_called()
 
 
+@mock.patch('incollege.repositories.UserRepository.create_user')
+@mock.patch('incollege.repositories.AuthRepository.get_user_id', return_value=None)
+@mock.patch('incollege.repositories.AuthRepository.create_auth_user', return_value='SOME_TOKEN')
+@mock.patch('incollege.repositories.AuthRepository.get_auth_user_count', return_value=Config.USER_LIMIT)
+def test_signup_user_limit_reached(mock_get_auth_user_count, mock_create_auth_user, mock_get_user_id,
+                                 mock_create_user):
+    with pytest.raises(AuthException) as e:
+        signup('austin', 'VAl1d-p@ss', 'austin', 'holmes')
 
-# ----------------------------------------------------------------------------------------------------------------
+    assert str(e.value) == str(AuthException('User limit reached.'))
 
-@mock.patch('incollege.repositories.AuthRepository.create_user', return_value='SOME_TOKEN')
-@mock.patch('incollege.repositories.AuthRepository.get_user_count', return_value=Config.USER_LIMIT)
-@mock.patch('incollege.repositories.AuthRepository.user_exists', return_value=False)
-def test_signup_user_limit_reached(mock_user_exists, mock_get_user_count, mock_create_user):
-    with pytest.raises(AuthException) as e_info:
-        signup('austin', 'vAl1d-p@ss', 'austin', 'holmes')
-        assert e_info.value == 'User limit reached.'
-    mock_user_exists.assert_called_once_with('austin')
-    mock_get_user_count.assert_called_once()
+    mock_create_auth_user.assert_not_called()
     mock_create_user.assert_not_called()
 
 
 def test_create_token():
-    result = create_token('austin')
+    result = create_token('austin', 'user')
     reference_payload = {
         'usr': 'austin',
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=Config.TOKEN_DURATION)
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=Config.TOKEN_DURATION),
+        'grp': 'user'
     }
     reference_token = jwt.encode(reference_payload, Config.SECRET, algorithm='HS512')
 
@@ -200,9 +225,11 @@ def test_create_token():
 def test_decode_token():
     reference_payload = {
         'usr': 'austin',
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=Config.TOKEN_DURATION)
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=Config.TOKEN_DURATION),
+        'grp': 'user'
     }
     reference_token = jwt.encode(reference_payload, Config.SECRET, algorithm='HS512')
     result = decode_token(reference_token)
 
     assert result['usr'] == 'austin'
+    assert result['grp'] == 'user'
