@@ -4,10 +4,9 @@ from incollege.repositories.UniversalRepositoryHelper import UniversalRepository
 UNIVERSAL = UniversalRepositoryHelper('jobs', Job, ['job_id'])
 
 
-def create_job(title, desc, employer, location, salary):
-    job = Job(title, desc, employer, location, salary)
+def create_job(job):
     UNIVERSAL.create_object(job)
 
 
 def get_job_count():
-    UNIVERSAL.get_record_count()
+    return UNIVERSAL.get_record_count()

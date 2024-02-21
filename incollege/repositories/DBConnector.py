@@ -55,6 +55,7 @@ def create_tables():
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS jobs (
             job_id TEXT PRIMARY KEY,
+            owner_user_id TEXT,
             title TEXT,
             desc TEXT, 
             employer TEXT,
