@@ -84,7 +84,7 @@ def test_login_no_username(mock_create_token, mock_hash_password, mock_get_passw
 @mock.patch('incollege.services.AuthService.hash_password', return_value='')
 @mock.patch('incollege.services.AuthService.create_token', return_value='INVALID_TOKEN')
 def test_login_no_password(mock_create_token, mock_hash_password, mock_get_password_hash,
-                           ):
+                           mock_get_permissions_group, mock_get_user_id):
     with pytest.raises(AuthException) as e_info:
         login('this', '')
         assert e_info.value == 'Username or password not provided.'

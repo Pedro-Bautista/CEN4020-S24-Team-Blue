@@ -65,7 +65,7 @@ def test_search_users_by_name_none(mock_get_connection):
 
     result = search_users_by_name(test_user.first_name, test_user.last_name)
 
-    assert result is None
+    assert len(result) == 0
 
 
 @mock.patch('incollege.repositories.UniversalRepositoryHelper.get_connection')
