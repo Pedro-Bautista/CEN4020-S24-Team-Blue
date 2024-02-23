@@ -55,12 +55,12 @@ class UniversalRepositoryHelper:
         result = cursor.fetchone()
         return result[0]
 
-    def get_objects(self, keys):
+    def get_objects(self, keys, limit=20, offset=0):
         condition_string = create_condition_string(keys)
-        query = f"SELECT * FROM {self.TABLE_NAME} WHERE {condition_string}"
+        query = f"SELECT * FROM {self.TABLE_NAME} WHERE {condition_string} LIMIT (?) OFFSET (?)"
 
         cursor = get_connection().cursor()
-        cursor.execute(query, create_tuple(keys))
+        cursor.execute(query, create_tuple(keys) + tuple(limit, offset))
 
         results = cursor.fetchall()
 
