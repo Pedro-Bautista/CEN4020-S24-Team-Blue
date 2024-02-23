@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS auth1 (
+CREATE TABLE IF NOT EXISTS auth (
     user_id TEXT PRIMARY KEY,
     username TEXT,
     password_hash TEXT,

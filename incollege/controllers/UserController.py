@@ -14,7 +14,10 @@ def configure_user_routes(app):
         first_name = data.get('first_name')
         last_name = data.get('last_name')
 
-        return jsonify({'message': UserService.find_users_by_name(first_name, last_name)})
+        users = UserService.find_users_by_name(first_name, last_name)
+        users_serial = [vars(user) for user in users]
+
+        return jsonify({'message': users_serial})
 
 
     @app.route('/update_preferences', methods=['POST'])

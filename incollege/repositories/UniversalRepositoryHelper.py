@@ -60,16 +60,13 @@ class UniversalRepositoryHelper:
         query = f"SELECT * FROM {self.TABLE_NAME} WHERE {condition_string} LIMIT (?) OFFSET (?)"
 
         cursor = get_connection().cursor()
-        cursor.execute(query, create_tuple(keys) + tuple(limit, offset))
+        cursor.execute(query, create_tuple(keys) + tuple([limit, offset]))
 
         results = cursor.fetchall()
 
         if results:
             column_names = [description[0] for description in cursor.description]
-            if len(results) > 1:
-                result_list = [dict(zip(column_names, row[0])) for row in results]
-            else:
-                result_list = [dict(zip(column_names, row)) for row in results]
+            result_list = [dict(zip(column_names, row)) for row in results]
             return [self.__convert_to_instance(data) for data in result_list]
         else:
             return []
