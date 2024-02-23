@@ -3,13 +3,7 @@ import os
 
 import sys
 
-# ---------- path config --------------------------------------------------------------------#
-# Get the parent directory of the current directory (tests/controllers/integration)
-parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 
-# Add the parent directory to the Python path
-sys.path.append(parent_dir)
-# ---------- path config --------------------------------------------------------------------#
 
 
 import pytest
