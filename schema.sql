@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS auth (
+CREATE TABLE IF NOT EXISTS auth1 (
     user_id TEXT PRIMARY KEY,
     username TEXT,
     password_hash TEXT,
@@ -18,8 +18,8 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS connections (
     connections_index_id TEXT PRIMARY KEY,
-    user_id TEXT,
-    connection_id TEXT,
+    connector_id TEXT,
+    connectee_id TEXT,
     pending TEXT
 );
 
