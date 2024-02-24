@@ -53,8 +53,21 @@ def test_handle_user_search_malformed(test_client):
 
 
 @mock.patch('incollege.services.UserService.update_preference')
-def test_handle_update_preference_success(test_client):
+def test_handle_update_preference_success(mock_update_preference, test_client):
     data = {''}
+
+
+@mock.patch('incollege.services.UserService.update_preference')
+def test_handle_update_preference_unauthorized(mock_update_preference, test_client):
+
+
+@mock.patch('incollege.services.UserService.update_preference')
+def test_handle_update_preference_malformed(mock_update_preference, test_client):
+
+
+@mock.patch('incollege.services.UserService.update_preference')
+def test_handle_update_preference_error(mock_update_preference, test_client):
+
 
 
 def get_response_error_desc(response):
