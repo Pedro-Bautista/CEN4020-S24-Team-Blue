@@ -33,3 +33,20 @@ CREATE TABLE IF NOT EXISTS jobs (
     salary REAL
 );
 
+CREATE TABLE IF NOT EXISTS friends (
+    user1_id TEXT,
+    user2_id TEXT,
+    FOREIGN KEY (user1_id) REFERENCES users(user_id),
+    FOREIGN KEY (user2_id) REFERENCES users(user_id,
+    PRIMARY KEY (user1, user2)
+);
+
+CREATE TABLE IF NOT EXISTS friend_requests (
+    request_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sender_user_id TEXT,
+    receiever_id TEXT,
+    status TEXT DEFAULT 'pending',
+    FOREIGN KEY (sender_user_id) REFERENCES users(user_id),
+    FOREIGN KEY (receiver_user_id) REFERENCES users(user_id)
+);
+
