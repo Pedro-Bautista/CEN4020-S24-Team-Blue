@@ -13,12 +13,12 @@ user_description = (
     ('targeted_adv_pref',)
 )
 test_user_data = [
-    ('some_uuid', 'some_username', 'some_first_name', 'some_last_name', 'some_language', 'some_email_pref',
-     'some_sms_pref', 'some_targeted_adv_pref')
+    'some_uuid', 'some_username', 'some_first_name', 'some_last_name', 'some_language', 'some_email_pref',
+     'some_sms_pref', 'some_targeted_adv_pref'
 ]
 test_user_data2 = [
-    ('some_uuid2', 'some_username2', 'some_first_name2', 'some_last_name2', 'some_language2', 'some_email_pref2',
-     'some_sms_pref2', 'some_targeted_adv_pref2')
+    'some_uuid2', 'some_username2', 'some_first_name2', 'some_last_name2', 'some_language2', 'some_email_pref2',
+     'some_sms_pref2', 'some_targeted_adv_pref2'
 ]
 test_user = User(**dict(zip([key[0] for key in user_description], test_user_data[0])))
 test_user2 = User(**dict(zip([key[0] for key in user_description], test_user_data2[0])))
