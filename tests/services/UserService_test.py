@@ -15,6 +15,16 @@ def test_find_users_by_name_none(mock_search_users_by_name):
 
         assert e == ContentException('No matching users found.', 404)
 
+
+@mock.patch('incollege.repositories.UserRepository.search_users_by_name')
+def test_find_users_by_name_no_params(mock_search_users_by_name):
+    with pytest.raises(ContentException) as e:
+        result = find_users_by_name('', '')
+
+        assert e == ContentException('Required search parameters not provided.', 400)
+
+    mock_search_users_by_name.assert_not_called()
+
 @mock.patch('incollege.repositories.UserRepository.search_users_by_name', return_value=[test_user])
 def test_find_users_by_name(mock_search_users_by_name):
     result = find_users_by_name('some_first', 'some_last')

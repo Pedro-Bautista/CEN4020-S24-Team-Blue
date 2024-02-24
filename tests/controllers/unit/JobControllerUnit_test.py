@@ -60,7 +60,7 @@ def test_handle_job_post_unauthorized(mock_post_job, test_client):
 
 @mock.patch('incollege.services.JobService.post_job',
             side_effect=ContentException('Required job posting information not provided.', 400))
-def test_handle_job_post_error(mock_post_job, test_client):
+def test_handle_job_post_malformed(mock_post_job, test_client):
     data = test_invalid_job_data
     response = test_client.post('/job_post', json=data, headers=test_jwt_header)
 
