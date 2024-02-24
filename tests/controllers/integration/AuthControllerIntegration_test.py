@@ -1,19 +1,13 @@
 import json
 import os
 
-import sys
-
-
-
-
 import pytest
-from flask import Flask, request
+from flask import Flask
 
 from incollege.config import Config
 from incollege.controllers.AuthController import *
 from incollege.controllers.ControllerAdvice import configure_controller_advice
 from incollege.repositories.DBConnector import create_tables
-
 
 
 @pytest.fixture(scope='module')
