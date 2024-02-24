@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS friends (
     user1_id TEXT,
     user2_id TEXT,
     FOREIGN KEY (user1_id) REFERENCES users(user_id),
-    FOREIGN KEY (user2_id) REFERENCES users(user_id,
+    FOREIGN KEY (user2_id) REFERENCES users(user_id),
     PRIMARY KEY (user1, user2)
 );
 
