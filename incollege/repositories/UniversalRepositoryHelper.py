@@ -117,3 +117,12 @@ class UniversalRepositoryHelper:
 
     def __convert_to_instance(self, data):
         return self.CLASS(**data)
+    
+    
+    def create_connect_request(self, sender_user_id, receiver_user_id):
+        connect_request_data = {
+            'sender_user_id': sender_user_id,
+            'receiver_user_id': receiver_user_id
+        }
+
+        self.create_object(connect_request_data)

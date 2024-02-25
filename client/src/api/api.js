@@ -61,6 +61,17 @@ const updatePref = async (prefData) => {
 	}
 };
 
+const requestConnection = async (requestData) => {
+
+	try {
+		const response = await api.post('/send_request', requestData);
+		return response.data
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+};
+
 
 export default {
 	login,
@@ -68,4 +79,5 @@ export default {
 	searchForPeople,
 	postJob,
     updatePref,
+	requestConnection,
 }

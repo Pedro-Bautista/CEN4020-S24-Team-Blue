@@ -23,3 +23,7 @@ def search_users_by_name(first_name, last_name):
 
 def update_user(user):
     UNIVERSAL.insert_update_object(user)
+
+
+def send_request(sender_user_id, receiver_user_id):
+    UNIVERSAL.create_connect_request(sender_user_id, receiver_user_id)

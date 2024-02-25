@@ -3,7 +3,7 @@
 from flask import jsonify, request
 
 from incollege.annotations.TokenRequired import token_required
-from incollege.services import UserService
+from incollege.services import UserService, AuthService
 
 
 def configure_user_routes(app):
@@ -31,3 +31,14 @@ def configure_user_routes(app):
         result = UserService.update_preference(user_id, preference_name, preference_value)
 
         return jsonify(result)
+    
+    @app.route('/send_request', methods=['POST'])
+    def send_connection_request():
+        data = request.get_json()
+        sender_userID = AuthService.decode_token(data.get('sender_userID'))
+        receiver_userID = data.get('receiver_userID')
+
+        result = UserService.send_connection_request(sender_userID, receiver_userID)
+        return jsonify(result)
+    
+    
