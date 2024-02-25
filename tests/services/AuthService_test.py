@@ -1,19 +1,5 @@
 from unittest import mock
-
 import pytest
-
-import os
-
-import sys
-
-# ---------- path config --------------------------------------------------------------------#
-# Get the parent directory of the current directory (tests/controllers/integration)
-parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-
-# Add the parent directory to the Python path
-sys.path.append(parent_dir)
-# ---------- path config --------------------------------------------------------------------#
-
 
 from incollege.services.AuthService import *
 
@@ -129,7 +115,7 @@ def test_signup_no_password(mock_get_auth_user_count, mock_create_auth_user, moc
     with pytest.raises(AuthException) as e:
         signup('austin', '', 'austin', 'holmes')
 
-    assert str(e.value) == str(AuthException('Username or password are not provided.'))
+        assert e == AuthException('Username or password are not provided.')
 
     mock_create_auth_user.assert_not_called()
     mock_create_user.assert_not_called()
@@ -144,7 +130,7 @@ def test_signup_no_username(mock_get_auth_user_count, mock_create_auth_user, moc
     with pytest.raises(AuthException) as e:
         signup('', 'password', 'austin', 'holmes')
 
-    assert str(e.value) == str(AuthException('Username or password are not provided.'))
+        assert e == AuthException('Username or password are not provided.')
 
     mock_create_auth_user.assert_not_called()
     mock_create_user.assert_not_called()
@@ -159,7 +145,7 @@ def test_signup_invalid_password(mock_get_auth_user_count, mock_create_auth_user
     with pytest.raises(AuthException) as e:
         signup('austin', 'invalid-password', 'austin', 'holmes')
 
-    assert str(e.value) == str(AuthException('Password does not meet requirements.'))
+        assert e == AuthException('Password does not meet requirements.')
 
     mock_create_auth_user.assert_not_called()
     mock_create_user.assert_not_called()
@@ -174,7 +160,7 @@ def test_signup_user_exists(mock_get_auth_user_count, mock_create_auth_user, moc
     with pytest.raises(AuthException) as e:
         signup('austin', 'VAl1d-p@ss', 'austin', 'holmes')
 
-    assert str(e.value) == str(AuthException('Username already exists.'))
+        assert e == AuthException('Username already exists.')
 
     mock_create_auth_user.assert_not_called()
     mock_create_user.assert_not_called()
@@ -189,7 +175,7 @@ def test_signup_no_name(mock_get_auth_user_count, mock_create_auth_user, mock_ge
     with pytest.raises(AuthException) as e:
         signup('austin', 'VAlid-p@ss', '', '')
 
-    assert str(e.value) == str(AuthException('First or last name are not provided.'))
+        assert e == AuthException('First or last name are not provided.')
 
     mock_create_auth_user.assert_not_called()
     mock_create_user.assert_not_called()
@@ -204,7 +190,7 @@ def test_signup_user_limit_reached(mock_get_auth_user_count, mock_create_auth_us
     with pytest.raises(AuthException) as e:
         signup('austin', 'VAl1d-p@ss', 'austin', 'holmes')
 
-    assert str(e.value) == str(AuthException('User limit reached.'))
+        assert e == AuthException('User limit reached.')
 
     mock_create_auth_user.assert_not_called()
     mock_create_user.assert_not_called()

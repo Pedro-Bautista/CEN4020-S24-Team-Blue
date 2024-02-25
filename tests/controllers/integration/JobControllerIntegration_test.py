@@ -5,8 +5,8 @@ import pytest
 from flask import Flask
 
 from incollege.config import Config
-from incollege.controllers.AuthController import *
 from incollege.controllers.ControllerAdvice import configure_controller_advice
+from incollege.controllers.JobController import configure_job_routes
 from incollege.repositories.DBConnector import create_tables
 
 
@@ -14,7 +14,7 @@ from incollege.repositories.DBConnector import create_tables
 def test_client():
     test_app = Flask(__name__)
     test_app.config['TESTING'] = True
-    configure_auth_routes(test_app)
+    configure_job_routes(test_app)
     configure_controller_advice(test_app)
 
     print('Attempting to reset database...')

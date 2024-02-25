@@ -28,6 +28,6 @@ def configure_user_routes(app):
         preference_value = data.get('preference_value')
         user_id = token_data['usr']
 
-        result = UserService.update_preference(user_id, preference_name, preference_value)
+        UserService.update_preference(user_id, preference_name, preference_value)
 
-        return jsonify(result)
+        return jsonify()

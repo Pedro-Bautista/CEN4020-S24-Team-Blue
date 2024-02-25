@@ -15,13 +15,9 @@ def token_required(f):
         if 'token' in request.headers:
             token = request.headers['token']
         if not token:
-            raise AuthException("Authentication token missing.")
-        token_data = None
-        try:
-            token_data = AuthService.decode_token(token)
-        except jwt.ExpiredSignatureError:
-            raise AuthException("Session expired.")
-        except jwt.InvalidTokenError:
-            raise AuthException("Authentication failed.")
+            raise AuthException('Authentication token missing.')
+        token_data = AuthService.decode_token(token)
+        if token_data is None:
+            raise AuthException('Authentication failed.')
         return f(token_data, *args, **kwargs)
     return decorated
