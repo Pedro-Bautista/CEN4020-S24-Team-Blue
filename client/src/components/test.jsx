@@ -8,9 +8,9 @@ export const People = () => {
     const [userFound, setUserFound] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const [data, setData] = useState([]);   // store return array
+    const [data, setData] = useState([]); // Add state to store the data array
 
-	const { user } = AuthData();
+    const { user } = AuthData();
 
     const handleSearch = async () => {
         setLoading(true);
@@ -19,11 +19,11 @@ export const People = () => {
         try {
             const responseData = await api.searchForPeople(searchParams);
             console.log(responseData);
-            setData(responseData.message);
+            setData(responseData); // Store the data array in state
             if (responseData.message) {
                 setUserFound(true);
             }
-			console.log(user);
+            console.log(user);
         } catch (error) {
             console.error("Search error:", error);
             setErrorMessage(error.response ? error.response.data.error.description : "An error occurred");
@@ -33,7 +33,6 @@ export const People = () => {
     };
 
     // const handleConnect = async (userId) => {
-       
     //     console.log("Request sent to ", userId);
     // };
 
@@ -61,46 +60,52 @@ export const People = () => {
             {userFound && (
                 <div className="login-signup-prompt">
                     <p>They are a part of the InCollege system.</p>
-					{!user.token && (
-						<>
-							<p>If you haven't signed in yet, please do so.</p>
-							<Link to="/login"><button>Login</button></Link>
-							<Link to="/signup"><button>Sign Up</button></Link>
-						</>
-					)}
-                
+                    {!user.token && (
+                        <>
+                            <p>If you haven't signed in yet, please do so.</p>
+                            <Link to="/login"><button>Login</button></Link>
+                            <Link to="/signup"><button>Sign Up</button></Link>
+                        </>
+                    )}
                     {user.token && (
-                        
                         <> 
-                            {console.log(data)}
                             <h3>Search Results</h3>
-                            <ul style={{ listStyleType: 'none' }}>
-                                {data.map((user) => (
-                                    <li key={user.user_id} style={{ marginBottom: '10px' }}>
-                                        <span>{user.first_name} {user.last_name}</span>
-                                        {/* <button onClick={() => handleConnect(user.user_id)}>Connect</button>  */}
-                                        <button style={{ marginLeft: '10px' }}> Connect </button>
-                                    </li> 
+                            <ul>
+                                {data.map((user) => ( // Use the stored data array here
+                                    <li key={user.user_id}>
+                                        {user.first_name} {user.last_name}
+                                        <button onClick={() => handleConnect(user.user_id)}>Connect</button>
+                                    </li>
                                 ))}
                             </ul>
                         </>
-                        
                     )}
                 </div>
             )}
             {!userFound && (
                 <div className="login-signup-prompt">
                     <p>They are not part of the InCollege system.</p>
-					{!user.token && (
-						<>
-							<p>If you haven't signed in yet, please do so.</p>
-							<Link to="/login"><button>Login</button></Link>
-							<Link to="/signup"><button>Sign Up</button></Link>
-						</>
-					)}
+                    {!user.token && (
+                        <>
+                            <p>If you haven't signed in yet, please do so.</p>
+                            <Link to="/login"><button>Login</button></Link>
+                            <Link to="/signup"><button>Sign Up</button></Link>
+                        </>
+                    )}
                 </div>
             )}
         </div>
     );
 };
 
+
+
+
+
+const responseData = await api.searchForPeople(searchParams);
+            console.log(responseData);
+            setData(responseData);
+            if (responseData.message) {
+                setUserFound(true);
+            }
+			console.log(user);
