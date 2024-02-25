@@ -38,13 +38,13 @@ CREATE TABLE IF NOT EXISTS friends (
     user2_id TEXT,
     FOREIGN KEY (user1_id) REFERENCES users(user_id),
     FOREIGN KEY (user2_id) REFERENCES users(user_id),
-    PRIMARY KEY (user1, user2)
+    PRIMARY KEY (user1_id, user2_id)
 );
 
 CREATE TABLE IF NOT EXISTS friend_requests (
     request_id INTEGER PRIMARY KEY AUTOINCREMENT,
     sender_user_id TEXT,
-    receiever_id TEXT,
+    receiver_user_id TEXT,
     status TEXT DEFAULT 'pending',
     FOREIGN KEY (sender_user_id) REFERENCES users(user_id),
     FOREIGN KEY (receiver_user_id) REFERENCES users(user_id)
