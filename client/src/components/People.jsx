@@ -32,10 +32,16 @@ export const People = () => {
         }
     };
 
-    // const handleConnect = async (userId) => {
-       
-    //     console.log("Request sent to ", userId);
-    // };
+    const handleConnectRequest = async (userId) => {
+
+        try {
+            await api.requestConnection({ sender_userID: user, receiver_userID: userId });
+            console.log("Request sent to ", userId);
+        } catch (error) {
+            console.error("Connection request error:", error);
+            setErrorMessage(error.response ? error.response.data.error.description : "An error occurred");
+        }
+    };
 
     return (
         <div className="page">
@@ -53,7 +59,7 @@ export const People = () => {
                     value={searchParams.last_name}
                     onChange={(e) => setSearchParams({ ...searchParams, last_name: e.target.value })}
                 />
-                <button onClick={handleSearch} disabled={loading}>
+                <button style={{ marginLeft: '10px' }} onClick={handleSearch} disabled={loading}>
                     {loading ? 'Searching...' : 'Search'}
                 </button>
             </div>
@@ -78,8 +84,7 @@ export const People = () => {
                                 {data.map((user) => (
                                     <li key={user.user_id} style={{ marginBottom: '10px' }}>
                                         <span>{user.first_name} {user.last_name}</span>
-                                        {/* <button onClick={() => handleConnect(user.user_id)}>Connect</button>  */}
-                                        <button style={{ marginLeft: '10px' }}> Connect </button>
+                                        <button style={{ marginLeft: '10px' }} onClick={() => handleConnectRequest(user.user_id)}>Connect</button> 
                                     </li> 
                                 ))}
                             </ul>

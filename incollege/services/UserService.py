@@ -21,4 +21,4 @@ def update_preference(user_id, preference_name, preference_value):
         raise ContentException('No such preference.', 404)
     setattr(user, preference_name, preference_value)
     UserRepository.update_user(user)
-    
+

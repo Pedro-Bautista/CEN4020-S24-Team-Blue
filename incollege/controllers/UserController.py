@@ -19,7 +19,7 @@ def configure_user_routes(app):
 
         return jsonify({'message': users_serial})
 
-
+    
     @app.route('/update_preferences', methods=['POST'])
     @token_required
     def handle_update_pref(token_data):

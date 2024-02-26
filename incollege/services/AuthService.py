@@ -67,6 +67,7 @@ def signup(username, password, first_name, last_name):
     return create_token(user_id, 'users')
 
 
+
 def create_token(user_id, permissions_group):
     payload = {
         'usr': user_id,
@@ -78,6 +79,13 @@ def create_token(user_id, permissions_group):
 
 def decode_token(token):
     try:
-        return jwt.decode(token, Config.SECRET, algorithms=['HS512'])
+        token_bytes = token.encode('utf-8')
+        return jwt.decode(token_bytes, Config.SECRET, algorithms=['HS512'])
     except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
         return None
+
+    
+def decode_token_test(token):
+    val = jwt.decode(token, Config.SECRET, algorithms=['HS512'])
+    return val
+

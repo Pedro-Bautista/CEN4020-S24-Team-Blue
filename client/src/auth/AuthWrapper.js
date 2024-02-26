@@ -8,7 +8,7 @@ export const AuthData = () => useContext(AuthContext)
 
 export const AuthWrapper = () => {
 
-	const [user, setUser] = useState({ token: null, username: null })
+	const [user, setUser] = useState({ token: null, username: null})
 
 	useEffect(() => {
 		const token = localStorage.getItem("token")
