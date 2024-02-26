@@ -8,14 +8,17 @@ export const Connections = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [requests, setRequests] = useState([]);
 
+    const { user } = AuthData();
+
     const toggleTab = () => {
         setIsOpen(!isOpen);
     };
 
     useEffect(() => {
         const fetchData = async () => {
+    
             try {
-                const responseData = await api.getRequests();
+                const responseData = await api.getRequests({});
                 console.log("RESPONSE DATA: ", responseData);
                 setRequests(responseData.message); 
             } catch (error) {

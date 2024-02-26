@@ -8,12 +8,13 @@ UNIVERSAL = UniversalRepositoryHelper("connection_requests", connectionRequest, 
 
 def send_request(request_data):
     UNIVERSAL.create_object(request_data)
+    UNIVERSAL.printTable()
    
 
 def get_requests_list(target_user_id):
     UNIVERSAL.printTable()
-    # print("TARGET PERSON: ", target_user_id)
+    print("TARGET PERSON: ", target_user_id)
     results = UNIVERSAL.get_objects({'receiver_user_id': target_user_id})
-
+    print("RESULTS HERE: ", results)
     return results
     

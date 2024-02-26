@@ -64,7 +64,12 @@ const updatePref = async (prefData) => {
 const requestConnection = async (requestData) => {
 
 	try {
-		const response = await api.post('/send_request', requestData);
+		const response = await api.post('/send_request', requestData, {
+				headers: {
+					'Content-Type': 'application/json',
+					'token': localStorage.getItem('token')
+				}
+			});
 		return response.data
 	} catch (error) {
 		console.log(error);
@@ -73,10 +78,15 @@ const requestConnection = async (requestData) => {
 };
 
 // potentially need data parameter here 
-const getRequests = async () => {
+const getRequests = async (getReqData) => {
 
 	try {
-		const response = await api.post('/get_requests_list');
+		const response = await api.post('/get_requests_list', getReqData, {
+			headers: {
+				'Content-Type': 'application/json',
+				'token': localStorage.getItem('token')
+			}
+		});
 		return response.data
 	} catch (error) {
 		console.log(error);

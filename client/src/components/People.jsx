@@ -12,6 +12,7 @@ export const People = () => {
 
 	const { user } = AuthData();
 
+
     const handleSearch = async () => {
         setLoading(true);
         setUserFound(false);
