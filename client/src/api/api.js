@@ -70,7 +70,7 @@ const requestConnection = async (requestData) => {
 					'token': localStorage.getItem('token')
 				}
 			});
-		return response.data
+		return response.data;
 	} catch (error) {
 		console.log(error);
 		throw error;
@@ -87,13 +87,23 @@ const getRequests = async (getReqData) => {
 				'token': localStorage.getItem('token')
 			}
 		});
-		return response.data
+		return response.data;
 	} catch (error) {
 		console.log(error);
 		throw error;
 	}
 };
 
+const changeConnStatus = async (statusData) => {
+
+	try {
+		const response = await api.post('/change_conn_status', statusData);
+		return response
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+};
 
 export default {
 	login,
@@ -103,4 +113,5 @@ export default {
     updatePref,
 	requestConnection,
 	getRequests,
+	changeConnStatus,
 }

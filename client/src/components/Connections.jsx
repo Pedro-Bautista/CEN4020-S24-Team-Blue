@@ -31,6 +31,29 @@ export const Connections = () => {
         }
     }, [isOpen]);
 
+    const handleAccept = async (requestId) => {
+        // Function to handle accept request
+        try {
+            const status = 'accepted';
+            await api.changeConnStatus({ request_id: requestId, status: status });
+            console.log("Accept request with ID:", requestId);
+        } catch (error) {
+            console.error("Status change request error (acceptance):", error);
+        }
+    };
+
+    const handleReject = async (requestId) => {
+        // Function to handle reject request
+        try {
+            const status = 'rejected';
+            await api.changeConnStatus({ request_id: requestId, status: status });
+            console.log("Rejected request with ID:", requestId);
+        } catch (error) {
+            console.error("Status change request error (rejected):", error);
+        }
+    };
+
+
     return (
         <div className="page">
             <button onClick={toggleTab}>Open Connection Requests</button>
@@ -39,14 +62,20 @@ export const Connections = () => {
                 <div>
                     <h2>Requests</h2>
                     {requests.length > 0 ? (
-                        <ul>
+                        <div>
                             {requests.map((request, index) => (
-                                <li key={index}>{/* Render each request here */}
-                                    <strong>Sender:</strong> {request.sender_user_id}<br />
-                                    <strong>Receiver:</strong> {request.receiver_user_id}<br />
-                                </li>
+                                <div key={index} className="request-box">
+                                    <div className="request-text">
+                                        <strong>Sender:</strong> {request.sender_user_id}<br />
+                                        <strong>Receiver:</strong> {request.receiver_user_id}<br />
+                                    </div>
+                                    <div className="button-container">
+                                        <button onClick={() => handleAccept(request.request_id)}>Accept</button>
+                                        <button onClick={() => handleReject(request.request_id)}>Reject</button>
+                                    </div>
+                                </div>
                             ))}
-                        </ul>
+                        </div>
                     ) : (
                         <p>No connection requests available.</p>
                     )}
@@ -56,3 +85,4 @@ export const Connections = () => {
     );
 
 }
+
