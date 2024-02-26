@@ -22,9 +22,15 @@ def configure_connection_routes(app):
     @token_required
     def handle_requests_list(token_data):
         user_id = token_data['usr']
-        print("USER SEARCHING FOR: ", user_id)
         requests = ConnectionsService.get_requests_list(user_id)
         requests_serial = [vars(request) for request in requests]
         return jsonify({'message': requests_serial})
 
+    @app.route('/change_conn_status', methods=['POST'])
+    def handle_conn_status_change():
+        data = request.get_json()
+        requestID = data.get('request_id')
+        status = data.get('status')
+        ConnectionsService.change_conn_status(requestID, status)
+        return jsonify()
         

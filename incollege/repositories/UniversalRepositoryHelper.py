@@ -120,7 +120,7 @@ class UniversalRepositoryHelper:
         else:
             original_dictionary = create_dict(original[0])
             diff = dict_diff(original_dictionary, mutated_dictionary)
-            self.__update_keys(mutated_primary_keys, diff)
+            self.__update_keys(mutated_primary_keys, diff) 
 
     def delete_entry(self, keys):
         condition_string = create_condition_string(keys)
@@ -154,16 +154,29 @@ class UniversalRepositoryHelper:
         else:
             return []
 
+
+    def updateConnection(self, change_data):
+
+        cursor = get_connection().cursor()
+
+        request_ID = change_data.get('request_id')
+        status = change_data.get('status')
+        query = "UPDATE connections SET status = ? WHERE request_id = ?"
+        cursor.execute(query, (status, request_ID))
+        get_connection().commit()
+        print("Connection updated successfully.")
+
+
     def printTable(self):
         cursor = get_connection().cursor()
-        cursor.execute("SELECT * FROM connection_requests")
+        cursor.execute("SELECT * FROM connections")
 
         # Fetch all rows from the result set
         rows = cursor.fetchall()
 
         # Print column names (optional)
         column_names = [description[0] for description in cursor.description]
-        print("HERE ARE ALL THE PEOPLES")
+        print("\n HERE ARE ALL THE PEOPLES")
         print(column_names)
 
         # Print each row in the result set

@@ -18,13 +18,6 @@ CREATE TABLE IF NOT EXISTS users (
     targeted_adv_pref TEXT
 );
 
-CREATE TABLE IF NOT EXISTS connections (
-    connections_index_id TEXT PRIMARY KEY,
-    connector_id TEXT,
-    connectee_id TEXT,
-    pending TEXT
-);
-
 CREATE TABLE IF NOT EXISTS jobs (
     job_id TEXT PRIMARY KEY,
     owner_user_id TEXT,
@@ -35,15 +28,8 @@ CREATE TABLE IF NOT EXISTS jobs (
     salary REAL
 );
 
--- CREATE TABLE IF NOT EXISTS connections (
---     user1_id TEXT,
---     user2_id TEXT,
---     FOREIGN KEY (user1_id) REFERENCES users(user_id),
---     FOREIGN KEY (user2_id) REFERENCES users(user_id),
---     PRIMARY KEY (user1_id, user2_id)
--- );
 
-CREATE TABLE IF NOT EXISTS connection_requests (
+CREATE TABLE IF NOT EXISTS connections (
     request_id TEXT PRIMARY KEY,
     sender_user_id TEXT,
     receiver_user_id TEXT,
