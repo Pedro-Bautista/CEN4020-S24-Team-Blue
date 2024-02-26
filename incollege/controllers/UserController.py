@@ -31,3 +31,5 @@ def configure_user_routes(app):
         UserService.update_preference(user_id, preference_name, preference_value)
 
         return jsonify()
+    
+    

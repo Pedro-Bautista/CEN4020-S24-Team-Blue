@@ -12,13 +12,14 @@ export const People = () => {
 
 	const { user } = AuthData();
 
+
     const handleSearch = async () => {
         setLoading(true);
         setUserFound(false);
         setErrorMessage("");
         try {
             const responseData = await api.searchForPeople(searchParams);
-            console.log(responseData);
+            console.log("ALL THE PEOPLE: ", responseData);
             setData(responseData.message);
             if (responseData.message) {
                 setUserFound(true);

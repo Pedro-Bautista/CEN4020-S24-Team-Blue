@@ -23,7 +23,7 @@ def create_condition_string(data):
     for key, value in data.items():
         conditions.append(f"{key} = (?)")
 
-    condition_string = " OR ".join(conditions)
+    condition_string = " AND ".join(conditions)
     return condition_string
 
 
@@ -33,6 +33,19 @@ def create_dict(obj):
 
 def dict_diff(dict1, dict2):
     return {key: dict2[key] for key in dict1 if dict1[key] != dict2[key]}
+
+
+
+####### temp v2 for partial return #############################
+def create_condition_string2(data):
+    conditions = []
+    for key, value in data.items():
+        conditions.append(f"{key} = (?)")
+
+    condition_string = " OR ".join(conditions)
+    return condition_string
+
+
 
 
 class UniversalRepositoryHelper:
@@ -98,10 +111,7 @@ class UniversalRepositoryHelper:
         get_connection().commit()
 
     def insert_update_object(self, mutated):
-        print("MADE IT TO STEP 2::::::::::::::::::::: ", mutated)
         mutated_dictionary = create_dict(mutated)
-
-        print("MADE IT TO STEP 3::::::::::::::::::::: ")
         mutated_primary_keys = \
             {attr: mutated_dictionary[attr] for attr in self.PRIMARY_KEYS if attr in mutated_dictionary}
         original = self.get_objects(mutated_primary_keys)
@@ -122,15 +132,42 @@ class UniversalRepositoryHelper:
     def __convert_to_instance(self, data):
         return self.CLASS(**data)
     
+
+
+
+
+    ####### temp v2 for partial return #############################
     
-    def create_connect_request(self, sender_user_id, receiver_user_id):
+    def get_objects2(self, keys, limit=20, offset=0):
+        condition_string = create_condition_string2(keys)
+        query = f"SELECT * FROM {self.TABLE_NAME} WHERE {condition_string} LIMIT (?) OFFSET (?)"
 
         cursor = get_connection().cursor()
-        cursor.execute("INSERT INTO connection_requests (sender_user_id, receiver_user_id) VALUES (?, ?)", (sender_user_id, receiver_user_id))
-        get_connection().commit()
+        cursor.execute(query, create_tuple(keys) + tuple([limit, offset]))
 
-        request_id = cursor.lastrowid
+        results = cursor.fetchall()
+
+        if results:
+            column_names = [description[0] for description in cursor.description]
+            result_list = [dict(zip(column_names, row)) for row in results]
+            return [self.__convert_to_instance(data) for data in result_list]
+        else:
+            return []
+
+    def printTable(self):
+        cursor = get_connection().cursor()
+        cursor.execute("SELECT * FROM connection_requests")
+
+        # Fetch all rows from the result set
+        rows = cursor.fetchall()
+
+        # Print column names (optional)
+        column_names = [description[0] for description in cursor.description]
+        print("HERE ARE ALL THE PEOPLES")
+        print(column_names)
+
+        # Print each row in the result set
+        for row in rows:
+            print(row)
+
         
-        return request_id
-
-       

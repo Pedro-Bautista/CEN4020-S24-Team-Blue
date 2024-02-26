@@ -5,6 +5,7 @@ import { Signup } from "./Signup"
 import { Jobs } from "./Jobs"
 import { People } from "./People"
 import { Learn } from "./Learn"
+import { Connections } from "./Connections"
 
 // Epic 3 added links ///////////////////////
 // IMPORTANT LINKS
@@ -40,6 +41,7 @@ export const nav = [
 	{ path:     "/people",   name: "People",      element: <People />,     isMenu: true,     isPrivate: false  },
 	{ path:     "/learn",    name: "Learn",       element: <Learn />,      isMenu: true,     isPrivate: true   },
 	{ path:     "/profile",  name: "Profile",     element: <Profile />,    isMenu: true,     isPrivate: true   },
+	{ path:     "/connections",  name: "Connections",     element: <Connections />,    isMenu: true,     isPrivate: true   },
 	{ path: 	"/important_links/Accessibility",	name: "Accessibility", 		element: <Accessibility />,		isMenu: false, 	isPrivate: false},
 	{ path: 	"/important_links/BrandPolicy",	name: "Brand Policy", 		element: <BrandPolicy />,		isMenu: false, 	isPrivate: false},
 	{ path: 	"/important_links/CookiePolicy",	name: "Cookie Policy", 		element: <CookiePolicy />,		isMenu: false, 	isPrivate: false},

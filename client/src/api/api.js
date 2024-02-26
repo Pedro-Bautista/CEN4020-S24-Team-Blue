@@ -64,9 +64,29 @@ const updatePref = async (prefData) => {
 const requestConnection = async (requestData) => {
 
 	try {
-		console.log("GOT TO HERE: ", requestData)
-		const response = await api.post('/send_request', requestData);
-		console.log("RETURN DATA: ", response.data)
+		const response = await api.post('/send_request', requestData, {
+				headers: {
+					'Content-Type': 'application/json',
+					'token': localStorage.getItem('token')
+				}
+			});
+		return response.data
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+};
+
+// potentially need data parameter here 
+const getRequests = async (getReqData) => {
+
+	try {
+		const response = await api.post('/get_requests_list', getReqData, {
+			headers: {
+				'Content-Type': 'application/json',
+				'token': localStorage.getItem('token')
+			}
+		});
 		return response.data
 	} catch (error) {
 		console.log(error);
@@ -82,4 +102,5 @@ export default {
 	postJob,
     updatePref,
 	requestConnection,
+	getRequests,
 }

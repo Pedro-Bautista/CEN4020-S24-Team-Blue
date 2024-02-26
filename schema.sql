@@ -35,16 +35,16 @@ CREATE TABLE IF NOT EXISTS jobs (
     salary REAL
 );
 
-CREATE TABLE IF NOT EXISTS connections (
-    user1_id TEXT,
-    user2_id TEXT,
-    FOREIGN KEY (user1_id) REFERENCES users(user_id),
-    FOREIGN KEY (user2_id) REFERENCES users(user_id),
-    PRIMARY KEY (user1_id, user2_id)
-);
+-- CREATE TABLE IF NOT EXISTS connections (
+--     user1_id TEXT,
+--     user2_id TEXT,
+--     FOREIGN KEY (user1_id) REFERENCES users(user_id),
+--     FOREIGN KEY (user2_id) REFERENCES users(user_id),
+--     PRIMARY KEY (user1_id, user2_id)
+-- );
 
 CREATE TABLE IF NOT EXISTS connection_requests (
-    request_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    request_id TEXT PRIMARY KEY,
     sender_user_id TEXT,
     receiver_user_id TEXT,
     status TEXT DEFAULT 'pending',
