@@ -98,10 +98,7 @@ class UniversalRepositoryHelper:
         get_connection().commit()
 
     def insert_update_object(self, mutated):
-        print("MADE IT TO STEP 2::::::::::::::::::::: ", mutated)
         mutated_dictionary = create_dict(mutated)
-
-        print("MADE IT TO STEP 3::::::::::::::::::::: ")
         mutated_primary_keys = \
             {attr: mutated_dictionary[attr] for attr in self.PRIMARY_KEYS if attr in mutated_dictionary}
         original = self.get_objects(mutated_primary_keys)
@@ -123,14 +120,40 @@ class UniversalRepositoryHelper:
         return self.CLASS(**data)
     
     
-    def create_connect_request(self, sender_user_id, receiver_user_id):
 
-        cursor = get_connection().cursor()
-        cursor.execute("INSERT INTO connection_requests (sender_user_id, receiver_user_id) VALUES (?, ?)", (sender_user_id, receiver_user_id))
-        get_connection().commit()
 
-        request_id = cursor.lastrowid
+
+    # to delete, but not sure why get objects is not working
+    # def get_connection_requests(self, target_user_id):
         
-        return request_id
+    #     cursor = get_connection().cursor()
+    #     cursor.execute("SELECT * FROM connection_requests WHERE receiver_user_id = ?", (target_user_id,))
+        
+    #     results = cursor.fetchall()
+    #     print("CURRENT RESULTS: ", results)
+    #     if results:
+    #         column_names = [description[0] for description in cursor.description]
+    #         result_list = [dict(zip(column_names, row)) for row in results]
+    #         return [self.__convert_to_instance(data) for data in result_list]
+    #     else:
+    #         return []
+        
+        
 
-       
+    def printTable(self):
+        cursor = get_connection().cursor()
+        cursor.execute("SELECT * FROM connection_requests")
+
+        # Fetch all rows from the result set
+        rows = cursor.fetchall()
+
+        # Print column names (optional)
+        column_names = [description[0] for description in cursor.description]
+        print("HERE ARE ALL THE PEOPLES")
+        print(column_names)
+
+        # Print each row in the result set
+        for row in rows:
+            print(row)
+
+        

@@ -18,7 +18,7 @@ export const People = () => {
         setErrorMessage("");
         try {
             const responseData = await api.searchForPeople(searchParams);
-            console.log(responseData);
+            console.log("ALL THE PEOPLE: ", responseData);
             setData(responseData.message);
             if (responseData.message) {
                 setUserFound(true);
