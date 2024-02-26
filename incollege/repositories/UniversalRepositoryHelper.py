@@ -23,7 +23,7 @@ def create_condition_string(data):
     for key, value in data.items():
         conditions.append(f"{key} = (?)")
 
-    condition_string = " AND ".join(conditions)
+    condition_string = " OR ".join(conditions)
     return condition_string
 
 
