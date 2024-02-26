@@ -23,7 +23,7 @@ def create_condition_string(data):
     for key, value in data.items():
         conditions.append(f"{key} = (?)")
 
-    condition_string = " OR ".join(conditions)
+    condition_string = " AND ".join(conditions)
     return condition_string
 
 
@@ -33,6 +33,19 @@ def create_dict(obj):
 
 def dict_diff(dict1, dict2):
     return {key: dict2[key] for key in dict1 if dict1[key] != dict2[key]}
+
+
+
+####### temp v2 for partial return #############################
+def create_condition_string2(data):
+    conditions = []
+    for key, value in data.items():
+        conditions.append(f"{key} = (?)")
+
+    condition_string = " OR ".join(conditions)
+    return condition_string
+
+
 
 
 class UniversalRepositoryHelper:
@@ -119,26 +132,27 @@ class UniversalRepositoryHelper:
     def __convert_to_instance(self, data):
         return self.CLASS(**data)
     
+
+
+
+
+    ####### temp v2 for partial return #############################
     
+    def get_objects2(self, keys, limit=20, offset=0):
+        condition_string = create_condition_string2(keys)
+        query = f"SELECT * FROM {self.TABLE_NAME} WHERE {condition_string} LIMIT (?) OFFSET (?)"
 
+        cursor = get_connection().cursor()
+        cursor.execute(query, create_tuple(keys) + tuple([limit, offset]))
 
+        results = cursor.fetchall()
 
-    # to delete, but not sure why get objects is not working
-    # def get_connection_requests(self, target_user_id):
-        
-    #     cursor = get_connection().cursor()
-    #     cursor.execute("SELECT * FROM connection_requests WHERE receiver_user_id = ?", (target_user_id,))
-        
-    #     results = cursor.fetchall()
-    #     print("CURRENT RESULTS: ", results)
-    #     if results:
-    #         column_names = [description[0] for description in cursor.description]
-    #         result_list = [dict(zip(column_names, row)) for row in results]
-    #         return [self.__convert_to_instance(data) for data in result_list]
-    #     else:
-    #         return []
-        
-        
+        if results:
+            column_names = [description[0] for description in cursor.description]
+            result_list = [dict(zip(column_names, row)) for row in results]
+            return [self.__convert_to_instance(data) for data in result_list]
+        else:
+            return []
 
     def printTable(self):
         cursor = get_connection().cursor()
