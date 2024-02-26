@@ -1,5 +1,5 @@
 class User:
-    def __init__(self, user_id, username, first_name, last_name, university, major, language_pref='english',
+    def __init__(self, user_id, username, first_name, last_name, university='', major='', language_pref='english',
                  email_pref=1, sms_pref=1,
                  targeted_adv_pref=1):
         self.user_id = user_id

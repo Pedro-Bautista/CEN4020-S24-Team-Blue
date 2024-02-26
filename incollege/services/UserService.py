@@ -2,10 +2,11 @@ from incollege.exceptions.ContentException import ContentException
 from incollege.repositories import UserRepository
 
 
-def find_users_by_name(first_name, last_name):
-    if not first_name or not last_name:
+def find_users_by_name(first_name, last_name, university, major):
+    # Using and instead of Or because we only need one parameter at a time to search.
+    if not first_name and not last_name and not university and not major:
         raise ContentException('Required search parameters not provided.', 400)
-    result = UserRepository.search_users_by_name(first_name, last_name)
+    result = UserRepository.search_users_by_name(first_name, last_name, university, major)
     if not result:
         raise ContentException('No matching users found.', 404)
     return result
@@ -21,4 +22,3 @@ def update_preference(user_id, preference_name, preference_value):
         raise ContentException('No such preference.', 404)
     setattr(user, preference_name, preference_value)
     UserRepository.update_user(user)
-
