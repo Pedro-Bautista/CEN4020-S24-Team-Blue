@@ -25,5 +25,5 @@ def update_user(user):
     UNIVERSAL.insert_update_object(user)
 
 
-def send_request(sender_user_id, receiver_user_id):
-    UNIVERSAL.create_connect_request(sender_user_id, receiver_user_id)
+# def send_request(sender_user_id, receiver_user_id):
+#     UNIVERSAL.create_connect_request(sender_user_id, receiver_user_id)

@@ -33,16 +33,13 @@ export const People = () => {
     };
 
     const handleConnectRequest = async (userId) => {
-        
-        console.log("checking my account ", user);
 
         try {
-            await api.requestConnection({ sender_userID: user.user_id, receiver_userID: userId });
+            await api.requestConnection({ sender_userID: user, receiver_userID: userId });
             console.log("Request sent to ", userId);
         } catch (error) {
             console.error("Connection request error:", error);
             setErrorMessage(error.response ? error.response.data.error.description : "An error occurred");
-            // Handle error
         }
     };
 
@@ -88,7 +85,6 @@ export const People = () => {
                                     <li key={user.user_id} style={{ marginBottom: '10px' }}>
                                         <span>{user.first_name} {user.last_name}</span>
                                         <button style={{ marginLeft: '10px' }} onClick={() => handleConnectRequest(user.user_id)}>Connect</button> 
-                                        {/* <button style={{ marginLeft: '10px' }}> Connect </button> */}
                                     </li> 
                                 ))}
                             </ul>

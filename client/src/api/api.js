@@ -64,7 +64,9 @@ const updatePref = async (prefData) => {
 const requestConnection = async (requestData) => {
 
 	try {
+		console.log("GOT TO HERE: ", requestData)
 		const response = await api.post('/send_request', requestData);
+		console.log("RETURN DATA: ", response.data)
 		return response.data
 	} catch (error) {
 		console.log(error);

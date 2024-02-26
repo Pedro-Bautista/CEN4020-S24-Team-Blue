@@ -18,12 +18,3 @@ def update_preference(user_id, preference_name, preference_value):
     setattr(user, preference_name, preference_value)
     UserRepository.update_user(user)
 
-def send_connection_request(sender_user_id, receiver_user_id):
-    # should we double check the users exist? 
-    # result = UserRepository.send_request(sender_user_id, receiver_user_id)
-
-    # if not result:
-    #     raise ContentException("Request failed to send.", 404)
-
-    UserRepository.send_request(sender_user_id, receiver_user_id)
-    

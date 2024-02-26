@@ -1,6 +1,7 @@
 import copy
 
 from incollege.repositories.DBConnector import get_connection
+from incollege.entity.RequestConn import connectionRequest
 
 
 def generate_input_parameters(dictionary):
@@ -97,7 +98,10 @@ class UniversalRepositoryHelper:
         get_connection().commit()
 
     def insert_update_object(self, mutated):
+        print("MADE IT TO STEP 2::::::::::::::::::::: ", mutated)
         mutated_dictionary = create_dict(mutated)
+
+        print("MADE IT TO STEP 3::::::::::::::::::::: ")
         mutated_primary_keys = \
             {attr: mutated_dictionary[attr] for attr in self.PRIMARY_KEYS if attr in mutated_dictionary}
         original = self.get_objects(mutated_primary_keys)
@@ -120,9 +124,13 @@ class UniversalRepositoryHelper:
     
     
     def create_connect_request(self, sender_user_id, receiver_user_id):
-        connect_request_data = {
-            'sender_user_id': sender_user_id,
-            'receiver_user_id': receiver_user_id
-        }
 
-        self.create_object(connect_request_data)
+        cursor = get_connection().cursor()
+        cursor.execute("INSERT INTO connection_requests (sender_user_id, receiver_user_id) VALUES (?, ?)", (sender_user_id, receiver_user_id))
+        get_connection().commit()
+
+        request_id = cursor.lastrowid
+        
+        return request_id
+
+       

@@ -32,13 +32,6 @@ def configure_user_routes(app):
 
         return jsonify(result)
     
-    @app.route('/send_request', methods=['POST'])
-    def send_connection_request():
-        data = request.get_json()
-        sender_userID = AuthService.decode_token(data.get('sender_userID'))
-        receiver_userID = data.get('receiver_userID')
 
-        result = UserService.send_connection_request(sender_userID, receiver_userID)
-        return jsonify(result)
     
     
