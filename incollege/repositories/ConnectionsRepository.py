@@ -31,7 +31,7 @@ def change_conn_status(change_data):
         print("INSERTED THE UPDATE")
 
     elif change_data.get('status') == 'rejected':
-        # if removing
+        # if removing bc rejected
         keys = {'request_id': requestID}
         UNIVERSAL.delete_entry(keys)
     
