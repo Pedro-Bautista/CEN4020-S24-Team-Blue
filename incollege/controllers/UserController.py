@@ -3,7 +3,7 @@
 from flask import jsonify, request
 
 from incollege.annotations.TokenRequired import token_required
-from incollege.services import UserService, AuthService
+from incollege.services import UserService
 
 
 def configure_user_routes(app):
@@ -19,7 +19,7 @@ def configure_user_routes(app):
 
         return jsonify({'message': users_serial})
 
-
+    
     @app.route('/update_preferences', methods=['POST'])
     @token_required
     def handle_update_pref(token_data):
@@ -28,10 +28,6 @@ def configure_user_routes(app):
         preference_value = data.get('preference_value')
         user_id = token_data['usr']
 
-        result = UserService.update_preference(user_id, preference_name, preference_value)
+        UserService.update_preference(user_id, preference_name, preference_value)
 
-        return jsonify(result)
-    
-
-    
-    
+        return jsonify()
