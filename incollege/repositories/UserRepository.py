@@ -17,13 +17,12 @@ def get_user(user_id):
         return result[0]
 
 
-def search_users_by_name(first_name, last_name):
-    return UNIVERSAL.get_objects({'first_name': first_name, 'last_name': last_name})
+def search_users_by_name(first_name, last_name, university, major):
+    return UNIVERSAL.get_objects({'first_name': first_name, 'last_name': last_name, 'university': university, 'major': major})
 
 
 def update_user(user):
     UNIVERSAL.insert_update_object(user)
-
 
 # def send_request(sender_user_id, receiver_user_id):
 #     UNIVERSAL.create_connect_request(sender_user_id, receiver_user_id)

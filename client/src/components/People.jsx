@@ -4,7 +4,7 @@ import api from '../api/api';
 import { AuthData } from "../auth/AuthWrapper"
 
 export const People = () => {
-    const [searchParams, setSearchParams] = useState({ first_name: "", last_name: "" });
+    const [searchParams, setSearchParams] = useState({ first_name: "", last_name: "" ,university:"", major:""});
     const [userFound, setUserFound] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -51,15 +51,27 @@ export const People = () => {
                     type="text"
                     placeholder="First Name"
                     value={searchParams.first_name}
-                    onChange={(e) => setSearchParams({ ...searchParams, first_name: e.target.value })}
+                    onChange={(e) => setSearchParams({...searchParams, first_name: e.target.value})}
                 />
                 <input
                     type="text"
                     placeholder="Last Name"
                     value={searchParams.last_name}
-                    onChange={(e) => setSearchParams({ ...searchParams, last_name: e.target.value })}
+                    onChange={(e) => setSearchParams({...searchParams, last_name: e.target.value})}
                 />
-                <button style={{ marginLeft: '10px' }} onClick={handleSearch} disabled={loading}>
+                <input
+                    type="text"
+                    placeholder="University"
+                    value={searchParams.university}
+                    onChange={(e) => setSearchParams({...searchParams, university: e.target.value})}
+                />
+                <input
+                    type="text"
+                    placeholder="Major"
+                    value={searchParams.major}
+                    onChange={(e) => setSearchParams({...searchParams, major: e.target.value})}
+                />
+                <button style={{marginLeft: '10px'}} onClick={handleSearch} disabled={loading}>
                     {loading ? 'Searching...' : 'Search'}
                 </button>
             </div>
@@ -67,8 +79,8 @@ export const People = () => {
             {userFound && (
                 <div className="login-signup-prompt">
                     <p>They are a part of the InCollege system.</p>
-					{!user.token && (
-						<>
+                    {!user.token && (
+                        <>
 							<p>If you haven't signed in yet, please do so.</p>
 							<Link to="/login"><button>Login</button></Link>
 							<Link to="/signup"><button>Sign Up</button></Link>
@@ -83,7 +95,7 @@ export const People = () => {
                             <ul style={{ listStyleType: 'none' }}>
                                 {data.map((user) => (
                                     <li key={user.user_id} style={{ marginBottom: '10px' }}>
-                                        <span>{user.first_name} {user.last_name}</span>
+                                        <span>{user.first_name} {user.last_name} {user.university} {user.major}</span>
                                         <button style={{ marginLeft: '10px' }} onClick={() => handleConnectRequest(user.user_id)}>Connect</button> 
                                     </li> 
                                 ))}
