@@ -13,6 +13,9 @@ def send_request(request_data):
 def get_requests_list(target_user_id):
     results = UNIVERSAL.get_objects({'receiver_user_id': target_user_id, 'status': 'pending'})
     return results
+def get_accepted_list(target_user_id):
+    results = UNIVERSAL.get_objects({'receiver_user_id':target_user_id, 'status': 'accepted'})
+    return results
     
 def change_conn_status(change_data):
 

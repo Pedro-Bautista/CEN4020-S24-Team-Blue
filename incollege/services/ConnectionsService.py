@@ -22,6 +22,12 @@ def get_requests_list(target_user_id):
         raise ContentException("Failure to retrieve connection requests.", 404)
     return result
 
+def get_accepted_list(target_user_id):
+    result = ConnectionsRepository.get_accepted_list(target_user_id)
+    if not result:
+        raise ContentException("Fail to retrieve,no accepted connections.", 404)
+    return result
+
 def change_conn_status(requestId, status):
     change_data = {
         "request_id": requestId,
