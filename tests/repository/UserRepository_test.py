@@ -63,7 +63,7 @@ def test_search_users_by_name_none(mock_get_connection):
     mock_cursor.fetchall.return_value = ()
     mock_cursor.description = user_description
 
-    result = search_users_by_name(test_user.first_name, test_user.last_name)
+    result = search_users(test_user.first_name, test_user.last_name, test_user.university, test_user.major)
 
     assert len(result) == 0
 
@@ -75,7 +75,7 @@ def test_search_users_by_name(mock_get_connection):
     mock_cursor.fetchall.return_value = [test_user_data, test_user_data2]
     mock_cursor.description = user_description
 
-    result = search_users_by_name(test_user.first_name, test_user.last_name)
+    result = search_users(test_user.first_name, test_user.last_name, test_user.university, test_user.major)
 
     assert len(result) == 2
 

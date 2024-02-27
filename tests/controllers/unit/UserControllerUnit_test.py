@@ -26,8 +26,8 @@ def test_client():
             yield test_client
 
 
-@mock.patch('incollege.services.UserService.find_users_by_name', return_value=[test_user1, test_user2])
-def test_handle_user_search_success(mock_find_users_by_name, test_client):
+@mock.patch('incollege.services.UserService.find_users', return_value=[test_user1, test_user2])
+def test_handle_user_search_success(mock_find_users, test_client):
     data = {'first_name': 'some_first', 'last_name': 'some_last'}
     response = test_client.post('/user_search', json=data)
 
@@ -35,9 +35,9 @@ def test_handle_user_search_success(mock_find_users_by_name, test_client):
     assert get_response_message(response) == [vars(test_user1), vars(test_user2)]
 
 
-@mock.patch('incollege.services.UserService.find_users_by_name',
+@mock.patch('incollege.services.UserService.find_users',
             side_effect=ContentException('No matching users found.', 404))
-def test_handle_user_search_error(mock_find_users_by_name, test_client):
+def test_handle_user_search_error(mock_find_users, test_client):
     data = {'first_name': 'some_first', 'last_name': 'some_last'}
     response = test_client.post('/user_search', json=data)
 

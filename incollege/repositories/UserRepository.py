@@ -17,10 +17,10 @@ def get_user(user_id):
         return result[0]
 
 
-def search_users_by_name(first_name, last_name, university, major):
-
+def search_users(first_name, last_name, university, major):
     #### CALLING GET OBJ 2 FOR TEMPORARY PARTIAL RETURN 
-    return UNIVERSAL.get_objects2({'first_name': first_name, 'last_name': last_name, 'university': university, 'major': major})
+    return UNIVERSAL.get_objects2({'first_name': first_name, 'last_name': last_name,
+                                   'university': university, 'major': major})
 
 
 def update_user(user):
