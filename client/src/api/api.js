@@ -94,6 +94,21 @@ const getRequests = async (getReqData) => {
 	}
 };
 
+const getAccepted = async (AcceptedData) =>{
+	try{
+		const response= await api.post('/get_accepted_list',AcceptedData,{
+			headers: {
+				'Content-Type': 'application/json',
+				'token': localStorage.getItem('token')
+			}
+		});
+		return response.data
+	}catch (error){
+		console.log(error);
+		throw error;
+	}
+}
+
 const changeConnStatus = async (statusData) => {
 
 	try {
@@ -113,5 +128,6 @@ export default {
     updatePref,
 	requestConnection,
 	getRequests,
+	getAccepted,
 	changeConnStatus,
 }
