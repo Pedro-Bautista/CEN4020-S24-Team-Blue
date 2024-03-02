@@ -34,11 +34,11 @@ def get_response_message(response):
 
 @mock.patch('incollege.services.ConnectionsService.send_connection_request')
 def test_send_connection_request_success(mock_send_request, test_client):
-    receiver_userID = 'receiver_user_id'
-    response = test_client.post('/send_request', json={'receiver_userID': receiver_userID}, headers=test_jwt_header)
+    recipient_user_id = 'some_recipient_user_id'
+    response = test_client.post('/send_request', json={'recipient_user_id': recipient_user_id}, headers=test_jwt_header)
 
     assert response.status_code == 200
-    mock_send_request.assert_called_once_with('some_user_id', receiver_userID)
+    mock_send_request.assert_called_once_with('some_user_id', recipient_user_id)
 
 
 @mock.patch('incollege.services.ConnectionsService.get_pending_requests_by_recipient_user_id',

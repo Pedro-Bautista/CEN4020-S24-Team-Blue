@@ -62,7 +62,7 @@ def test_get_requests_by_sender_and_recipient_user_id(mock_get_connection):
     result = get_request_by_sender_and_recipient_user_id(test_connection_request.sender_user_id,
                                                          test_connection_request.recipient_user_id)
 
-    assert len(result) == 1
+    assert vars(result) == vars(test_connection_request)
 
 
 @mock.patch('incollege.repositories.UniversalRepositoryHelper.get_connection')
