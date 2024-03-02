@@ -9,8 +9,6 @@ import incollege.config.Config as Config
 import hashlib
 import re
 import incollege.repositories.AuthRepository as AuthRepository
-import incollege.repositories.JobRepository
-import incollege.repositories.UserRepository
 from incollege.entity.AuthUser import AuthUser
 from incollege.entity.User import User
 from incollege.exceptions.AuthException import AuthException
@@ -67,7 +65,6 @@ def signup(username, password, first_name, last_name):
     return create_token(user_id, 'users')
 
 
-
 def create_token(user_id, permissions_group):
     payload = {
         'usr': user_id,
@@ -83,9 +80,3 @@ def decode_token(token):
         return jwt.decode(token_bytes, Config.SECRET, algorithms=['HS512'])
     except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
         return None
-
-    
-def decode_token_test(token):
-    val = jwt.decode(token, Config.SECRET, algorithms=['HS512'])
-    return val
-

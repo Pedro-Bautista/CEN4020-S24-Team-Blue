@@ -7,23 +7,30 @@ from incollege.repositories.UniversalRepositoryHelper import UniversalRepository
 UNIVERSAL = UniversalRepositoryHelper("connections", ConnectionRequest, ['sender_user_id', 'recipient_user_id'])
 
 
-def send_request(connection_request):
+def create_connection_request(connection_request):
     UNIVERSAL.create_object(connection_request)
 
 
+def get_requests_by_sender_and_recipient_user_id(sender_user_id, recipient_user_id):
+    results = UNIVERSAL.get_objects_intersection({'sender_user_id': sender_user_id,
+                                                  'recipient_user_id': recipient_user_id})
+    if results:
+        return results[0]
+
+
 def get_pending_requests_by_recipient_id(recipient_user_id):
-    results = UNIVERSAL.get_objects_intersection({'receiver_user_id': recipient_user_id,
+    results = UNIVERSAL.get_objects_intersection({'recipient_user_id': recipient_user_id,
                                                   'status': ConnectionStatus.PENDING})
     return results
 
 
 def get_pending_requests_by_sender_id(sender_user_id):
-    results = UNIVERSAL.get_objects_intersection({'receiver_user_id': sender_user_id,
+    results = UNIVERSAL.get_objects_intersection({'recipient_user_id': sender_user_id,
                                                   'status': ConnectionStatus.PENDING})
     return results
 
 
-def get_friends_by_user_id(user_id):
+def get_connections_by_user_id(user_id):
     result_receiver = UNIVERSAL.get_objects_intersection({'recipient_user_id': user_id,
                                                           'status': ConnectionStatus.ACCEPTED})
     result_sender = UNIVERSAL.get_objects_intersection({'sender_user_id': user_id,

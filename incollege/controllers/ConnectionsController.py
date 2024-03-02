@@ -22,7 +22,7 @@ def configure_connection_routes(app):
     @token_required
     def handle_requests_list(token_data):
         user_id = token_data['usr']
-        requests = ConnectionsService.get_requests_list(user_id)
+        requests = ConnectionsService.get_pending_requests_by_recipient_user_id(user_id)
         requests_serial = [vars(request) for request in requests]
         return jsonify({'message': requests_serial})
 
@@ -30,7 +30,7 @@ def configure_connection_routes(app):
     @token_required
     def handle_accepted_list(token_data):
         user_id = token_data['usr']
-        requests = ConnectionsService.get_accepted_list(user_id)
+        requests = ConnectionsService.get_connections_by_user_id(user_id)
         requests_serial = [vars(request) for request in requests]
         return jsonify({'message': requests_serial})
 
