@@ -13,15 +13,18 @@ def generate_input_parameters(dictionary):
     return placeholders_string, keys_string
 
 
-def create_tuple(input_dict):
-    return tuple(input_dict.values())
+def create_tuple(input_dict, fuzzy=False):
+    if fuzzy:
+        return tuple(f'%{value}%' for value in input_dict.values())
+    else:
+        return tuple(input_dict.values())
 
 
 def create_condition_string(data, joiner='AND', fuzzy=False):
     conditions = []
     for key, value in data.items():
         if fuzzy:
-            condition = f'{key} LIKE (%?%)'
+            condition = f'{key} LIKE (?)'
         else:
             condition = f'{key} = (?)'
         conditions.append(condition)
@@ -77,11 +80,11 @@ class UniversalRepositoryHelper:
         result = cursor.fetchone()
         return result[0]
 
-    def __get_objects_conditional(self, condition_string, keys, limit=20, offset=0):
+    def __get_objects_conditional(self, condition_string, keys, limit=20, offset=0, fuzzy=False):
         query = f"SELECT * FROM {self.TABLE_NAME} WHERE {condition_string} LIMIT (?) OFFSET (?)"
 
         cursor = get_connection().cursor()
-        cursor.execute(query, create_tuple(keys) + tuple([limit, offset]))
+        cursor.execute(query, create_tuple(keys, fuzzy) + tuple([limit, offset]))
 
         results = cursor.fetchall()
 
@@ -94,7 +97,7 @@ class UniversalRepositoryHelper:
 
     def get_objects_fuzzy(self, keys, limit=20, offset=0):
         condition_string = create_condition_string(keys, 'AND', True)
-        return self.__get_objects_conditional(condition_string, keys, limit, offset)
+        return self.__get_objects_conditional(condition_string, keys, limit, offset, True)
 
     def get_objects_intersection(self, keys, limit=20, offset=0):
         condition_string = create_condition_string(keys, 'AND', False)

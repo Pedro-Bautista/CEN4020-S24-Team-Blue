@@ -46,8 +46,8 @@ def test_get_requests_by_sender_and_recipient_user_id_none(mock_get_connection):
     mock_cursor.fetchall.return_value = ()
     mock_cursor.description = connection_request_description
 
-    result = get_requests_by_sender_and_recipient_user_id(test_connection_request.sender_user_id,
-                                                          test_connection_request.recipient_user_id)
+    result = get_request_by_sender_and_recipient_user_id(test_connection_request.sender_user_id,
+                                                         test_connection_request.recipient_user_id)
 
     assert result is None
 
@@ -59,8 +59,8 @@ def test_get_requests_by_sender_and_recipient_user_id(mock_get_connection):
     mock_cursor.fetchall.return_value = test_connection_request_data
     mock_cursor.description = connection_request_description
 
-    result = get_requests_by_sender_and_recipient_user_id(test_connection_request.sender_user_id,
-                                                          test_connection_request.recipient_user_id)
+    result = get_request_by_sender_and_recipient_user_id(test_connection_request.sender_user_id,
+                                                         test_connection_request.recipient_user_id)
 
     assert len(result) == 1
 
