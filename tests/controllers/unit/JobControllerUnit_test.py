@@ -16,7 +16,7 @@ test_invalid_job = Job('some_job_id', 'some_owner_user_id', '', 'some_desc', 'so
                        'some_location', 123456)
 test_job_data = vars(test_job)
 test_invalid_job_data = vars(test_invalid_job)
-test_jwt_header = {'token': AuthJWT('some_user_id', 'user').encode}
+test_jwt_header = {'token': AuthJWT('some_user_id', 'user').encode()}
 test_invalid_jwt_header = {'token': 'invalid_token'}
 
 

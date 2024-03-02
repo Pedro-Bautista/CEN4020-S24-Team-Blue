@@ -7,7 +7,7 @@ from incollege.config import Config
 
 class AuthJWT:
 
-    def __init__(self, user_id, permissions_group):
+    def __init__(self, user_id=None, permissions_group=None):
         self.user_id = user_id
         self.expiry_datetime = datetime.utcnow() + timedelta(hours=Config.TOKEN_DURATION)
         self.permissions_group = permissions_group

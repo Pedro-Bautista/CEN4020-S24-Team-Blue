@@ -22,11 +22,11 @@ def configure_user_routes(app):
 
     @app.route('/update_preferences', methods=['POST'])
     @token_required
-    def handle_update_pref(token_data):
+    def handle_update_pref(token):
         data = request.get_json()
         preference_name = data.get('preference_name')
         preference_value = data.get('preference_value')
-        user_id = token_data['usr']
+        user_id = token.user_id
 
         UserService.update_preference(user_id, preference_name, preference_value)
 

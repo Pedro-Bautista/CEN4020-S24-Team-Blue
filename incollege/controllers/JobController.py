@@ -10,9 +10,9 @@ from incollege.services import JobService
 def configure_job_routes(app):
     @app.route('/job_post', methods=['POST'])
     @token_required
-    def handle_job_post(token_data):
+    def handle_job_post(token):
         data = request.get_json()
-        user_id = token_data['usr']
+        user_id = token.user_id
         title = data.get('title')
         desc = data.get('desc')
         employer = data.get('employer')

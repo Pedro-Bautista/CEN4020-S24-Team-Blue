@@ -3,7 +3,6 @@
 
 from flask import request, jsonify
 import incollege.services.AuthService as AuthService
-import incollege.services.UserService
 
 
 def configure_auth_routes(app):

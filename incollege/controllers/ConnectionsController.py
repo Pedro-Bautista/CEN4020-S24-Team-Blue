@@ -5,40 +5,38 @@ from incollege.services import ConnectionsService, AuthService
 
 
 def configure_connection_routes(app):
-
     @app.route('/send_request', methods=['POST'])
     @token_required
-    def send_connection_request(token_data):
+    def send_connection_request(token):
         data = request.get_json()
-        sender_userID = token_data['usr']
-        print("\n TOKENNNNN: ", sender_userID)
-        receiver_userID = data.get('receiver_userID')
+        sender_user_id = token.user_id
+        recipient_user_id = data.get('receiver_userID')
 
-        ConnectionsService.send_connection_request(sender_userID, receiver_userID)
+        ConnectionsService.send_connection_request(sender_user_id, recipient_user_id)
         return jsonify()
 
-    
     @app.route('/get_requests_list', methods=['POST'])
     @token_required
-    def handle_requests_list(token_data):
-        user_id = token_data['usr']
-        requests = ConnectionsService.get_pending_requests_by_recipient_user_id(user_id)
-        requests_serial = [vars(request) for request in requests]
-        return jsonify({'message': requests_serial})
+    def handle_requests_list(token):
+        user_id = token.user_id
+        connection_requests = ConnectionsService.get_pending_requests_by_recipient_user_id(user_id)
+        connection_requests_serial = [vars(connection_request) for connection_request in connection_requests]
+        return jsonify({'message': connection_requests_serial})
 
     @app.route('/get_accepted_list', methods=['POST'])
     @token_required
-    def handle_accepted_list(token_data):
-        user_id = token_data['usr']
-        requests = ConnectionsService.get_connections_by_user_id(user_id)
-        requests_serial = [vars(request) for request in requests]
-        return jsonify({'message': requests_serial})
+    def handle_accepted_list(token):
+        user_id = token.user_id
+        connection_requests = ConnectionsService.get_connections_by_user_id(user_id)
+        connection_requests_serial = [vars(connection_request) for connection_request in connection_requests]
+        return jsonify({'message': connection_requests_serial})
 
     @app.route('/change_conn_status', methods=['POST'])
-    def handle_conn_status_change():
+    @token_required
+    def handle_conn_status_change(token):
         data = request.get_json()
-        requestID = data.get('request_id')
+        sender_user_id = token.user_id
+        recipient_user_id = data.get('recipient_user_id')
         status = data.get('status')
-        ConnectionsService.change_conn_status(requestID, status)
+        ConnectionsService.update_connection_request(sender_user_id, recipient_user_id, status)
         return jsonify()
-        
