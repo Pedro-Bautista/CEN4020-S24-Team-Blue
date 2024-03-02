@@ -30,11 +30,10 @@ CREATE TABLE IF NOT EXISTS jobs (
 
 
 CREATE TABLE IF NOT EXISTS connections (
-    request_id TEXT PRIMARY KEY,
-    sender_user_id TEXT,
-    receiver_user_id TEXT,
+    sender_user_id TEXT PRIMARY KEY,
+    recipient_user_id TEXT PRIMARY KEY,
     status TEXT DEFAULT 'pending',
     FOREIGN KEY (sender_user_id) REFERENCES users(user_id),
-    FOREIGN KEY (receiver_user_id) REFERENCES users(user_id)
+    FOREIGN KEY (recipient_user_id) REFERENCES users(user_id)
 );
 

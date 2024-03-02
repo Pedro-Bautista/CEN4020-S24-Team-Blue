@@ -2,7 +2,7 @@ from incollege.exceptions.ContentException import ContentException
 from incollege.repositories import UserRepository
 
 
-def find_users(first_name='', last_name='', university='', major=''):
+def search_users(first_name='', last_name='', university='', major=''):
     if not first_name and not last_name and not university and not major:
         raise ContentException('Required search parameters not provided.', 400)
     result = UserRepository.search_users(first_name, last_name, university, major)

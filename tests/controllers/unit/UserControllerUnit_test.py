@@ -5,14 +5,15 @@ from flask import Flask
 
 from incollege.controllers.ControllerAdvice import configure_controller_advice
 from incollege.controllers.UserController import configure_user_routes
+from incollege.entity.AuthJWT import AuthJWT
 from incollege.entity.User import User
 from incollege.exceptions.ContentException import ContentException
-from incollege.services import AuthService
 
 test_user1 = User('some_user_id', 'some_username', 'some_first', 'some_last')
 test_user2 = User('some_user_id2', 'some_username2', 'some_first2', 'some_last2')
-test_jwt_header = {'token': AuthService.create_token('some_user_id', 'user')}
+test_jwt_header = {'token': AuthJWT('some_user_id', 'user').encode()}
 test_invalid_jwt_header = {'token': 'invalid_token'}
+
 
 @pytest.fixture(scope='module')
 def test_client():
@@ -26,8 +27,8 @@ def test_client():
             yield test_client
 
 
-@mock.patch('incollege.services.UserService.find_users', return_value=[test_user1, test_user2])
-def test_handle_user_search_success(mock_find_users, test_client):
+@mock.patch('incollege.services.UserService.search_users', return_value=[test_user1, test_user2])
+def test_handle_user_search_success(mock_search_users, test_client):
     data = {'first_name': 'some_first', 'last_name': 'some_last'}
     response = test_client.post('/user_search', json=data)
 
@@ -35,9 +36,9 @@ def test_handle_user_search_success(mock_find_users, test_client):
     assert get_response_message(response) == [vars(test_user1), vars(test_user2)]
 
 
-@mock.patch('incollege.services.UserService.find_users',
+@mock.patch('incollege.services.UserService.search_users',
             side_effect=ContentException('No matching users found.', 404))
-def test_handle_user_search_error(mock_find_users, test_client):
+def test_handle_user_search_error(mock_search_users, test_client):
     data = {'first_name': 'some_first', 'last_name': 'some_last'}
     response = test_client.post('/user_search', json=data)
 

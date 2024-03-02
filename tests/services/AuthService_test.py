@@ -27,7 +27,7 @@ def test_hash_password():
 @mock.patch('incollege.repositories.AuthRepository.get_permissions_group', return_value="TEST_GROUP")
 @mock.patch('incollege.repositories.AuthRepository.get_password_hash', return_value="TEST_HASH")
 @mock.patch('incollege.services.AuthService.hash_password', return_value='WRONG_HASH')
-@mock.patch('incollege.services.AuthService.create_token', return_value='INVALID_TOKEN')
+@mock.patch('incollege.entity.AuthJWT.AuthJWT.encode', return_value='INVALID_TOKEN')
 def test_login_failed(mock_create_token, mock_hash_password, mock_get_password_hash,
                       mock_get_permissions_group, mock_get_user_id):
     with pytest.raises(AuthException):
@@ -40,7 +40,7 @@ def test_login_failed(mock_create_token, mock_hash_password, mock_get_password_h
 @mock.patch('incollege.repositories.AuthRepository.get_permissions_group', return_value="TEST_GROUP")
 @mock.patch('incollege.repositories.AuthRepository.get_password_hash', return_value="TEST_HASH")
 @mock.patch('incollege.services.AuthService.hash_password', return_value='TEST_HASH')
-@mock.patch('incollege.services.AuthService.create_token', return_value='VALID_TOKEN')
+@mock.patch('incollege.entity.AuthJWT.AuthJWT.encode', return_value='VALID_TOKEN')
 def test_login_success(mock_create_token, mock_hash_password, mock_get_password_hash,
                        mock_get_permissions_group, mock_get_user_id):
     result = login("austin", "correct password")
@@ -54,7 +54,7 @@ def test_login_success(mock_create_token, mock_hash_password, mock_get_password_
 @mock.patch('incollege.repositories.AuthRepository.get_permissions_group', return_value="TEST_GROUP")
 @mock.patch('incollege.repositories.AuthRepository.get_password_hash', return_value="TEST_HASH")
 @mock.patch('incollege.services.AuthService.hash_password', return_value='')
-@mock.patch('incollege.services.AuthService.create_token', return_value='INVALID_TOKEN')
+@mock.patch('incollege.entity.AuthJWT.AuthJWT.encode', return_value='INVALID_TOKEN')
 def test_login_no_username(mock_create_token, mock_hash_password, mock_get_password_hash,
                            mock_get_permissions_group, mock_get_user_id):
     with pytest.raises(AuthException) as e_info:
@@ -68,7 +68,7 @@ def test_login_no_username(mock_create_token, mock_hash_password, mock_get_passw
 @mock.patch('incollege.repositories.AuthRepository.get_permissions_group', return_value="TEST_GROUP")
 @mock.patch('incollege.repositories.AuthRepository.get_password_hash', return_value="TEST_HASH")
 @mock.patch('incollege.services.AuthService.hash_password', return_value='')
-@mock.patch('incollege.services.AuthService.create_token', return_value='INVALID_TOKEN')
+@mock.patch('incollege.entity.AuthJWT.AuthJWT.encode', return_value='INVALID_TOKEN')
 def test_login_no_password(mock_create_token, mock_hash_password, mock_get_password_hash,
                            mock_get_permissions_group, mock_get_user_id):
     with pytest.raises(AuthException) as e_info:
@@ -82,7 +82,7 @@ def test_login_no_password(mock_create_token, mock_hash_password, mock_get_passw
 @mock.patch('incollege.repositories.AuthRepository.get_permissions_group', return_value="TEST_GROUP")
 @mock.patch('incollege.repositories.AuthRepository.get_password_hash', return_value="TEST_HASH")
 @mock.patch('incollege.services.AuthService.hash_password', return_value='')
-@mock.patch('incollege.services.AuthService.create_token', return_value='INVALID_TOKEN')
+@mock.patch('incollege.entity.AuthJWT.AuthJWT.encode', return_value='INVALID_TOKEN')
 def test_login_no_input(mock_create_token, mock_hash_password, mock_get_password_hash,
                         mock_get_permissions_group, mock_get_user_id):
     with pytest.raises(AuthException) as e_info:
@@ -156,7 +156,7 @@ def test_signup_invalid_password(mock_get_auth_user_count, mock_create_auth_user
 @mock.patch('incollege.repositories.AuthRepository.create_auth_user', return_value='SOME_TOKEN')
 @mock.patch('incollege.repositories.AuthRepository.get_auth_user_count', return_value=Config.USER_LIMIT - 1)
 def test_signup_user_exists(mock_get_auth_user_count, mock_create_auth_user, mock_get_user_id,
-                                 mock_create_user):
+                            mock_create_user):
     with pytest.raises(AuthException) as e:
         signup('austin', 'VAl1d-p@ss', 'austin', 'holmes')
 
@@ -171,7 +171,7 @@ def test_signup_user_exists(mock_get_auth_user_count, mock_create_auth_user, moc
 @mock.patch('incollege.repositories.AuthRepository.create_auth_user', return_value='SOME_TOKEN')
 @mock.patch('incollege.repositories.AuthRepository.get_auth_user_count', return_value=Config.USER_LIMIT - 1)
 def test_signup_no_name(mock_get_auth_user_count, mock_create_auth_user, mock_get_user_id,
-                                 mock_create_user):
+                        mock_create_user):
     with pytest.raises(AuthException) as e:
         signup('austin', 'VAlid-p@ss', '', '')
 
@@ -186,7 +186,7 @@ def test_signup_no_name(mock_get_auth_user_count, mock_create_auth_user, mock_ge
 @mock.patch('incollege.repositories.AuthRepository.create_auth_user', return_value='SOME_TOKEN')
 @mock.patch('incollege.repositories.AuthRepository.get_auth_user_count', return_value=Config.USER_LIMIT)
 def test_signup_user_limit_reached(mock_get_auth_user_count, mock_create_auth_user, mock_get_user_id,
-                                 mock_create_user):
+                                   mock_create_user):
     with pytest.raises(AuthException) as e:
         signup('austin', 'VAl1d-p@ss', 'austin', 'holmes')
 
@@ -194,28 +194,3 @@ def test_signup_user_limit_reached(mock_get_auth_user_count, mock_create_auth_us
 
     mock_create_auth_user.assert_not_called()
     mock_create_user.assert_not_called()
-
-
-def test_create_token():
-    result = create_token('austin', 'user')
-    reference_payload = {
-        'usr': 'austin',
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=Config.TOKEN_DURATION),
-        'grp': 'user'
-    }
-    reference_token = jwt.encode(reference_payload, Config.SECRET, algorithm='HS512')
-
-    assert result == reference_token
-
-
-def test_decode_token():
-    reference_payload = {
-        'usr': 'austin',
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=Config.TOKEN_DURATION),
-        'grp': 'user'
-    }
-    reference_token = jwt.encode(reference_payload, Config.SECRET, algorithm='HS512')
-    result = decode_token(reference_token)
-
-    assert result['usr'] == 'austin'
-    assert result['grp'] == 'user'

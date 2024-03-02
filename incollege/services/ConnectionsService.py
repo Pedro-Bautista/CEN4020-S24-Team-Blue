@@ -1,36 +1,31 @@
 from incollege.exceptions.ContentException import ContentException
 from incollege.repositories import ConnectionsRepository
-from incollege.entity.RequestConn import connectionRequest
-
-import uuid
-
-def create_connection_id():
-    return str(uuid.uuid4())
-
-def send_connection_request(sender_user_id, receiver_user_id):
-    # double check the users exist? 
-    conn_id = create_connection_id()
-    connection_request = connectionRequest(conn_id, sender_user_id, receiver_user_id, 'pending')
-    ConnectionsRepository.send_request(connection_request)
+from incollege.entity.ConnectionRequest import ConnectionRequest, ConnectionRequestStatus
 
 
-def get_requests_list(target_user_id):
+def send_connection_request(sender_user_id, recipient_user_id):
+    # TODO: double check the users exist
+    connection_request = ConnectionRequest(sender_user_id, recipient_user_id, ConnectionRequestStatus.PENDING)
+    ConnectionsRepository.create_connection_request(connection_request)
 
-    result = ConnectionsRepository.get_requests_list(target_user_id)
 
+def get_pending_requests_by_recipient_user_id(recipient_user_id):
+    result = ConnectionsRepository.get_pending_requests_by_recipient_id(recipient_user_id)
     if not result:
-        raise ContentException("Failure to retrieve connection requests.", 404)
+        raise ContentException("No matching connection requests found.", 404)
     return result
 
-def get_accepted_list(target_user_id):
-    result = ConnectionsRepository.get_accepted_list(target_user_id)
+
+def get_connections_by_user_id(user_id):
+    result = ConnectionsRepository.get_connections_by_user_id(user_id)
     if not result:
-        raise ContentException("Fail to retrieve,no accepted connections.", 404)
+        raise ContentException("No matching connection requests found.", 404)
     return result
 
-def change_conn_status(requestId, status):
-    change_data = {
-        "request_id": requestId,
-        "status": status
-    }
-    ConnectionsRepository.change_conn_status(change_data)
+
+def update_connection_request(sender_user_id, recipient_user_id, status):
+    connection_request = ConnectionsRepository\
+        .get_requests_by_sender_and_recipient_user_id(sender_user_id, recipient_user_id)
+    connection_request.status = status
+
+    ConnectionsRepository.update_connection_request(connection_request)

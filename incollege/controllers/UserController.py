@@ -15,18 +15,18 @@ def configure_user_routes(app):
         university = data.get('university')
         major = data.get('major')
 
-        users = UserService.find_users(first_name, last_name, university, major)
+        users = UserService.search_users(first_name, last_name, university, major)
         users_serial = [vars(user) for user in users]
 
         return jsonify({'message': users_serial})
 
     @app.route('/update_preferences', methods=['POST'])
     @token_required
-    def handle_update_pref(token_data):
+    def handle_update_pref(token):
         data = request.get_json()
         preference_name = data.get('preference_name')
         preference_value = data.get('preference_value')
-        user_id = token_data['usr']
+        user_id = token.user_id
 
         UserService.update_preference(user_id, preference_name, preference_value)
 

@@ -12,19 +12,15 @@ def create_user(user):
 
 
 def get_user(user_id):
-    result = UNIVERSAL.get_objects({'user_id': user_id})
+    result = UNIVERSAL.get_objects_intersection({'user_id': user_id})
     if result:
         return result[0]
 
 
 def search_users(first_name, last_name, university, major):
-    #### CALLING GET OBJ 2 FOR TEMPORARY PARTIAL RETURN 
-    return UNIVERSAL.get_objects2({'first_name': first_name, 'last_name': last_name,
-                                   'university': university, 'major': major})
+    return UNIVERSAL.get_objects_fuzzy({'first_name': first_name, 'last_name': last_name,
+                                        'university': university, 'major': major})
 
 
-def update_user(user):
-    UNIVERSAL.insert_update_object(user)
-
-# def send_request(sender_user_id, receiver_user_id):
-#     UNIVERSAL.create_connect_request(sender_user_id, receiver_user_id)
+def update_user(mutated_user):
+    UNIVERSAL.insert_update_object(mutated_user)
