@@ -10,12 +10,12 @@ def send_request(request_data):
     UNIVERSAL.create_object(request_data)
    
 def get_requests_list(target_user_id):
-    results = UNIVERSAL.get_objects({'receiver_user_id': target_user_id, 'status': 'pending'})
+    results = UNIVERSAL.get_objects_intersection({'receiver_user_id': target_user_id, 'status': 'pending'})
     return results
 
 def get_accepted_list(target_user_id):
-    result_receiver = UNIVERSAL.get_objects({'receiver_user_id':target_user_id, 'status': 'accepted'})
-    result_sender = UNIVERSAL.get_objects({'sender_user_id':target_user_id, 'status': 'accepted'})
+    result_receiver = UNIVERSAL.get_objects_intersection({'receiver_user_id':target_user_id, 'status': 'accepted'})
+    result_sender = UNIVERSAL.get_objects_intersection({'sender_user_id':target_user_id, 'status': 'accepted'})
 
     results = result_sender + result_receiver
 
@@ -43,5 +43,5 @@ def change_conn_status(change_data):
         UNIVERSAL.delete_entry(keys)
     
     print("REQUEST ID CHANGED:::::::::::: ", requestID)
-    UNIVERSAL.printTable()
+    print_table()
 
