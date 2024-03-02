@@ -35,8 +35,8 @@ def configure_connection_routes(app):
     @token_required
     def handle_conn_status_change(token):
         data = request.get_json()
-        sender_user_id = token.user_id
-        recipient_user_id = data.get('recipient_user_id')
+        sender_user_id = data.get('sender_user_id')
+        recipient_user_id = token.user_id
         status = data.get('status')
         ConnectionsService.update_connection_request(sender_user_id, recipient_user_id, status)
         return jsonify()

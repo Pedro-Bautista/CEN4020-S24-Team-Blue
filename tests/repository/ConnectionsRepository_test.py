@@ -1,62 +1,137 @@
 from unittest import mock, TestCase
 from incollege.repositories.ConnectionsRepository import *
 
-class ConnectionsRepositoryTest(TestCase):
-    @mock.patch('incollege.repositories.ConnectionsRepository.UNIVERSAL')
-    def test_change_conn_status_accepted(self, mock_universal):
-        change_data = {
-            'request_id': 'request_uuid',
-            'status': 'accepted'
-        }
-        
-        change_conn_status(change_data)
-        
-        mock_universal.updateConnection.assert_called_once_with(change_data)
-        mock_universal.printTable.assert_called_once()
-    
-    @mock.patch('incollege.repositories.ConnectionsRepository.UNIVERSAL')
-    def test_change_conn_status_rejected(self, mock_universal):
-        change_data = {
-            'request_id': 'request_uuid',
-            'status': 'rejected'
-        }
-        
-        change_conn_status(change_data)
-        
-        mock_universal.delete_entry.assert_called_once_with({'request_id': 'request_uuid'})
-        mock_universal.printTable.assert_called_once()
-        
-class ConnectionsRepositoryTestSendRequest(TestCase):
-    @mock.patch('incollege.repositories.ConnectionsRepository.UNIVERSAL')
-    def test_send_request(self, mock_universal):
-        request_data = {
-            'sender_user_id': 'user1_uuid',
-            'receiver_user_id': 'user2_uuid',
-            'status': 'pending'
-        }
-        
-        send_request(request_data)
-        
-        mock_universal.create_object.assert_called_once_with(request_data)
+connection_request_description = (
+    ('sender_user_id',),
+    ('recipient_user_id',),
+    ('status',)
+)
+test_connection_request_data = [
+    ('some_sender_user_id1', 'some_recipient_user_id1', 'some_status1')
+]
+test_connection_request_data_mutated = [
+    ('some_sender_user_id2', 'some_recipient_user_id2', 'some_status2')
+]
+test_connection_request = ConnectionRequest(**dict(zip([key[0] for key in connection_request_description],
+                                                       test_connection_request_data[0])))
 
-class ConnectionsRepositoryTestGetRequestsList(TestCase):
-    @mock.patch('incollege.repositories.ConnectionsRepository.UNIVERSAL')
-    def test_get_requests_list(self, mock_universal):
-        target_user_id = 'user2_uuid'
-        expected_query = {'receiver_user_id': target_user_id, 'status': 'pending'}
-        
-        get_requests_list(target_user_id)
-        
-        mock_universal.get_objects.assert_called_once_with(expected_query)
+test_connection_request_mutated = ConnectionRequest(**dict(zip([key[0] for key in connection_request_description],
+                                                               test_connection_request_data_mutated[0])))
 
-class ConnectionsRepositoryTestGetAcceptedList(TestCase):
-    @mock.patch('incollege.repositories.ConnectionsRepository.UNIVERSAL')
-    def test_get_accepted_list(self, mock_universal):
-        target_user_id = 'user_uuid'
-        expected_query_receiver = {'receiver_user_id': target_user_id, 'status': 'accepted'}
-        expected_query_sender = {'sender_user_id': target_user_id, 'status': 'accepted'}
-        
-        get_accepted_list(target_user_id)
-        
-        calls = [mock.call(expected_query_receiver), mock.call(expected_query_sender)]
-        mock_universal.get_objects.assert_has_calls(calls, any_order=True)
+
+@mock.patch('incollege.repositories.UniversalRepositoryHelper.get_connection')
+def test_update_connection(mock_get_connection):
+    mock_cursor = mock.MagicMock()
+    mock_get_connection.return_value.cursor.return_value = mock_cursor
+
+    result = update_connection_request(test_connection_request_mutated)
+
+    assert result is None
+
+
+@mock.patch('incollege.repositories.UniversalRepositoryHelper.get_connection')
+def test_create_connection_request(mock_get_connection):
+    mock_cursor = mock.MagicMock()
+    mock_get_connection.return_value.cursor.return_value = mock_cursor
+
+    result = create_connection_request(test_connection_request)
+
+    assert result is None
+
+
+@mock.patch('incollege.repositories.UniversalRepositoryHelper.get_connection')
+def test_get_requests_by_sender_and_recipient_user_id_none(mock_get_connection):
+    mock_cursor = mock.MagicMock()
+    mock_get_connection.return_value.cursor.return_value = mock_cursor
+    mock_cursor.fetchall.return_value = ()
+    mock_cursor.description = connection_request_description
+
+    result = get_requests_by_sender_and_recipient_user_id(test_connection_request.sender_user_id,
+                                                          test_connection_request.recipient_user_id)
+
+    assert result is None
+
+
+@mock.patch('incollege.repositories.UniversalRepositoryHelper.get_connection')
+def test_get_requests_by_sender_and_recipient_user_id(mock_get_connection):
+    mock_cursor = mock.MagicMock()
+    mock_get_connection.return_value.cursor.return_value = mock_cursor
+    mock_cursor.fetchall.return_value = test_connection_request_data
+    mock_cursor.description = connection_request_description
+
+    result = get_requests_by_sender_and_recipient_user_id(test_connection_request.sender_user_id,
+                                                          test_connection_request.recipient_user_id)
+
+    assert len(result) == 1
+
+
+@mock.patch('incollege.repositories.UniversalRepositoryHelper.get_connection')
+def test_get_pending_requests_by_sender_user_id_none(mock_get_connection):
+    mock_cursor = mock.MagicMock()
+    mock_get_connection.return_value.cursor.return_value = mock_cursor
+    mock_cursor.fetchall.return_value = ()
+    mock_cursor.description = connection_request_description
+
+    result = get_pending_requests_by_sender_user_id(test_connection_request.sender_user_id)
+
+    assert result is None
+
+
+@mock.patch('incollege.repositories.UniversalRepositoryHelper.get_connection')
+def test_get_pending_requests_by_sender_user_id(mock_get_connection):
+    mock_cursor = mock.MagicMock()
+    mock_get_connection.return_value.cursor.return_value = mock_cursor
+    mock_cursor.fetchall.return_value = test_connection_request_data
+    mock_cursor.description = connection_request_description
+
+    result = get_pending_requests_by_sender_user_id(test_connection_request.sender_user_id)
+
+    assert len(result) == 1
+
+
+@mock.patch('incollege.repositories.UniversalRepositoryHelper.get_connection')
+def test_get_pending_requests_by_recipient_user_id_none(mock_get_connection):
+    mock_cursor = mock.MagicMock()
+    mock_get_connection.return_value.cursor.return_value = mock_cursor
+    mock_cursor.fetchall.return_value = ()
+    mock_cursor.description = connection_request_description
+
+    result = get_pending_requests_by_recipient_user_id(test_connection_request.recipient_user_id)
+
+    assert result is None
+
+
+@mock.patch('incollege.repositories.UniversalRepositoryHelper.get_connection')
+def test_get_pending_requests_by_recipient_user_id(mock_get_connection):
+    mock_cursor = mock.MagicMock()
+    mock_get_connection.return_value.cursor.return_value = mock_cursor
+    mock_cursor.fetchall.return_value = test_connection_request_data
+    mock_cursor.description = connection_request_description
+
+    result = get_pending_requests_by_recipient_user_id(test_connection_request.recipient_user_id)
+
+    assert len(result) == 1
+
+@mock.patch('incollege.repositories.UniversalRepositoryHelper.get_connection')
+def test_get_connections_by_user_id_none(mock_get_connection):
+    mock_cursor = mock.MagicMock()
+    mock_get_connection.return_value.cursor.return_value = mock_cursor
+    mock_cursor.fetchall.return_value = ()
+    mock_cursor.description = connection_request_description
+
+    result = get_connections_by_user_id(test_connection_request.sender_user_id)
+
+    assert result is None
+
+
+@mock.patch('incollege.repositories.UniversalRepositoryHelper.get_connection')
+def test_get_connections_by_user_id(mock_get_connection):
+    mock_cursor = mock.MagicMock()
+    mock_get_connection.return_value.cursor.return_value = mock_cursor
+    mock_cursor.fetchall.return_value = test_connection_request_data
+    mock_cursor.description = connection_request_description
+
+    result = get_connections_by_user_id(test_connection_request.sender_user_id)
+
+    # Same fetchall value used twice - testing limitation; result would actually be 1
+    assert len(result) == 2

@@ -10,7 +10,7 @@ def send_connection_request(sender_user_id, recipient_user_id):
 
 
 def get_pending_requests_by_recipient_user_id(recipient_user_id):
-    result = ConnectionsRepository.get_pending_requests_by_recipient_id(recipient_user_id)
+    result = ConnectionsRepository.get_pending_requests_by_recipient_user_id(recipient_user_id)
     if not result:
         raise ContentException("No matching connection requests found.", 404)
     return result

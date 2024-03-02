@@ -12,33 +12,36 @@ def create_connection_request(connection_request):
 
 
 def get_requests_by_sender_and_recipient_user_id(sender_user_id, recipient_user_id):
-    results = UNIVERSAL.get_objects_intersection({'sender_user_id': sender_user_id,
-                                                  'recipient_user_id': recipient_user_id})
-    if results:
-        return results[0]
+    result = UNIVERSAL.get_objects_intersection({'sender_user_id': sender_user_id,
+                                                 'recipient_user_id': recipient_user_id})
+    if result:
+        return result
 
 
-def get_pending_requests_by_recipient_id(recipient_user_id):
-    results = UNIVERSAL.get_objects_intersection({'recipient_user_id': recipient_user_id,
-                                                  'status': ConnectionRequestStatus.PENDING})
-    return results
+def get_pending_requests_by_recipient_user_id(recipient_user_id):
+    result = UNIVERSAL.get_objects_intersection({'recipient_user_id': recipient_user_id,
+                                                 'status': ConnectionRequestStatus.PENDING})
+    if result:
+        return result
 
 
-def get_pending_requests_by_sender_id(sender_user_id):
-    results = UNIVERSAL.get_objects_intersection({'recipient_user_id': sender_user_id,
-                                                  'status': ConnectionRequestStatus.PENDING})
-    return results
+def get_pending_requests_by_sender_user_id(sender_user_id):
+    result = UNIVERSAL.get_objects_intersection({'sender_user_id': sender_user_id,
+                                                 'status': ConnectionRequestStatus.PENDING})
+    if result:
+        return result
 
 
 def get_connections_by_user_id(user_id):
-    result_receiver = UNIVERSAL.get_objects_intersection({'recipient_user_id': user_id,
-                                                          'status': ConnectionRequestStatus.ACCEPTED})
     result_sender = UNIVERSAL.get_objects_intersection({'sender_user_id': user_id,
                                                         'status': ConnectionRequestStatus.ACCEPTED})
+    result_recipient = UNIVERSAL.get_objects_intersection({'recipient_user_id': user_id,
+                                                           'status': ConnectionRequestStatus.ACCEPTED})
 
-    results = result_sender + result_receiver
+    results = result_sender + result_recipient
 
-    return results
+    if results:
+        return results
 
 
 def update_connection_request(mutated_connection_request):
