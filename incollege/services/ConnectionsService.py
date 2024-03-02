@@ -1,6 +1,6 @@
 from incollege.exceptions.ContentException import ContentException
 from incollege.repositories import ConnectionsRepository
-from incollege.entity.RequestConn import connectionRequest
+from incollege.entity.ConnectionRequest import ConnectionRequest
 
 import uuid
 
@@ -10,20 +10,20 @@ def create_connection_id():
 def send_connection_request(sender_user_id, receiver_user_id):
     # double check the users exist? 
     conn_id = create_connection_id()
-    connection_request = connectionRequest(conn_id, sender_user_id, receiver_user_id, 'pending')
+    connection_request = ConnectionRequest(conn_id, sender_user_id, receiver_user_id, 'pending')
     ConnectionsRepository.send_request(connection_request)
 
 
 def get_requests_list(target_user_id):
 
-    result = ConnectionsRepository.get_requests_list(target_user_id)
+    result = ConnectionsRepository.get_pending_requests_by_recipient_id(target_user_id)
 
     if not result:
         raise ContentException("Failure to retrieve connection requests.", 404)
     return result
 
 def get_accepted_list(target_user_id):
-    result = ConnectionsRepository.get_accepted_list(target_user_id)
+    result = ConnectionsRepository.get_friends_by_user_id(target_user_id)
     if not result:
         raise ContentException("Fail to retrieve,no accepted connections.", 404)
     return result
@@ -33,4 +33,4 @@ def change_conn_status(requestId, status):
         "request_id": requestId,
         "status": status
     }
-    ConnectionsRepository.change_conn_status(change_data)
+    ConnectionsRepository.update_connection_request(change_data)

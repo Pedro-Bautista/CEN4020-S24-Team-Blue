@@ -18,13 +18,9 @@ def get_user(user_id):
 
 
 def search_users(first_name, last_name, university, major):
-    #### CALLING GET OBJ 2 FOR TEMPORARY PARTIAL RETURN 
-    return UNIVERSAL.get_objects_union({'first_name': first_name, 'last_name': last_name,
-                                   'university': university, 'major': major})
+    return UNIVERSAL.get_objects_fuzzy({'first_name': first_name, 'last_name': last_name,
+                                        'university': university, 'major': major})
 
 
-def update_user(user):
-    UNIVERSAL.insert_update_object(user)
-
-# def send_request(sender_user_id, receiver_user_id):
-#     UNIVERSAL.create_connect_request(sender_user_id, receiver_user_id)
+def update_user(mutated_user):
+    UNIVERSAL.insert_update_object(mutated_user)
