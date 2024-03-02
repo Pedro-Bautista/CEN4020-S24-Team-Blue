@@ -5,18 +5,18 @@ from flask import Flask
 
 from incollege.controllers.ControllerAdvice import configure_controller_advice
 from incollege.controllers.JobController import *
+from incollege.entity.AuthJWT import AuthJWT
 from incollege.entity.Job import Job
 from incollege.exceptions.ContentException import ContentException
-from incollege.services import AuthService
 
 
 test_job = Job('some_job_id', 'some_owner_user_id', 'some_title', 'some_desc', 'some_employer',
                'some_location', 123456)
 test_invalid_job = Job('some_job_id', 'some_owner_user_id', '', 'some_desc', 'some_employer',
-               'some_location', 123456)
+                       'some_location', 123456)
 test_job_data = vars(test_job)
 test_invalid_job_data = vars(test_invalid_job)
-test_jwt_header = {'token': AuthService.create_token('some_user_id', 'user')}
+test_jwt_header = {'token': AuthJWT('some_user_id', 'user').encode}
 test_invalid_jwt_header = {'token': 'invalid_token'}
 
 

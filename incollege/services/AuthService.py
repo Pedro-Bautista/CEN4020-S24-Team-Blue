@@ -9,8 +9,10 @@ import incollege.config.Config as Config
 import hashlib
 import re
 import incollege.repositories.AuthRepository as AuthRepository
+from incollege.entity.AuthJWT import AuthJWT
 from incollege.entity.AuthUser import AuthUser
 from incollege.entity.User import User
+from incollege.entity.enum.PermissionsGroup import PermissionsGroup
 from incollege.exceptions.AuthException import AuthException
 from incollege.repositories import UserRepository
 
@@ -39,7 +41,7 @@ def login(username, password):
         raise AuthException("Invalid username or password.")
 
     permissions_group = AuthRepository.get_permissions_group(user_id)
-    return create_token(user_id, permissions_group)
+    return AuthJWT(user_id, permissions_group).encode()
 
 
 def signup(username, password, first_name, last_name):
@@ -62,21 +64,4 @@ def signup(username, password, first_name, last_name):
     user = User(user_id, username, first_name, last_name)
     UserRepository.create_user(user)
 
-    return create_token(user_id, 'users')
-
-
-def create_token(user_id, permissions_group):
-    payload = {
-        'usr': user_id,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=Config.TOKEN_DURATION),
-        'grp': permissions_group
-    }
-    return jwt.encode(payload, Config.SECRET, algorithm='HS512')
-
-
-def decode_token(token):
-    try:
-        token_bytes = token.encode('utf-8')
-        return jwt.decode(token_bytes, Config.SECRET, algorithms=['HS512'])
-    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
-        return None
+    return AuthJWT(user_id, PermissionsGroup.USER).encode()

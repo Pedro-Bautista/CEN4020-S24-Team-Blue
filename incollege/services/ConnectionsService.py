@@ -1,11 +1,11 @@
 from incollege.exceptions.ContentException import ContentException
 from incollege.repositories import ConnectionsRepository
-from incollege.entity.ConnectionRequest import ConnectionRequest, ConnectionStatus
+from incollege.entity.ConnectionRequest import ConnectionRequest, ConnectionRequestStatus
 
 
 def send_connection_request(sender_user_id, recipient_user_id):
     # TODO: double check the users exist
-    connection_request = ConnectionRequest(sender_user_id, recipient_user_id, ConnectionStatus.PENDING)
+    connection_request = ConnectionRequest(sender_user_id, recipient_user_id, ConnectionRequestStatus.PENDING)
     ConnectionsRepository.create_connection_request(connection_request)
 
 

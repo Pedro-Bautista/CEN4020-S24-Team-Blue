@@ -1,7 +1,7 @@
 # Connections/requests repository
 # handles requests to connect and accepted connection changes in the db
 
-from incollege.entity.ConnectionRequest import ConnectionRequest, ConnectionStatus
+from incollege.entity.ConnectionRequest import ConnectionRequest, ConnectionRequestStatus
 from incollege.repositories.UniversalRepositoryHelper import UniversalRepositoryHelper
 
 UNIVERSAL = UniversalRepositoryHelper("connections", ConnectionRequest, ['sender_user_id', 'recipient_user_id'])
@@ -20,21 +20,21 @@ def get_requests_by_sender_and_recipient_user_id(sender_user_id, recipient_user_
 
 def get_pending_requests_by_recipient_id(recipient_user_id):
     results = UNIVERSAL.get_objects_intersection({'recipient_user_id': recipient_user_id,
-                                                  'status': ConnectionStatus.PENDING})
+                                                  'status': ConnectionRequestStatus.PENDING})
     return results
 
 
 def get_pending_requests_by_sender_id(sender_user_id):
     results = UNIVERSAL.get_objects_intersection({'recipient_user_id': sender_user_id,
-                                                  'status': ConnectionStatus.PENDING})
+                                                  'status': ConnectionRequestStatus.PENDING})
     return results
 
 
 def get_connections_by_user_id(user_id):
     result_receiver = UNIVERSAL.get_objects_intersection({'recipient_user_id': user_id,
-                                                          'status': ConnectionStatus.ACCEPTED})
+                                                          'status': ConnectionRequestStatus.ACCEPTED})
     result_sender = UNIVERSAL.get_objects_intersection({'sender_user_id': user_id,
-                                                        'status': ConnectionStatus.ACCEPTED})
+                                                        'status': ConnectionRequestStatus.ACCEPTED})
 
     results = result_sender + result_receiver
 

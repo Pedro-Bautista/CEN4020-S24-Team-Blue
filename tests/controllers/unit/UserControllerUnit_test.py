@@ -5,14 +5,15 @@ from flask import Flask
 
 from incollege.controllers.ControllerAdvice import configure_controller_advice
 from incollege.controllers.UserController import configure_user_routes
+from incollege.entity.AuthJWT import AuthJWT
 from incollege.entity.User import User
 from incollege.exceptions.ContentException import ContentException
-from incollege.services import AuthService
 
 test_user1 = User('some_user_id', 'some_username', 'some_first', 'some_last')
 test_user2 = User('some_user_id2', 'some_username2', 'some_first2', 'some_last2')
-test_jwt_header = {'token': AuthService.create_token('some_user_id', 'user')}
+test_jwt_header = {'token': AuthJWT('some_user_id', 'user').encode()}
 test_invalid_jwt_header = {'token': 'invalid_token'}
+
 
 @pytest.fixture(scope='module')
 def test_client():
