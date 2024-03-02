@@ -1,6 +1,7 @@
+from incollege.entity.enum.ConnectionRequestStatus import ConnectionRequestStatus
 from incollege.exceptions.ContentException import ContentException
 from incollege.repositories import ConnectionsRepository
-from incollege.entity.ConnectionRequest import ConnectionRequest, ConnectionRequestStatus
+from incollege.entity.ConnectionRequest import ConnectionRequest
 
 
 def send_connection_request(sender_user_id, recipient_user_id):
@@ -25,7 +26,7 @@ def get_connections_by_user_id(user_id):
 
 def update_connection_request(sender_user_id, recipient_user_id, status):
     connection_request = ConnectionsRepository\
-        .get_requests_by_sender_and_recipient_user_id(sender_user_id, recipient_user_id)
-    connection_request.status = status
+        .get_request_by_sender_and_recipient_user_id(sender_user_id, recipient_user_id)
+    connection_request.status = ConnectionRequestStatus().from_string(status)
 
     ConnectionsRepository.update_connection_request(connection_request)

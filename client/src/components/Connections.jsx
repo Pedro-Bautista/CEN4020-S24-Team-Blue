@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import api from '../api/api';
 import { AuthData } from "../auth/AuthWrapper"
 
@@ -48,23 +47,23 @@ export const Connections = () => {
         }
     }, [isOpen]);
 
-    const handleAccept = async (requestId) => {
+    const handleAccept = async (sender_user_id) => {
         // Function to handle accept request
         try {
-            const status = 'accepted';
-            await api.changeConnStatus({ request_id: requestId, status: status });
-            console.log("Accept request with ID:", requestId);
+            const status = 'ACCEPTED';
+            await api.changeConnStatus({ sender_user_id: sender_user_id, status: status });
+            console.log("Accept request with sender ID:", sender_user_id);
         } catch (error) {
             console.error("Status change request error (acceptance):", error);
         }
     };
 
-    const handleReject = async (requestId) => {
+    const handleReject = async (sender_user_id) => {
         // Function to handle reject request
         try {
             const status = 'rejected';
-            await api.changeConnStatus({ request_id: requestId, status: status });
-            console.log("Rejected request with ID:", requestId);
+            await api.changeConnStatus({ sender_user_id: sender_user_id, status: status });
+            console.log("Rejected request with ID:", sender_user_id);
         } catch (error) {
             console.error("Status change request error (rejected):", error);
         }
@@ -83,10 +82,10 @@ export const Connections = () => {
                                 {Connections.map((Connection, index) => (
                                     <div key={index} className="request-box">
                                         <div className="request-text">
-                                            <strong>Receiver:</strong> {Connection.receiver_user_id}<br/>
+                                            <strong>Receiver:</strong> {Connection.recipient_user_id}<br/>
                                         </div>
                                         <div className="button-container">
-                                            <button onClick={() => handleReject(Connection.request_id)}>Remove</button>
+                                            <button onClick={() => handleReject(Connection.sender_user_id)}>Remove</button>
                                         </div>
                                     </div>
                                 ))}
@@ -109,11 +108,11 @@ export const Connections = () => {
                                     <div key={index} className="request-box">
                                         <div className="request-text">
                                             <strong>Sender:</strong> {request.sender_user_id}<br/>
-                                            <strong>Receiver:</strong> {request.receiver_user_id}<br/>
+                                            <strong>Receiver:</strong> {request.recipient_user_id}<br/>
                                         </div>
                                         <div className="button-container">
-                                            <button onClick={() => handleAccept(request.request_id)}>Accept</button>
-                                            <button onClick={() => handleReject(request.request_id)}>Reject</button>
+                                            <button onClick={() => handleAccept(request.sender_user_id)}>Accept</button>
+                                            <button onClick={() => handleReject(request.sender_user_id)}>Reject</button>
                                         </div>
                                     </div>
                                 ))}

@@ -11,11 +11,11 @@ def create_connection_request(connection_request):
     UNIVERSAL.create_object(connection_request)
 
 
-def get_requests_by_sender_and_recipient_user_id(sender_user_id, recipient_user_id):
+def get_request_by_sender_and_recipient_user_id(sender_user_id, recipient_user_id):
     result = UNIVERSAL.get_objects_intersection({'sender_user_id': sender_user_id,
                                                  'recipient_user_id': recipient_user_id})
     if result:
-        return result
+        return result[0]
 
 
 def get_pending_requests_by_recipient_user_id(recipient_user_id):

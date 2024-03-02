@@ -1,7 +1,7 @@
 from flask import jsonify, request
 
 from incollege.annotations.TokenRequired import token_required
-from incollege.services import ConnectionsService, AuthService
+from incollege.services import ConnectionsService
 
 
 def configure_connection_routes(app):
@@ -10,7 +10,7 @@ def configure_connection_routes(app):
     def send_connection_request(token):
         data = request.get_json()
         sender_user_id = token.user_id
-        recipient_user_id = data.get('receiver_userID')
+        recipient_user_id = data.get('recipient_user_id')
 
         ConnectionsService.send_connection_request(sender_user_id, recipient_user_id)
         return jsonify()
