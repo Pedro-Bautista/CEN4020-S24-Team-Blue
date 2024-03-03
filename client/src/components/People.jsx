@@ -33,11 +33,11 @@ export const People = () => {
         }
     };
 
-    const handleConnectRequest = async (userId) => {
+    const handleConnectRequest = async (recipient_user_id) => {
 
         try {
-            await api.requestConnection({ sender_userID: user, receiver_userID: userId });
-            console.log("Request sent to ", userId);
+            await api.requestConnection({ recipient_user_id: recipient_user_id });
+            console.log("Request sent to ", recipient_user_id);
         } catch (error) {
             console.error("Connection request error:", error);
             setErrorMessage(error.response ? error.response.data.error.description : "An error occurred");
