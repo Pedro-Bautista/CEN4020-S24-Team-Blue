@@ -108,6 +108,16 @@ const getAccepted = async (AcceptedData) => {
 	}
 }
 
+const getAcceptedProfiles = async (AcceptedData) => {
+	try {
+		const response = await api.post('/get_connection_profiles', AcceptedData);
+		return response.data
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+}
+
 const changeConnStatus = async (statusData) => {
 
 	try {
@@ -128,5 +138,6 @@ export default {
 	requestConnection,
 	getRequests,
 	getAccepted,
+	getAcceptedProfiles,
 	changeConnStatus,
 }

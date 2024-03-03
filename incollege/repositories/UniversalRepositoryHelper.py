@@ -73,6 +73,21 @@ class UniversalRepositoryHelper:
         self.CLASS = cls
         self.PRIMARY_KEYS = primary_keys
 
+    def call_sql_query(self, query, values, map_to_object=False):
+        query = f"{query}"
+        cursor = get_connection().cursor()
+        cursor.execute(query, values)
+        results = cursor.fetchall()
+        if results:
+            column_names = [description[0] for description in cursor.description]
+            result_list = [dict(zip(column_names, row)) for row in results]
+            if map_to_object:
+                return [self.__convert_to_instance(data) for data in result_list]
+            else:
+                return result_list
+        else:
+            return []
+
     def get_record_count(self):
         query = f"SELECT COUNT(1) FROM {self.TABLE_NAME}"
         cursor = get_connection().cursor()
