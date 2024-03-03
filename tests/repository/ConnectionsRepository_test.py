@@ -1,5 +1,5 @@
 from unittest import mock, TestCase
-from incollege.repositories.ConnectionsRepository import *
+from incollege.repositories.ConnectionRepository import *
 
 connection_request_description = (
     ('sender_user_id',),

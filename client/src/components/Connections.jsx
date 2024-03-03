@@ -17,7 +17,7 @@ export const Connections = () => {
     useEffect(()=> {
         const fetchAccepted = async () => {
             try {
-                const responseData = await api.getAccepted({});
+                const responseData = await api.getAcceptedProfiles({});
                 console.log("Accepted List", responseData);
                 setConnections(responseData.message)
             } catch (error) {
@@ -80,9 +80,15 @@ export const Connections = () => {
                         {Connections.length > 0 ? (
                             <div>
                                 {Connections.map((Connection, index) => (
-                                    <div key={index} className="request-box">
-                                        <div className="request-text">
-                                            <strong>Receiver:</strong> {Connection.recipient_user_id}<br/>
+                                    <div key={index} className="profile-summary">
+                                        <div className={"profile stub"}>
+                                            {`${Connection.first_name} ${Connection.last_name}`}<br/>
+                                            {`${Connection.university} ${Connection.major}`}<br/>
+                                        </div>
+                                        <div className={"profile extension"}>
+                                            {`${Connection.about}`}<br/>
+                                            {`${Connection.experience}`}<br/>
+                                            {`${Connection.education}`}<br/>
                                         </div>
                                         <div className="button-container">
                                             <button onClick={() => handleReject(Connection.sender_user_id)}>Remove</button>
