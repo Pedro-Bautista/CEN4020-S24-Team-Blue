@@ -5,6 +5,10 @@ from incollege.entity.ConnectionRequest import ConnectionRequest
 
 
 def send_connection_request(sender_user_id, recipient_user_id):
+    if not sender_user_id or not recipient_user_id:
+        raise ContentException('Required connection parameters not provided.', 400)
+    if sender_user_id == recipient_user_id:
+        raise ContentException('Sender and recipient cannot match.', 400)
     if not UserRepository.get_user(sender_user_id):
         raise ContentException('No such sending user.', 404)
     if not UserRepository.get_user(recipient_user_id):
