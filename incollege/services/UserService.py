@@ -21,3 +21,9 @@ def update_preference(user_id, preference_name, preference_value):
         raise ContentException('No such preference.', 404)
     setattr(user, preference_name, preference_value)
     UserRepository.update_user(user)
+
+def get_user_data(user_id):
+    result = UserRepository.get_user(user_id)
+    if not result:
+        raise ContentException('No such user.', 404)
+    return result
