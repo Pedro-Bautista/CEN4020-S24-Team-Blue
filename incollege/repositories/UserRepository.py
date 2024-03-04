@@ -15,7 +15,7 @@ def create_user(user):
 def get_user(user_id):
     result = UNIVERSAL.get_objects_intersection({'user_id': user_id})
     if result:
-        return result
+        return result[0]
 
 
 def get_connection_users_by_user_id(user_id):
