@@ -160,7 +160,19 @@ export const Profile = () => {
                 </div>
                 <div className={"button-container"}>
                 {isEditing ? (
-                    <button onClick={()=>{setIsEditing(false);handleUpdate();}}>Save</button>
+                    <button onClick={()=>{
+                      if (userData[0].education.trim() === '') {
+                          // Show an alert if education is empty
+                          alert('Education cannot be empty. Please fill in the field.');
+                        } else {
+                          setIsEditing(false);
+                          handleUpdate();
+                        }
+                      }}
+
+                    >
+                      Save
+                    </button>
                   ) : (
                     <button onClick={()=>{setIsEditing(true);handleEdit();}}>Edit</button>
                   )}
