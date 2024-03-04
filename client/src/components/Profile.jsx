@@ -17,7 +17,8 @@ export const Profile = () => {
       try {
         const responseData = await api.getUserData({});
         console.log("User Data", responseData);
-        setUserData(responseData.message);
+        const user=responseData.user
+        setUserData([user]);
       } catch (error) {
         console.error("Error fetching user data:", error);
         setError("Error fetching user data. Please try again later.");
