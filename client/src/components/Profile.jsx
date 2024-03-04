@@ -11,6 +11,7 @@ export const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     const handleUserData = async () => {
@@ -39,6 +40,47 @@ export const Profile = () => {
     setUserData([{ ...userData[0], [field]: value }]);
   };
 
+  const handleUpdate = async () => {
+  try {
+    // Assuming userData[0] is an object with multiple preferences
+    const preferencesToUpdate = {
+      university: userData[0].university,
+      major: userData[0].major,
+      bio: userData[0].bio,
+      experience: userData[0].experience,
+      education: userData[0].education,
+    };
+
+    // Iterate through each preference and make individual API calls
+    for (const preferenceName in preferencesToUpdate) {
+      const preferenceValue = preferencesToUpdate[preferenceName];
+
+      try {
+        // Send the updated user data to the server
+        const response = await api.updatePref({
+          preference_name: preferenceName,
+          preference_value: preferenceValue,
+        });
+
+      }  catch (error) {
+        if (error.response && error.response.status === 503) {
+          // Handle 503 error (Service Unavailable) as a successful update
+          console.log(`No changes detected for ${preferenceName}. Update considered successful.`);
+        }
+        if (error.response && error.response.status===409){
+          setErrorMessage(error.response.data.error.description)
+        }
+
+      }}
+    // Disable editing mode after attempting updates
+    setIsEditing(false);
+
+  } catch (error) {
+    console.error("Error updating user data:", error);
+    // Handle the error, e.g., display an error message to the user
+  }
+};
+
   return (
     <div className="page">
       <div className="centered-content">
@@ -49,17 +91,10 @@ export const Profile = () => {
           {userData.map((data, index) => (
             <div key={index} className="profile-summary">
               <div className={`page h1 ${isEditing ? 'editing' : ''}`}>
-                {isEditing ?(
-                    <textarea
-                        className={"profile-section editing"}
-                      value={`${data.first_name} ${data.last_name}`}
-                      onChange={(e) => handleFieldChange('first_name', e.target.value)}
-                      />
 
-                ):(
                 <h1>{`${data.first_name} ${data.last_name}`}</h1>
-                    )}
-
+                <div className="profile-section">
+                <h2>University</h2>
                 {isEditing ?(
                     <textarea
                         className={"profile-section editing"}
@@ -68,18 +103,22 @@ export const Profile = () => {
                       />
 
                 ): (
-                    <h2>{data.university}</h2>
+                    <h3>{data.university}</h3>
                 )}
+                </div>
 
+                <div className="profile-section">
+                <h2>Major</h2>
                 {isEditing ?(
                     <textarea
                         className={"profile-section editing"}
                       value={data.major}
-                      onChange={(e) => handleFieldChange('university', e.target.value)}
+                      onChange={(e) => handleFieldChange('major', e.target.value)}
                       />
                 ): (
-                    <h2>{data.major}</h2>
+                    <h3>{data.major}</h3>
                 )}
+                </div>
 
                 <div className="profile-section">
                   <h1>About Me</h1>
@@ -120,7 +159,23 @@ export const Profile = () => {
                   )}
                 </div>
                 <div className={"button-container"}>
-                <button onClick={handleEdit}>{isEditing ? "Save" : "Edit"}</button>
+                {isEditing ? (
+                    <button onClick={()=>{
+                      if (userData[0].education.trim() === '') {
+                          // Show an alert if education is empty
+                          alert('Education cannot be empty. Please fill in the field.');
+                        } else {
+                          setIsEditing(false);
+                          handleUpdate();
+                        }
+                      }}
+
+                    >
+                      Save
+                    </button>
+                  ) : (
+                    <button onClick={()=>{setIsEditing(true);handleEdit();}}>Edit</button>
+                  )}
                 </div>
               </div>
             </div>

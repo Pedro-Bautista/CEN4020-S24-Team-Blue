@@ -30,7 +30,7 @@ def configure_user_routes(app):
 
         UserService.update_preference(user_id, preference_name, preference_value)
 
-        return jsonify()
+        return jsonify({'Message': f'{preference_name} Updated successfully to {preference_value}'}), 200
 
     @app.route('/get_user_data', methods=['POST'])
     @token_required
