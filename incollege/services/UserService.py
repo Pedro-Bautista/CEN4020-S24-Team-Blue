@@ -15,7 +15,7 @@ def update_preference(user_id, preference_name, preference_value):
     user = UserRepository.get_user(user_id)
     if not user:
         raise ContentException('No such user.', 404)
-    if preference_name == "education" and len(preference_value) <1:
+    if preference_name == "education" and len(preference_value) < 1:
         raise ContentException('Education must contain at least one value.', 409)
     if preference_name is None or preference_name == '' or preference_value is None or preference_value == '':
         raise ContentException('Required preference parameters not provided.', 400)
@@ -24,7 +24,8 @@ def update_preference(user_id, preference_name, preference_value):
     setattr(user, preference_name, preference_value)
     UserRepository.update_user(user)
 
-def get_user_data(user_id):
+
+def get_user(user_id):
     result = UserRepository.get_user(user_id)
     if not result:
         raise ContentException('No such user.', 404)

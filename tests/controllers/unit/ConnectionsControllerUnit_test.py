@@ -6,6 +6,7 @@ from flask import Flask
 from incollege.controllers.ConnectionsController import configure_connection_routes
 from incollege.controllers.ControllerAdvice import configure_controller_advice
 from incollege.entity.AuthJWT import AuthJWT
+from incollege.exceptions.ContentException import ContentException
 from incollege.services import AuthService
 
 test_jwt_header = {'token': AuthJWT('some_user_id', 'user').encode()}
@@ -52,13 +53,13 @@ def test_get_pending_requests_by_recipient_user_id_success(mock_get_pending_requ
     mock_get_pending_requests_by_recipient_user_id.assert_called_once_with('some_user_id')
 
 
-@mock.patch('incollege.services.ConnectionsService.get_connections_by_user_id', return_value=[])
-def test_get_accepted_list_success(mock_get_connections_by_user_id, test_client):
-    response = test_client.post('/get_accepted_list', headers=test_jwt_header)
+@mock.patch('incollege.services.ConnectionsService.get_connection_profiles_by_user_id',
+            side_effect=ContentException("No matching connection requests found.", 404))
+def test_get_connection_profiles_success(mock_get_connection_profiles_by_user_id, test_client):
+    response = test_client.post('/get_connection_profiles', headers=test_jwt_header)
 
-    assert response.status_code == 200
-    assert get_response_message(response) == []
-    mock_get_connections_by_user_id.assert_called_once_with('some_user_id')
+    assert response.status_code == 404
+    mock_get_connection_profiles_by_user_id.assert_called_once_with('some_user_id')
 
 
 @mock.patch('incollege.services.ConnectionsService.update_connection_request')
