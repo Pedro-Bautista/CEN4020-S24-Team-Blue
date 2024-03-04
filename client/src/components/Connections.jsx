@@ -86,7 +86,7 @@ export const Connections = () => {
                                             {`${Connection.university} ${Connection.major}`}<br/>
                                         </div>
                                         <div className={"profile extension"}>
-                                            {`${Connection.about}`}<br/>
+                                            {`${Connection.bio}`}<br/>
                                             {`${Connection.experience}`}<br/>
                                             {`${Connection.education}`}<br/>
                                         </div>

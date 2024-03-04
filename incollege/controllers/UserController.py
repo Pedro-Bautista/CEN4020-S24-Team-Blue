@@ -31,5 +31,12 @@ def configure_user_routes(app):
         UserService.update_preference(user_id, preference_name, preference_value)
 
         return jsonify()
-    
+
+    @app.route('/get_user_data', methods=['POST'])
+    @token_required
+    def get_user_data(token):
+        user_id = token.user_id
+        user_data = UserService.get_user_data(user_id)
+        users_serial = vars(user_data)
+        return jsonify({'user': users_serial})
     
