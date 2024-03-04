@@ -23,14 +23,6 @@ def configure_connection_routes(app):
         connection_requests_serial = [vars(connection_request) for connection_request in connection_requests]
         return jsonify({'message': connection_requests_serial})
 
-    @app.route('/get_accepted_list', methods=['POST'])
-    @token_required
-    def handle_accepted_list(token):
-        user_id = token.user_id
-        connection_requests = ConnectionsService.get_connections_by_user_id(user_id)
-        connection_requests_serial = [vars(connection_request) for connection_request in connection_requests]
-        return jsonify({'message': connection_requests_serial})
-
     @app.route('/get_connection_profiles', methods=['POST'])
     @token_required
     def handle_connection_profiles(token):
