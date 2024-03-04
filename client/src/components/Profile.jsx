@@ -89,17 +89,10 @@ export const Profile = () => {
           {userData.map((data, index) => (
             <div key={index} className="profile-summary">
               <div className={`page h1 ${isEditing ? 'editing' : ''}`}>
-                {isEditing ?(
-                    <textarea
-                        className={"profile-section editing"}
-                      value={`${data.first_name} ${data.last_name}`}
-                      onChange={(e) => handleFieldChange('first_name', e.target.value)}
-                      />
 
-                ):(
                 <h1>{`${data.first_name} ${data.last_name}`}</h1>
-                    )}
-
+                <div className="profile-section">
+                <h2>University</h2>
                 {isEditing ?(
                     <textarea
                         className={"profile-section editing"}
@@ -108,9 +101,12 @@ export const Profile = () => {
                       />
 
                 ): (
-                    <h2>{data.university}</h2>
+                    <h3>{data.university}</h3>
                 )}
+                </div>
 
+                <div className="profile-section">
+                <h2>Major</h2>
                 {isEditing ?(
                     <textarea
                         className={"profile-section editing"}
@@ -118,8 +114,9 @@ export const Profile = () => {
                       onChange={(e) => handleFieldChange('major', e.target.value)}
                       />
                 ): (
-                    <h2>{data.major}</h2>
+                    <h3>{data.major}</h3>
                 )}
+                </div>
 
                 <div className="profile-section">
                   <h1>About Me</h1>
