@@ -11,6 +11,7 @@ export const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     const handleUserData = async () => {
@@ -65,10 +66,11 @@ export const Profile = () => {
         if (error.response && error.response.status === 503) {
           // Handle 503 error (Service Unavailable) as a successful update
           console.log(`No changes detected for ${preferenceName}. Update considered successful.`);
-        } else {
-          // Re-throw other errors
-          throw error;
         }
+        if (error.response && error.response.status===409){
+          setErrorMessage(error.response.data.error.description)
+        }
+
       }}
     // Disable editing mode after attempting updates
     setIsEditing(false);
