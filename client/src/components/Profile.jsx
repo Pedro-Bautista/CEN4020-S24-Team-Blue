@@ -39,6 +39,46 @@ export const Profile = () => {
     setUserData([{ ...userData[0], [field]: value }]);
   };
 
+  const handleUpdate = async () => {
+  try {
+    // Assuming userData[0] is an object with multiple preferences
+    const preferencesToUpdate = {
+      university: userData[0].university,
+      major: userData[0].major,
+      bio: userData[0].bio,
+      experience: userData[0].experience,
+      education: userData[0].education,
+    };
+
+    // Iterate through each preference and make individual API calls
+    for (const preferenceName in preferencesToUpdate) {
+      const preferenceValue = preferencesToUpdate[preferenceName];
+
+      try {
+        // Send the updated user data to the server
+        const response = await api.updatePref({
+          preference_name: preferenceName,
+          preference_value: preferenceValue,
+        });
+
+      }  catch (error) {
+        if (error.response && error.response.status === 503) {
+          // Handle 503 error (Service Unavailable) as a successful update
+          console.log(`No changes detected for ${preferenceName}. Update considered successful.`);
+        } else {
+          // Re-throw other errors
+          throw error;
+        }
+      }}
+    // Disable editing mode after attempting updates
+    setIsEditing(false);
+
+  } catch (error) {
+    console.error("Error updating user data:", error);
+    // Handle the error, e.g., display an error message to the user
+  }
+};
+
   return (
     <div className="page">
       <div className="centered-content">
@@ -75,7 +115,7 @@ export const Profile = () => {
                     <textarea
                         className={"profile-section editing"}
                       value={data.major}
-                      onChange={(e) => handleFieldChange('university', e.target.value)}
+                      onChange={(e) => handleFieldChange('major', e.target.value)}
                       />
                 ): (
                     <h2>{data.major}</h2>
@@ -120,7 +160,11 @@ export const Profile = () => {
                   )}
                 </div>
                 <div className={"button-container"}>
-                <button onClick={handleEdit}>{isEditing ? "Save" : "Edit"}</button>
+                {isEditing ? (
+                    <button onClick={()=>{setIsEditing(false);handleUpdate();}}>Save</button>
+                  ) : (
+                    <button onClick={()=>{setIsEditing(true);handleEdit();}}>Edit</button>
+                  )}
                 </div>
               </div>
             </div>
