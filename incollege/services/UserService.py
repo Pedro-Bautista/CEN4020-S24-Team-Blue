@@ -18,9 +18,9 @@ def update_preference(user_id, preference_name, preference_value):
     if preference_name == "education" and len(preference_value) <1:
         raise ContentException('Education must contain at least one value.', 409)
     if preference_name == "education" and len(preference_value) >512:
-        raise ContentException('Education must not exceed 512 characters')
+        raise ContentException('Education must not exceed 512 characters',404)
     if preference_name == "experience" and len(preference_value)>100:
-        raise ContentException('Experience must not exceed 100 characters')
+        raise ContentException('Experience must not exceed 100 characters',404)
     if preference_name is None or preference_name == '' or preference_value is None or preference_value == '':
         #Since these values can be empty, will raise only when name is not any of them.
         if preference_name != 'experience' or preference_name != 'bio' or preference_name != 'major' or preference_name != 'university':
