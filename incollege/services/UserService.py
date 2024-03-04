@@ -23,7 +23,10 @@ def update_preference(user_id, preference_name, preference_value):
         raise ContentException('Experience must not exceed 100 characters',404)
     if preference_name is None or preference_name == '' or preference_value is None or preference_value == '':
         #Since these values can be empty, will raise only when name is not any of them.
-        if preference_name != 'experience' or preference_name != 'bio' or preference_name != 'major' or preference_name != 'university':
+        if (preference_name == "experience") or (preference_name == "bio") or (preference_name == "major") or (preference_name == "university"):
+            print(preference_name, preference_value)
+        else:
+
             raise ContentException('Required preference parameters not provided.', 400)
     if not hasattr(user, preference_name):
         raise ContentException('No such preference.', 404)
