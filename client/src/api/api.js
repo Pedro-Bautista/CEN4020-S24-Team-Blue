@@ -98,10 +98,10 @@ const getRequests = async (getReqData) => {
 	}
 };
 
-const getAccepted = async (AcceptedData) => {
+const getUserData = async (UserData) => {
 	try {
-		const response = await api.post('/get_accepted_list', AcceptedData);
-		return response.data
+		const response = await api.post('/get_user_data', UserData);
+		return response.data;
 	} catch (error) {
 		console.log(error);
 		throw error;
@@ -137,7 +137,7 @@ export default {
 	updatePref,
 	requestConnection,
 	getRequests,
-	getAccepted,
+	getUserData,
 	getAcceptedProfiles,
 	changeConnStatus,
 }
