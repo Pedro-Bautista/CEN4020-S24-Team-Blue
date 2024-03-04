@@ -37,6 +37,6 @@ def configure_user_routes(app):
     def get_user_data(token):
         user_id = token.user_id
         user_data = UserService.get_user_data(user_id)
-        users_serial = [vars(user) for user in user_data]
-        return jsonify({'message': users_serial})
+        users_serial = vars(user_data)
+        return jsonify({'user': users_serial})
     
