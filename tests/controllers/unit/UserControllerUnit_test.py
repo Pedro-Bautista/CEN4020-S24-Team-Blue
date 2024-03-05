@@ -86,8 +86,20 @@ def test_handle_update_preference_error(mock_update_preference, test_client):
 
     assert response.status_code == 404
     assert get_response_error_desc(response) == 'No such user.'
+    
+@mock.patch('incollege.services.UserService.get_user', return_value=test_user1)
+def test_handle_get_user_data_success(mock_get_user, test_client):
+    response = test_client.post('/get_user_data', headers=test_jwt_header)
 
+    assert response.status_code == 200
+    assert json.loads(response.data)['user'] == vars(test_user1) 
+    
+@mock.patch('incollege.services.UserService.get_user')
+def test_handle_get_user_data_failure(mock_get_user, test_client):
+    response = test_client.post('/get_user_data', headers=test_invalid_jwt_header)
 
+    assert response.status_code == 401
+    
 def get_response_error_desc(response):
     return json.loads(response.data)['error']['description']
 
