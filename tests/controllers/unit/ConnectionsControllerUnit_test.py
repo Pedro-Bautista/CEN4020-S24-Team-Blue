@@ -55,7 +55,7 @@ def test_get_pending_requests_by_recipient_user_id_success(mock_get_pending_requ
 
 @mock.patch('incollege.services.ConnectionsService.get_connection_profiles_by_user_id',
             side_effect=ContentException("No matching connection requests found.", 404))
-def test_get_connection_profiles_success(mock_get_connection_profiles_by_user_id, test_client):
+def test_get_connection_profiles_fail(mock_get_connection_profiles_by_user_id, test_client):
     response = test_client.post('/get_connection_profiles', headers=test_jwt_header)
 
     assert response.status_code == 404
@@ -80,3 +80,11 @@ def test_send_connection_request_unauthorized(mock_send_request, test_client):
                                 headers=test_invalid_jwt_header)
 
     assert response.status_code == 401
+
+@mock.patch('incollege.services.ConnectionsService.get_connection_profiles_by_user_id')
+def test_get_connection_profiles_success(mock_get_connection_profiles_by_user_id, test_client):
+    response = test_client.post('/get_connection_profiles', headers=test_jwt_header)
+
+    assert response.status_code == 200
+    assert get_response_message(response) == []
+    mock_get_connection_profiles_by_user_id.assert_called_once_with('some_user_id')
