@@ -269,3 +269,4 @@ yarn-error.log*
 InCollege.db
 
 .idea/webResources.xml
+/.idea
