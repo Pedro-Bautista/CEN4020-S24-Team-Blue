@@ -1,7 +1,7 @@
 from incollege.entity.Job import Job
 from incollege.repositories.UniversalRepositoryHelper import UniversalRepositoryHelper
 
-UNIVERSAL = UniversalRepositoryHelper('jobs', Job, ['job_id'])
+UNIVERSAL = UniversalRepositoryHelper(Job, 'jobs', ['job_id'])
 
 
 def create_job(job):

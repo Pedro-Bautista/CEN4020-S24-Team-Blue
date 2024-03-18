@@ -4,7 +4,7 @@ from incollege.entity.AuthUser import AuthUser
 from incollege.repositories.UniversalRepositoryHelper import UniversalRepositoryHelper
 
 
-UNIVERSAL = UniversalRepositoryHelper('auth', AuthUser, ['user_id'])
+UNIVERSAL = UniversalRepositoryHelper(AuthUser, 'auth', ['user_id'])
 
 
 def get_auth_user_count():
@@ -27,7 +27,7 @@ def get_permissions_group(user_id):
     result = UNIVERSAL.get_objects_intersection({'user_id': user_id})
     if result:
         return result[0].permissions_group
-    
+
 
 def create_auth_user(auth_user):
     UNIVERSAL.create_object(auth_user)

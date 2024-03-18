@@ -4,7 +4,7 @@
 from incollege.entity.ConnectionRequest import ConnectionRequest, ConnectionRequestStatus
 from incollege.repositories.UniversalRepositoryHelper import UniversalRepositoryHelper
 
-UNIVERSAL = UniversalRepositoryHelper("connections", ConnectionRequest, ['sender_user_id', 'recipient_user_id'])
+UNIVERSAL = UniversalRepositoryHelper(ConnectionRequest, "connections", ['sender_user_id', 'recipient_user_id'])
 
 
 def create_connection_request(connection_request):
