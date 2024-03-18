@@ -46,7 +46,8 @@ class AuthJWT:
             token_string (str): The encoded token string.
 
         Returns:
-            AuthJWT:
+            AuthJWT: This instance with metadata set to match the input.
+            None: If the input is invalid in any way (expired, unverifiable, malformed).
 
         Examples:
             >>> # Example 1: Decoding a token
