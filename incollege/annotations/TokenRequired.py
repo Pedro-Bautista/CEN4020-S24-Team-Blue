@@ -1,6 +1,5 @@
 from functools import wraps
 
-import jwt
 from flask import request
 
 from incollege.entity.AuthJWT import AuthJWT
