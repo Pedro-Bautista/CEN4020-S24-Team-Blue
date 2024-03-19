@@ -1,4 +1,5 @@
 import uuid
+from typing import List
 
 from incollege.config import Config
 from incollege.entity.Job import Job
@@ -51,6 +52,13 @@ def get_job(job_id: str) -> 'Job | None':
     if not job:
         raise ContentException('No such job.', 404)
     return job
+
+
+def get_all_jobs() -> List[Job]:
+    jobs = JobRepository.get_all_jobs()
+    if not jobs:
+        raise ContentException('No jobs found.', 404)
+    return jobs
 
 
 def delete_job(job_id: str, user_id: str):
