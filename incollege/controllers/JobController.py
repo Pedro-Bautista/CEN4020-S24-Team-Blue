@@ -54,3 +54,14 @@ def configure_job_routes(app: Flask):
         job_id = data.get('job_id')
 
         JobService.delete_job(job_id, user_id)
+
+    @app.route('/job_fetch', methods=['POST'])
+    def handle_job_fetch():
+        """Route for fetching all jobs.
+        
+        Returns:
+            Response: A JSON-serialized list of all job records.
+        """
+        jobs = JobService.get_all_jobs()
+        jobs_serial = [vars(jobs) for job in jobs]
+        return jsonify({'message': jobs_serial})

@@ -1,4 +1,4 @@
-from typing import Generic
+from typing import Generic, List
 
 from incollege.entity.Job import Job
 from incollege.repositories.UniversalRepositoryHelper import UniversalRepositoryHelper
@@ -37,6 +37,16 @@ def get_job(job_id: str) -> Job:
     result = UNIVERSAL.get_objects_intersection({'job_id': job_id})
     if result:
         return result[0]
+
+
+def get_all_jobs() -> List[Job]:
+    """Retrieves all jobs from the database.
+
+    Returns:
+        List[Job]: All jobs on record.
+        None: If no jobs exist.
+    """
+    return UNIVERSAL.get_all_records()
 
 
 def delete_job(job: Job):
