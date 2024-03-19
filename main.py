@@ -9,6 +9,7 @@ from incollege.controllers.ApplicationController import configure_application_ro
 from incollege.controllers.AuthController import configure_auth_routes
 from incollege.controllers.ControllerAdvice import configure_controller_advice
 from incollege.controllers.JobController import configure_job_routes
+from incollege.controllers.JobSaveController import configure_job_save_routes
 from incollege.controllers.UserController import configure_user_routes
 from incollege.controllers.ConnectionsController import configure_connection_routes
 
@@ -20,6 +21,7 @@ configure_job_routes(app)
 configure_user_routes(app)
 configure_connection_routes(app)
 configure_application_routes(app)
+configure_job_save_routes(app)
 
 
 # Controller Error Handler

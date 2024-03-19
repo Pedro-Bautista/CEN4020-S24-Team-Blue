@@ -27,12 +27,12 @@ def configure_application_routes(app: Flask):
         applications = ApplicationService.get_applications_by_user_id(user_id)
         applications_serial = [vars(application) for application in applications]
         return jsonify({'message': applications_serial})
-    
+
     @app.route('/application_create', methods=['POST'])
     @token_required
     def handle_application_create(token: AuthJWT):
         data = request.get_json()
-        applied_job_id = data.get('applied_job_id')
+        applied_job_id = data.get('job_id')
         applicant_user_id = token.user_id
         graduation_date = data.get('graduation_date')
         start_working_date = data.get('start_working_date')
