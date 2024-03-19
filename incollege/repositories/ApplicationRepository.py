@@ -3,7 +3,7 @@ from incollege.entity.Job import Job
 from incollege.entity.User import User
 from incollege.repositories.UniversalRepositoryHelper import UniversalRepositoryHelper
 
-UNIVERSAL = UniversalRepositoryHelper(Application.__class__, 'applications', ['applied_job_id', 'applicant_user_id'])
+UNIVERSAL = UniversalRepositoryHelper(Application, 'applications', ['applied_job_id', 'applicant_user_id'])
 
 
 def get_application_count() -> int:

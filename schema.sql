@@ -56,3 +56,12 @@ CREATE TABLE IF NOT EXISTS applications (
     FOREIGN KEY (applicant_user_id) REFERENCES users(user_id),
     PRIMARY KEY (applied_job_id, applicant_user_id)
 );
+
+
+CREATE TABLE IF NOT EXISTS job_saves (
+    saving_user_id TEXT,
+    saved_job_id TEXT,
+    FOREIGN KEY (saving_user_id) REFERENCES users(user_id),
+    FOREIGN KEY (saved_job_id) REFERENCES jobs(job_id),
+    PRIMARY KEY (saving_user_id, saved_job_id)
+)
