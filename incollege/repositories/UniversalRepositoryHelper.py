@@ -54,6 +54,8 @@ def create_condition_string(data: dict, joiner: str = 'AND', fuzzy: bool = False
     Returns:
         str: A condition string matching the input data, fuzzily if specified.
     """
+    if len(data) == 0:
+        return "1=1"
     conditions = []
     for key, value in data.items():
         if fuzzy:
@@ -197,6 +199,18 @@ class UniversalRepositoryHelper(Generic[T]):
         result = cursor.fetchone()
         return result[0]
 
+    def get_all_records(self, limit: int = 20, offset: int = 0) -> List[T()]:
+        """Retrieve all records from the table, with pagination.
+
+        Args:
+            limit (int): The maximum records to retrieve.
+            offset (int): The number of the first record to retrieve.
+
+        Returns:
+            List[T()]: All records, with limit and offset as specified.
+        """
+        return self.get_objects_union(dict(), limit, offset)
+
     def __get_objects_conditional(self, condition_string: str, keys: dict, limit: int = 20,
                                   offset: int = 0, fuzzy: bool = False) -> List[T()]:
         """Get the objects from the table matching the condition string.
@@ -209,7 +223,7 @@ class UniversalRepositoryHelper(Generic[T]):
             fuzzy (bool): Whether to enable partial matching (using LIKE and %).
 
         Returns:
-            List[T]: A list of objects matching the input criteria.
+            List[T()]: A list of objects matching the input criteria.
         """
         query = f"SELECT * FROM {self.TABLE_NAME} WHERE {condition_string} LIMIT (?) OFFSET (?)"
 
@@ -234,7 +248,7 @@ class UniversalRepositoryHelper(Generic[T]):
             offset (int): Pagination offset.
 
         Returns:
-            List[T]: List of objects matching criteria.
+            List[T()]: List of objects matching criteria.
 
         Examples:
             >>> from incollege.entity.User import User
@@ -254,7 +268,7 @@ class UniversalRepositoryHelper(Generic[T]):
             offset (int): Pagination offset.
 
         Returns:
-            List[T]: List of objects matching criteria.
+            List[T()]: List of objects matching criteria.
         """
         condition_string = create_condition_string(keys, 'AND', False)
         return self.__get_objects_conditional(condition_string, keys, limit, offset)
@@ -268,7 +282,7 @@ class UniversalRepositoryHelper(Generic[T]):
             offset (int): Pagination offset.
 
         Returns:
-            List[T]: List of objects matching criteria.
+            List[T()]: List of objects matching criteria.
         """
         condition_string = create_condition_string(keys, 'OR', False)
         return self.__get_objects_conditional(condition_string, keys, limit, offset)
