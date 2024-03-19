@@ -44,8 +44,7 @@ CREATE TABLE IF NOT EXISTS connections (
     PRIMARY KEY (sender_user_id, recipient_user_id)
 );
 
-<<<<<<< Updated upstream
-=======
+
 CREATE TABLE IF NOT EXISTS applications (
     applied_job_id TEXT,
     applicant_user_id TEXT,
@@ -57,4 +56,3 @@ CREATE TABLE IF NOT EXISTS applications (
     FOREIGN KEY (applicant_user_id) REFERENCES users(user_id),
     PRIMARY KEY (applied_job_id, applicant_user_id)
 );
->>>>>>> Stashed changes

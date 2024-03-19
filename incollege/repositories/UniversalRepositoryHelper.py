@@ -139,7 +139,7 @@ class UniversalRepositoryHelper(Generic[T]):
         self.CLASS = cls
         self.PRIMARY_KEYS = primary_keys
 
-    def call_sql_query(self, query: str, values: List[str], map_to_object: bool = False) -> 'List[T()] | List[dict]':
+    def call_sql_query(self, query: str, values: List[str], map_to_object: bool = False) -> 'List[T] | List[dict]':
         """[UNSAFE] Directly call a SQL query.
 
         This method directly calls the database, allowing any SQL query to be performed. This is \
@@ -199,7 +199,7 @@ class UniversalRepositoryHelper(Generic[T]):
         result = cursor.fetchone()
         return result[0]
 
-    def get_all_records(self, limit: int = 20, offset: int = 0) -> List[T()]:
+    def get_all_records(self, limit: int = 20, offset: int = 0) -> List[T]:
         """Retrieve all records from the table, with pagination.
 
         Args:
@@ -207,12 +207,12 @@ class UniversalRepositoryHelper(Generic[T]):
             offset (int): The number of the first record to retrieve.
 
         Returns:
-            List[T()]: All records, with limit and offset as specified.
+            List[T]: All records, with limit and offset as specified.
         """
         return self.get_objects_union(dict(), limit, offset)
 
     def __get_objects_conditional(self, condition_string: str, keys: dict, limit: int = 20,
-                                  offset: int = 0, fuzzy: bool = False) -> List[T()]:
+                                  offset: int = 0, fuzzy: bool = False) -> List[T]:
         """Get the objects from the table matching the condition string.
 
         Args:
@@ -223,7 +223,7 @@ class UniversalRepositoryHelper(Generic[T]):
             fuzzy (bool): Whether to enable partial matching (using LIKE and %).
 
         Returns:
-            List[T()]: A list of objects matching the input criteria.
+            List[T]: A list of objects matching the input criteria.
         """
         query = f"SELECT * FROM {self.TABLE_NAME} WHERE {condition_string} LIMIT (?) OFFSET (?)"
 
@@ -239,7 +239,7 @@ class UniversalRepositoryHelper(Generic[T]):
         else:
             return []
 
-    def get_objects_fuzzy(self, keys: dict, limit: int = 20, offset: int = 0) -> List[T()]:
+    def get_objects_fuzzy(self, keys: dict, limit: int = 20, offset: int = 0) -> List[T]:
         """Get fuzzy-matching objects based on keys.
 
         Args:
@@ -248,7 +248,7 @@ class UniversalRepositoryHelper(Generic[T]):
             offset (int): Pagination offset.
 
         Returns:
-            List[T()]: List of objects matching criteria.
+            List[T]: List of objects matching criteria.
 
         Examples:
             >>> from incollege.entity.User import User
@@ -259,7 +259,7 @@ class UniversalRepositoryHelper(Generic[T]):
         condition_string = create_condition_string(keys, 'AND', True)
         return self.__get_objects_conditional(condition_string, keys, limit, offset, True)
 
-    def get_objects_intersection(self, keys: dict, limit: int = 20, offset: int = 0) -> List[T()]:
+    def get_objects_intersection(self, keys: dict, limit: int = 20, offset: int = 0) -> List[T]:
         """Get fully-matching objects based on keys.
 
         Args:
@@ -268,12 +268,12 @@ class UniversalRepositoryHelper(Generic[T]):
             offset (int): Pagination offset.
 
         Returns:
-            List[T()]: List of objects matching criteria.
+            List[T]: List of objects matching criteria.
         """
         condition_string = create_condition_string(keys, 'AND', False)
         return self.__get_objects_conditional(condition_string, keys, limit, offset)
 
-    def get_objects_union(self, keys: dict, limit: int = 20, offset: int = 0) -> List[T()]:
+    def get_objects_union(self, keys: dict, limit: int = 20, offset: int = 0) -> List[T]:
         """Get partially-matching objects based on keys.
 
         Args:
@@ -282,7 +282,7 @@ class UniversalRepositoryHelper(Generic[T]):
             offset (int): Pagination offset.
 
         Returns:
-            List[T()]: List of objects matching criteria.
+            List[T]: List of objects matching criteria.
         """
         condition_string = create_condition_string(keys, 'OR', False)
         return self.__get_objects_conditional(condition_string, keys, limit, offset)
@@ -303,7 +303,7 @@ class UniversalRepositoryHelper(Generic[T]):
         result = cursor.fetchall()
         return result[0] >= 1
 
-    def create_object(self, obj: T()):
+    def create_object(self, obj: T):
         """Creates a row in the table for the object passed.
 
         Args:
@@ -325,7 +325,7 @@ class UniversalRepositoryHelper(Generic[T]):
         cursor.execute(query, values_tuple)
         get_connection().commit()
 
-    def insert_update_object(self, mutated: T()):
+    def insert_update_object(self, mutated: T):
         """Update the record matching the primary key of the mutated object passed in.
 
         If the existing record is missing any columns or does not exist, the row and or columns \
@@ -354,7 +354,7 @@ class UniversalRepositoryHelper(Generic[T]):
             diff = dict_diff(original_dictionary, mutated_dictionary)
             self.__update_keys(mutated_primary_keys, diff)
 
-    def delete_object(self, obj: T()):
+    def delete_object(self, obj: T):
         """Delete an object based on its primary keys
 
         Args:
@@ -376,5 +376,5 @@ class UniversalRepositoryHelper(Generic[T]):
         cursor.execute(query, create_tuple(keys))
         get_connection().commit()
 
-    def __convert_to_instance(self, data: dict) -> T():
+    def __convert_to_instance(self, data: dict) -> T:
         return self.CLASS(**data)
