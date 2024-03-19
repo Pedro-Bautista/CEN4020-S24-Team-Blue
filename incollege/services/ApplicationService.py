@@ -13,7 +13,7 @@ def get_applications_by_job_id(applied_job_id: str) -> 'List[Application] | None
     return applications
 
 
-def get_applications_by_user(applicant_user_id: str) -> 'List[Application] | None':
+def get_applications_by_user_id(applicant_user_id: str) -> 'List[Application] | None':
     if not applicant_user_id:
         raise ContentException('Required user identifier information not provided.', 400)
     applications = ApplicationRepository.get_applications_by_user_id(applicant_user_id)
