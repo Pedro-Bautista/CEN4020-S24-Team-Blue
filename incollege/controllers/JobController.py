@@ -65,3 +65,16 @@ def configure_job_routes(app: Flask):
         jobs = JobService.get_all_jobs()
         jobs_serial = [vars(job) for job in jobs]
         return jsonify({'message': jobs_serial})
+
+    @app.route('/job_fetch', methods=['POST'])
+    def handle_job_fetch():
+        """Route for fetching job details. Expects a job_id.
+
+        Returns:
+            Response: A JSON-serialized form of the fetched job.
+        """
+        data = request.get_json()
+        job_id = data.get('job_id')
+        job = JobService.get_job(job_id)
+        job_serial = vars(job)
+        return jsonify({'message': job_serial})
