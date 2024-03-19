@@ -18,7 +18,7 @@ def configure_job_routes(app: Flask):
     @app.route('/job_post', methods=['POST'])
     @token_required
     def handle_job_post(token: AuthJWT):
-        """Route for job posting.
+        """Route for job posting. Expects all parameters to :class:`~Job` other than job_id.
 
         Args:
             token (AuthJWT): A valid authentication token for the sending user.
@@ -37,3 +37,20 @@ def configure_job_routes(app: Flask):
         JobService.post_job(user_id, title, desc, employer, location, salary)
 
         return jsonify({'message': 'Job posted successfully'}), 201
+
+    @app.route('/job_delete', methods=['POST'])
+    @token_required
+    def handle_job_delete(token: AuthJWT):
+        """Route for job deletion. Expects job_id.
+
+        Args:
+            token (AuthJWT): A valid authentication token for the sending user.
+
+        Returns:
+            Response: A basic placeholder response indicating success with status code 200.
+        """
+        data = request.get_json()
+        user_id = token.user_id
+        job_id = data.get('job_id')
+
+        JobService.delete_job(job_id, user_id)
