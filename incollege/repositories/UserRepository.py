@@ -5,7 +5,7 @@ from incollege.entity.User import User
 from incollege.entity.enum.ConnectionRequestStatus import ConnectionRequestStatus
 from incollege.repositories.UniversalRepositoryHelper import UniversalRepositoryHelper
 
-UNIVERSAL = UniversalRepositoryHelper('users', User, ['user_id'])
+UNIVERSAL = UniversalRepositoryHelper(User, 'users', ['user_id'])
 
 
 def create_user(user):

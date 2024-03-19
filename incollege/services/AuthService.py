@@ -17,19 +17,57 @@ from incollege.exceptions.AuthException import AuthException
 from incollege.repositories import UserRepository
 
 
-def validate_password(password):
+def validate_password(password: str) -> bool:
+    """Validates whether the password meets the requirements specified.
+
+    The following criteria will be evaluated:
+    - Must be between 8-12 characters (inclusive)
+    - Must contain at least one capital letter.
+    - Must contain at least one special (non-alphanumeric) character.
+
+    Args:
+        password (str): The password to be validated.
+
+    Returns:
+        bool: True if the requirements are met, False if not.
+    """
     return bool(re.search(r'(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[A-Z])(^.{8,12}$)', password))
 
 
-def hash_password(password):
+def hash_password(password: str) -> str:
+    """Returns the SHA-512 hash of the input password with the :class:`~Config`-specified salt appended.
+
+    Args:
+        password (str): The password to be hashed
+
+    Returns:
+        str: The hashed password.
+    """
     return hashlib.sha512(str.encode(password + Config.SALT), usedforsecurity=True).hexdigest()
 
 
-def create_user_id():
+def create_user_id() -> str:
+    """Generates a UUID to be used as a unique identifier.
+
+    Returns:
+        str: The UUID.
+    """
     return str(uuid.uuid4())
 
 
-def login(username, password):
+def login(username: str, password: str) -> str:
+    """Executes the service-level of the login process.
+
+    Args:
+        username: The username to log in as.
+        password: The password for the username.
+
+    Returns:
+        str: An encoded authentication token for the user referenced by the username.
+
+    Raises:
+        AuthException: If there is a failure to match the password to the username, or if the arguments are invalid.
+    """
     if not username or not password:
         raise AuthException("Username or password are not provided.", 400)
 
@@ -44,7 +82,22 @@ def login(username, password):
     return AuthJWT(user_id, permissions_group).encode()
 
 
-def signup(username, password, first_name, last_name):
+def signup(username: str, password: str, first_name: str, last_name: str) -> str:
+    """Executes the service level of the signup process.
+
+    Args:
+        username (str): Username to sign up.
+        password (str): Password to link to username.
+        first_name (str): First name for profile.
+        last_name (str): Last name for profile.
+
+    Returns:
+        str: An encoded authentication token for the user referenced by the username.
+
+    Raises:
+        AuthException: If the arguments are invalid, or the username already exists, or the internal user limit has \
+        been reached.
+    """
     if not username or not password:
         raise AuthException("Username or password are not provided.", 400)
     if not first_name or not last_name:

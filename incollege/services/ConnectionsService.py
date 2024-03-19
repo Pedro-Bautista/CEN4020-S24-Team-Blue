@@ -1,4 +1,4 @@
-from incollege.entity.enum.ConnectionRequestStatus import ConnectionRequestStatus
+from incollege.entity.enum.ConnectionRequestStatus import ConnectionRequestStatus, from_string
 from incollege.exceptions.ContentException import ContentException
 from incollege.repositories import ConnectionRepository, UserRepository
 from incollege.entity.ConnectionRequest import ConnectionRequest
@@ -51,6 +51,6 @@ def update_connection_request(sender_user_id, recipient_user_id, status):
         .get_request_by_sender_and_recipient_user_id(sender_user_id, recipient_user_id)
     if not connection_request:
         raise ContentException('No such connection request.', 404)
-    connection_request.status = ConnectionRequestStatus().from_string(status)
+    connection_request.status = from_string(status)
 
     ConnectionRepository.update_connection_request(connection_request)
