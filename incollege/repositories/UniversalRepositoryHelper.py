@@ -240,7 +240,7 @@ class UniversalRepositoryHelper(Generic[T]):
             >>> from incollege.entity.User import User
             >>> helper = UniversalRepositoryHelper(User, 'users', ['user_id'])
             >>> print(helper.get_objects_fuzzy({'first_name': 'aust'}))
-
+            User Object named "Austin", if exists.
         """
         condition_string = create_condition_string(keys, 'AND', True)
         return self.__get_objects_conditional(condition_string, keys, limit, offset, True)
@@ -273,7 +273,15 @@ class UniversalRepositoryHelper(Generic[T]):
         condition_string = create_condition_string(keys, 'OR', False)
         return self.__get_objects_conditional(condition_string, keys, limit, offset)
 
-    def does_record_exist(self, keys):
+    def does_record_exist(self, keys: dict) -> bool:
+        """Returns whether a record matching the keys exists.
+
+        Args:
+            keys (dict): The keys to match against.
+
+        Returns:
+            bool: True if a matching record exists, False if not.
+        """
         condition_string = create_condition_string(keys)
         query = f"SELECT COUNT(*) FROM {self.TABLE_NAME} WHERE {condition_string}"
         cursor = get_connection().cursor()
@@ -281,7 +289,12 @@ class UniversalRepositoryHelper(Generic[T]):
         result = cursor.fetchall()
         return result[0] >= 1
 
-    def create_object(self, obj):
+    def create_object(self, obj: T):
+        """Creates a row in the table for the object passed.
+
+        Args:
+            obj: The object to create a record for.
+        """
         dictionary = create_dict(obj)
         placeholders_string, keys_string = generate_input_parameters(dictionary)
         query = f"INSERT INTO {self.TABLE_NAME} {keys_string} VALUES {placeholders_string}"
@@ -289,7 +302,7 @@ class UniversalRepositoryHelper(Generic[T]):
         cursor.execute(query, create_tuple(dictionary))
         get_connection().commit()
 
-    def __update_keys(self, keys, update_data):
+    def __update_keys(self, keys: dict, update_data: dict):
         set_clause = ", ".join([f"{column} = ?" for column, value in update_data.items()])
         condition_string = create_condition_string(keys)
         query = f"UPDATE {self.TABLE_NAME} SET {set_clause} WHERE {condition_string}"
@@ -298,7 +311,24 @@ class UniversalRepositoryHelper(Generic[T]):
         cursor.execute(query, values_tuple)
         get_connection().commit()
 
-    def insert_update_object(self, mutated):
+    def insert_update_object(self, mutated: T):
+        """Update the record matching the primary key of the mutated object passed in.
+
+        If the existing record is missing any columns or does not exist, the row and or columns \
+        will be created.
+
+        Args:
+            mutated: The object representing the changes to the row.
+
+        Examples:
+            >>> from incollege.entity.User import User
+            >>> helper = UniversalRepositoryHelper(User, 'users', ['user_id'])
+            >>> user = User('some_id', 'some_username', 'some_first', 'some_last')
+            >>> helper.create_object(user)
+            >>> user.first_name = 'something_different'
+            >>> helper.insert_update_object(user)
+            The entry for user is now updated to have the first name 'something_different'
+        """
         mutated_dictionary = create_dict(mutated)
         mutated_primary_keys = \
             {attr: mutated_dictionary[attr] for attr in self.PRIMARY_KEYS if attr in mutated_dictionary}
@@ -310,12 +340,17 @@ class UniversalRepositoryHelper(Generic[T]):
             diff = dict_diff(original_dictionary, mutated_dictionary)
             self.__update_keys(mutated_primary_keys, diff)
 
-    def delete_entry(self, keys):
+    def delete_entry(self, keys: dict):
+        """Delete rows from the table matching keys.
+
+        Args:
+            keys: The set of keys to match on
+        """
         condition_string = create_condition_string(keys)
         query = f"DELETE FROM {self.TABLE_NAME} WHERE {condition_string}"
         cursor = get_connection().cursor()
         cursor.execute(query, create_tuple(keys))
         get_connection().commit()
 
-    def __convert_to_instance(self, data):
+    def __convert_to_instance(self, data: dict) -> T:
         return self.CLASS(**data)
