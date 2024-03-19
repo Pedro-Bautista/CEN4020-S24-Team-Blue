@@ -2,8 +2,8 @@ from incollege.exceptions.ContentException import ContentException
 
 
 def from_string(permissions_group_string):
-    upper_status = permissions_group_string.upper()
-    match upper_status:
+    upper_group = permissions_group_string.upper()
+    match upper_group:
         case 'USER':
             return PermissionsGroup.USER
         case 'ADMIN':
