@@ -11,7 +11,7 @@ api_test.rest
 
 # Distribution / packaging
 .Python
-build/
+documentation/build/
 develop-eggs/
 dist/
 downloads/
@@ -252,7 +252,7 @@ fabric.properties
 /coverage
 
 # production
-/build
+/documentation/build
 
 # misc
 .DS_Store
@@ -268,4 +268,4 @@ yarn-error.log*
 
 InCollege.db
 
-.idea/webResources.xml
+.idea/

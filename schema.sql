@@ -44,3 +44,24 @@ CREATE TABLE IF NOT EXISTS connections (
     PRIMARY KEY (sender_user_id, recipient_user_id)
 );
 
+
+CREATE TABLE IF NOT EXISTS applications (
+    applied_job_id TEXT,
+    applicant_user_id TEXT,
+    status TEXT DEFAULT 'PENDING',
+    graduation_date TEXT,
+    start_working_date TEXT,
+    application_paragraph TEXT,
+    FOREIGN KEY (applied_job_id) REFERENCES jobs(job_id),
+    FOREIGN KEY (applicant_user_id) REFERENCES users(user_id),
+    PRIMARY KEY (applied_job_id, applicant_user_id)
+);
+
+
+CREATE TABLE IF NOT EXISTS job_saves (
+    saving_user_id TEXT,
+    saved_job_id TEXT,
+    FOREIGN KEY (saving_user_id) REFERENCES users(user_id),
+    FOREIGN KEY (saved_job_id) REFERENCES jobs(job_id),
+    PRIMARY KEY (saving_user_id, saved_job_id)
+)

@@ -1,6 +1,7 @@
-werkzeug
-PyJWT
-Flask
+werkzeug~=3.0.1
+PyJWT~=2.8.0
+Flask~=3.0.2
 flask-cors
-pytest
+pytest~=8.1.1
 pytest-flask
+sphinx~=7.2.6
