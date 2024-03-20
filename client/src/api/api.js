@@ -64,6 +64,71 @@ const postJob = async (jobData) => {
 	}
 };
 
+const fetchAllJobs = async () => {
+	try {
+		const response = await api.post('/job_fetch_all');
+		return response.data.message;
+	} catch (error) {
+		console.log(error);
+		if(error.response.status === 404)
+			return [];
+		throw error;
+	}
+}
+
+const deleteJob = async (job_id) => {
+	try {
+		const jobData = {
+			job_id: job_id
+		}
+		const response = await api.post('/job_delete', jobData);
+		return response.data;
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+}
+
+const saveJob = async (job_id) => {
+	try {
+		const jobData = {
+			job_id: job_id
+		}
+		const response = await api.post('/save_job', jobData);
+		return response.data;
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+}
+
+const unsaveJob = async (job_id) => {
+	try {
+		const jobData = {
+			job_id: job_id
+		}
+		const response = await api.post('/unsave_job', jobData);
+		return response.data;
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+}
+
+const fetchSavedJobs = async () => {
+	try {
+		const response = await api.post('/saved_jobs_fetch'); // returns a list of job objects with field message.saved_job_id, need to fetch all jobs with these ids and return them 
+		const savedJobIds = response.data.message.map((job) => job.saved_job_id);
+		const savedJobs = await Promise.all(savedJobIds.map((job_id) => api.post('/job_fetch', {job_id: job_id})));
+		return savedJobs.map((job) => job.data.message);
+	} catch (error) {
+		console.log(error);
+		if(error.response.status === 404)
+			return [];
+		throw error;
+	}
+}
+
 const updatePref = async (prefData) => {
 
 	try {
@@ -134,6 +199,11 @@ export default {
 	signup,
 	searchForPeople,
 	postJob,
+	fetchAllJobs,
+	deleteJob,
+	saveJob,
+	unsaveJob,
+	fetchSavedJobs,
 	updatePref,
 	requestConnection,
 	getRequests,

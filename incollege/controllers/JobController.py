@@ -55,6 +55,8 @@ def configure_job_routes(app: Flask):
 
         JobService.delete_job(job_id, user_id)
 
+        return jsonify({'message': 'Job deleted successfully'}), 200
+
     @app.route('/job_fetch_all', methods=['POST'])
     def handle_job_fetch_all():
         """Route for fetching all jobs.

@@ -1,4 +1,4 @@
-from unittest import mock
+from unittest import mock, TestCase
 
 from incollege.repositories.UserRepository import *
 
@@ -88,3 +88,30 @@ def test_update_user(mock_get_connection):
     result = update_user(test_user)
 
     assert result is None
+
+@mock.patch('incollege.repositories.UserRepository.UNIVERSAL.call_sql_query')
+def test_get_connection_users_by_user_id_none(mock_call_sql_query):
+	mock_call_sql_query.return_value = None
+
+	result = get_connection_users_by_user_id(test_user.user_id)
+
+	assert result is None
+    
+@mock.patch('incollege.repositories.UserRepository.UNIVERSAL.call_sql_query')
+def test_get_connection_users_by_user_id(mock_call_sql_query):
+    mock_call_sql_query.return_value = [tuple(test_user_data)]
+
+    result = get_connection_users_by_user_id(test_user.user_id)
+    assert result is not None
+    assert len(result) == 1
+
+@mock.patch('incollege.repositories.UniversalRepositoryHelper.get_connection')
+def test_get_connections_by_user_id_none(mock_get_connection):
+	mock_cursor = mock.MagicMock()
+	mock_get_connection.return_value.cursor.return_value = mock_cursor
+	mock_cursor.fetchall.return_value = ()
+	mock_cursor.description = user_description
+
+	result = get_connection_users_by_user_id(test_user.user_id)
+
+	assert result is None
