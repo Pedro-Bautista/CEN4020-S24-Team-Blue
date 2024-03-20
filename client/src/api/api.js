@@ -64,6 +64,31 @@ const postJob = async (jobData) => {
 	}
 };
 
+const fetchAllJobs = async () => {
+	try {
+		const response = await api.post('/job_fetch_all');
+		return response.data.message;
+	} catch (error) {
+		console.log(error);
+		if(error.response.status === 404)
+			return [];
+		throw error;
+	}
+}
+
+const deleteJob = async (job_id) => {
+	try {
+		const jobData = {
+			job_id: job_id
+		}
+		const response = await api.post('/job_delete', jobData);
+		return response.data;
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+}
+
 const updatePref = async (prefData) => {
 
 	try {
@@ -134,6 +159,8 @@ export default {
 	signup,
 	searchForPeople,
 	postJob,
+	fetchAllJobs,
+	deleteJob,
 	updatePref,
 	requestConnection,
 	getRequests,
