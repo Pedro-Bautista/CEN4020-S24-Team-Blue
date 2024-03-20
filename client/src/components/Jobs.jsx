@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/api';
 import { AuthData } from '../auth/AuthWrapper';
-import { Menu, MenuItem, IconButton } from '@mui/material'
+import {
+	Menu,
+	MenuItem,
+	IconButton,
+	Accordion,
+	AccordionSummary,
+	AccordionDetails,
+	Typography 
+} from '@mui/material'
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export const Jobs = () => {
 	const { user } = AuthData();
@@ -51,6 +60,8 @@ export const Jobs = () => {
     };
 
 	const openMenu = (event, job) => {
+		event.preventDefault();
+		event.stopPropagation();
         setAnchorEl(event.currentTarget);
         setSelectedJob(job);
     };
@@ -187,37 +198,51 @@ export const Jobs = () => {
                 <button onClick={() => handleTabChange('saved')}>Saved Jobs</button>
             </div>
 
-            <div className="jobs-list">
-                <h3>{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Jobs</h3>
-                {displayedJobs.map((job, index) => (
-                    <div key={index} className="job">
-                        <h4>
-                            {job.title}
-                            <IconButton onClick={(event) => openMenu(event, job)}>
-                                <MoreVertIcon />
-                            </IconButton>
-                            <Menu
-                                anchorEl={anchorEl}
-                                keepMounted
-                                open={Boolean(anchorEl) && selectedJob === job}
-                                onClose={closeMenu}
-                            >
-                                {activeTab !== 'saved' && (
-                                    <MenuItem onClick={() => handleSaveUnsaveJob(job.job_id, isJobSaved(job.job_id))}>
-										{isJobSaved(job.job_id) ? 'Unsave' : 'Save'}
-									</MenuItem>
-                                )}
-                                {activeTab === 'saved' && (
-                                    <MenuItem onClick={() => handleSaveUnsaveJob(job.job_id, true)}>Unsave</MenuItem>
-                                )}
-                                {activeTab === 'my' && (
-                                    <MenuItem onClick={() => handleDelete(job.job_id)}>Delete</MenuItem>
-                                )}
-                            </Menu>
-                        </h4>
-                    </div>
-                ))}
-            </div>
+			<div className="jobs-list">
+				<Typography variant="h6">{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Jobs</Typography>
+				{displayedJobs.map((job, index) => (
+					<Accordion key={index}>
+						<AccordionSummary
+							expandIcon={<ExpandMoreIcon />}
+							aria-controls={`panel${index}-content`}
+							id={`panel${index}-header`}
+						>
+							<Typography>{job.title}</Typography>
+							<IconButton onClick={(event) => openMenu(event, job)} size="small" sx={{ ml: 'auto', mr: -1 }}>
+								<MoreVertIcon />
+							</IconButton>
+						</AccordionSummary>
+						<AccordionDetails>
+							<Typography>Description: {job.desc}</Typography>
+							<Typography>Employer: {job.employer}</Typography>
+							<Typography>Location: {job.location}</Typography>
+							<Typography>Salary: {job.salary}</Typography>
+						</AccordionDetails>
+					</Accordion>
+				))}
+				<Menu
+					anchorEl={anchorEl}
+					keepMounted
+					open={Boolean(anchorEl)}
+					onClose={closeMenu}
+				>
+					{selectedJob && (
+						<>
+							{activeTab !== 'saved' && (
+								<MenuItem onClick={() => handleSaveUnsaveJob(selectedJob.job_id, isJobSaved(selectedJob.job_id))}>
+									{isJobSaved(selectedJob.job_id) ? 'Unsave' : 'Save'}
+								</MenuItem>
+							)}
+							{activeTab === 'saved' && (
+								<MenuItem onClick={() => handleSaveUnsaveJob(selectedJob.job_id, true)}>Unsave</MenuItem>
+							)}
+							{activeTab === 'my' && (
+								<MenuItem onClick={() => handleDelete(selectedJob.job_id)}>Delete</MenuItem>
+							)}
+						</>
+					)}
+				</Menu>
+			</div>
         </div>
     );
 };
