@@ -6,7 +6,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 export const Jobs = () => {
 	const { user } = AuthData();
-    const [activeTab, setActiveTab] = useState('all');
+    const [savedJobs, setSavedJobs] = useState([]);
+	const [activeTab, setActiveTab] = useState('all'); // 'all', 'my', or 'saved'
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedJob, setSelectedJob] = useState(null);
     const [message, setMessage] = useState('');
@@ -63,7 +64,34 @@ export const Jobs = () => {
         setActiveTab(tabName);
     };
 
-    const filteredJobs = activeTab === 'all' ? jobs : jobs.filter(job => job.owner_user_id === user.user_id);
+    const handleSaveUnsaveJob = async (job_id, isSaved) => {
+        try {
+            if (isSaved) {
+                await api.unsaveJob(job_id);
+            } else {
+                await api.saveJob(job_id);
+            }
+            // Refresh saved jobs after action
+            const fetchedSavedJobs = await api.fetchSavedJobs();
+            setSavedJobs(fetchedSavedJobs);
+            setMessage(isSaved ? 'Job unsaved successfully.' : 'Job saved successfully.');
+        } catch (error) {
+            console.error('Error saving/unsaving job:', error);
+            setMessage('Failed to update job. Please try again.');
+        }
+        closeMenu();
+    };
+
+	const isJobSaved = (job_id) => {
+		return savedJobs.some(savedJob => savedJob.job_id === job_id);
+	}
+
+    let displayedJobs = jobs;
+    if (activeTab === 'my') {
+        displayedJobs = jobs.filter(job => job.owner_user_id === user.user_id);
+    } else if (activeTab === 'saved') {
+        displayedJobs = savedJobs;
+    }
 
 	useEffect(() => {
         const fetchJobs = async () => {
@@ -75,7 +103,17 @@ export const Jobs = () => {
             }
         };
 
+        const fetchSavedJobs = async () => {
+            try {
+                const fetchedSavedJobs = await api.fetchSavedJobs();
+                setSavedJobs(fetchedSavedJobs);
+            } catch (error) {
+                console.error('Error fetching saved jobs:', error);
+            }
+        };
+
         fetchJobs();
+        fetchSavedJobs();
     }, []);
 
 	const handleDelete = async (job_id) => {
@@ -146,29 +184,36 @@ export const Jobs = () => {
 			<div className="tabs">
                 <button onClick={() => handleTabChange('all')}>All Jobs</button>
                 <button onClick={() => handleTabChange('my')}>My Jobs</button>
+                <button onClick={() => handleTabChange('saved')}>Saved Jobs</button>
             </div>
 
             <div className="jobs-list">
-                <h3>{activeTab === 'all' ? 'Available Jobs' : 'My Jobs'}</h3>
-                {filteredJobs.map((job, index) => (
+                <h3>{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Jobs</h3>
+                {displayedJobs.map((job, index) => (
                     <div key={index} className="job">
                         <h4>
                             {job.title}
-                            {activeTab === 'my' && (
-                                <>
-                                    <IconButton onClick={(event) => openMenu(event, job)}>
-                                        <MoreVertIcon />
-                                    </IconButton>
-                                    <Menu
-                                        anchorEl={anchorEl}
-                                        keepMounted
-                                        open={Boolean(anchorEl) && selectedJob === job}
-                                        onClose={closeMenu}
-                                    >
-                                        <MenuItem onClick={() => handleDelete(job.job_id)}>Delete</MenuItem>
-                                    </Menu>
-                                </>
-                            )}
+                            <IconButton onClick={(event) => openMenu(event, job)}>
+                                <MoreVertIcon />
+                            </IconButton>
+                            <Menu
+                                anchorEl={anchorEl}
+                                keepMounted
+                                open={Boolean(anchorEl) && selectedJob === job}
+                                onClose={closeMenu}
+                            >
+                                {activeTab !== 'saved' && (
+                                    <MenuItem onClick={() => handleSaveUnsaveJob(job.job_id, isJobSaved(job.job_id))}>
+										{isJobSaved(job.job_id) ? 'Unsave' : 'Save'}
+									</MenuItem>
+                                )}
+                                {activeTab === 'saved' && (
+                                    <MenuItem onClick={() => handleSaveUnsaveJob(job.job_id, true)}>Unsave</MenuItem>
+                                )}
+                                {activeTab === 'my' && (
+                                    <MenuItem onClick={() => handleDelete(job.job_id)}>Delete</MenuItem>
+                                )}
+                            </Menu>
                         </h4>
                     </div>
                 ))}
