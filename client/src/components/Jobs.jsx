@@ -22,8 +22,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export const Jobs = () => {
 	const { user } = AuthData();
+	const [appliedJobs, setAppliedJobs] = useState([]);
 	const [savedJobs, setSavedJobs] = useState([]);
-	const [activeTab, setActiveTab] = useState('all'); // 'all', 'my', or 'saved'
+	const [activeTab, setActiveTab] = useState('all'); // 'all', 'my', or 'saved', 'applied', 'not applied'
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [selectedJob, setSelectedJob] = useState(null);
 	const [message, setMessage] = useState('');
@@ -138,10 +139,19 @@ export const Jobs = () => {
 	}
 
 	let displayedJobs = jobs;
-	if (activeTab === 'my') {
-		displayedJobs = jobs.filter(job => job.owner_user_id === user.user_id);
-	} else if (activeTab === 'saved') {
-		displayedJobs = savedJobs;
+	switch (activeTab) {
+		case 'my':
+			displayedJobs = jobs.filter(job => job.owner_user_id === user.user_id);
+			break;
+		case 'saved':
+			displayedJobs = savedJobs;
+			break;
+		case 'applied':
+			displayedJobs = jobs.filter(job => appliedJobs.some(appliedJob => appliedJob.applied_job_id === job.job_id));
+			break;
+		case 'notApplied':
+			displayedJobs = jobs.filter(job => !appliedJobs.some(appliedJob => appliedJob.applied_job_id === job.job_id));
+			break;
 	}
 
 	useEffect(() => {
@@ -163,6 +173,16 @@ export const Jobs = () => {
 			}
 		};
 
+		const fetchAppliedJobs = async () => {
+			try {
+				const fetchedAppliedJobs = await api.fetchAppliedJobs();
+				setAppliedJobs(fetchedAppliedJobs);
+			} catch (error) {
+				console.error('Error fetching applied jobs:', error);
+			}
+		};
+
+		fetchAppliedJobs();
 		fetchJobs();
 		fetchSavedJobs();
 	}, []);
@@ -236,6 +256,8 @@ export const Jobs = () => {
 				<button onClick={() => handleTabChange('all')}>All Jobs</button>
 				<button onClick={() => handleTabChange('my')}>My Jobs</button>
 				<button onClick={() => handleTabChange('saved')}>Saved Jobs</button>
+				<button onClick={() => handleTabChange('applied')}>Applied Jobs</button>
+				<button onClick={() => handleTabChange('notApplied')}>Not Applied Jobs</button>
 			</div>
 
 			<div className="jobs-list">

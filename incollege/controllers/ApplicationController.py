@@ -23,7 +23,6 @@ def configure_application_routes(app: Flask):
     @app.route('/applications_fetch_by_user_id', methods=['POST'])
     @token_required
     def handle_application_fetch_by_user_id(token: AuthJWT):
-        data = request.get_json()
         user_id = token.user_id
         applications = ApplicationService.get_applications_by_user_id(user_id)
         applications_serial = [vars(application) for application in applications]
