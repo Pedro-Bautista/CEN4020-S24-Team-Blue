@@ -117,7 +117,7 @@ const unsaveJob = async (job_id) => {
 
 const fetchSavedJobs = async () => {
 	try {
-		const response = await api.post('/saved_jobs_fetch'); // returns a list of job objects with field message.saved_job_id, need to fetch all jobs with these ids and return them 
+		const response = await api.post('/saved_jobs_fetch');
 		const savedJobIds = response.data.message.map((job) => job.saved_job_id);
 		const savedJobs = await Promise.all(savedJobIds.map((job_id) => api.post('/job_fetch', {job_id: job_id})));
 		return savedJobs.map((job) => job.data.message);
@@ -127,6 +127,29 @@ const fetchSavedJobs = async () => {
 			return [];
 		throw error;
 	}
+}
+
+const applyToJob = async (applicationData) => {
+	try {
+		const response = await api.post('/application_create', applicationData);
+		return response.data;
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+}
+
+const fetchAppliedJobs = async () => {
+	try {
+		const response = await api.post('/applications_fetch_by_user_id');
+		return response.data.message;
+	} catch (error) {
+		console.log(error);
+		if(error.response.status === 404)
+			return [];
+		throw error;
+	}
+
 }
 
 const updatePref = async (prefData) => {
@@ -204,6 +227,8 @@ export default {
 	saveJob,
 	unsaveJob,
 	fetchSavedJobs,
+	applyToJob,
+	fetchAppliedJobs,
 	updatePref,
 	requestConnection,
 	getRequests,
