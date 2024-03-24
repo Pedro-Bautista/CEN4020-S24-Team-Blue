@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS users (
     email_pref TEXT,
     sms_pref TEXT,
     targeted_adv_pref TEXT,
+    tier TEXT,
     PRIMARY KEY (user_id)
 );
 
@@ -64,4 +65,22 @@ CREATE TABLE IF NOT EXISTS job_saves (
     FOREIGN KEY (saving_user_id) REFERENCES users(user_id),
     FOREIGN KEY (saved_job_id) REFERENCES jobs(job_id),
     PRIMARY KEY (saving_user_id, saved_job_id)
-)
+);
+
+CREATE TABLE IF NOT EXISTS chats (
+    chat_id TEXT,
+    user1 TEXT,
+    user2 TEXT, 
+    FOREIGN KEY(user1) REFERENCES users(user_id),
+    FOREIGN KEY(user2) REFERENCES users(user_id),
+    PRIMARY KEY(chat_id, user1, user2)
+);
+
+CREATE TABLE IF NOT EXISTS messages (
+    chat_id TEXT,
+    message_id TEXT,
+    content TEXT,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (chat_id) REFERENCES chats(chat_id),
+    PRIMARY KEY (chat_id, message_id)
+);
