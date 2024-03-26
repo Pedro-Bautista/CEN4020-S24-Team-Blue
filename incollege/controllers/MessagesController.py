@@ -23,7 +23,7 @@ def configure_messages_routes(app: Flask):
         user1 = token.user_id
         message_id = data.get('message_id')
         MessagesService.delete_message(user1, message_id)
-        return jsonify()
+        return jsonify({'message': 'Message deleted successfully'}), 200
     
     @app.route('/get_messages', methods=['POST'])
     @token_required
