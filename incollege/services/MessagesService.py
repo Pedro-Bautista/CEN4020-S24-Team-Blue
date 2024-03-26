@@ -36,3 +36,14 @@ def get_messages(user1: str, chat_id: str):
     if not messages_in_chat:
         raise ContentException('No messages in this chat.', 404)
     return messages_in_chat
+
+def delete_message(user1: str, message_id: str):
+    if not user1 or not message_id:
+        raise ContentException('Cannot delete messages with information provided.', 400)
+    user = UserRepository.get_user(user1)
+    if not user:
+        raise ContentException('Do not have sufficient permissions to delete this message.', 400)
+    message = MessagesRepository.get_message(message_id)
+    if not message:
+        raise ContentException('No such message.', 404)
+    MessagesRepository.delete_message(message)
