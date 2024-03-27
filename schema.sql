@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS messages (
     chat_id TEXT,
     message_id TEXT,
     content TEXT,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status TEXT DEFAULT 'UNREAD',
     FOREIGN KEY (chat_id) REFERENCES chats(chat_id),
     PRIMARY KEY (chat_id, message_id)
 );
