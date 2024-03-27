@@ -223,7 +223,7 @@ const createChat = async (user2_id) => {
 			user2: user2_id
 		}
 		const response = await api.post('/create_chat', chatData);
-		return response.data.message;
+		return response.data;
 	} catch (error) {
 		console.log(error);
 		throw error;

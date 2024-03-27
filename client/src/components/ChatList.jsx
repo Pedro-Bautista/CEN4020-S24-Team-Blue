@@ -24,18 +24,6 @@ const ChatList = ({ chats, setChats, setCurrentChat }) => {
 
 		const fetchChats = async () => {
 			const data = await api.getChatList();
-
-			const chats = await Promise.all(data.map(async (chat) => {
-				const response = await api.getUserData({ user_id: chat.user2 });
-				const user2 = response.user
-				return {
-					id: chat.chat_id,
-					name: user2.first_name + " " + user2.last_name,
-				};
-			}));
-
-			console.log(chats);
-
 			setChats(chats);
 		}
 
@@ -46,7 +34,6 @@ const ChatList = ({ chats, setChats, setCurrentChat }) => {
 	const handleCreateChat = async (user2_id) => {
 		await api.createChat(user2_id);
 		const data = await api.getChatList();
-		console.log(data)
 		setChats(data);
 	};
 
@@ -74,8 +61,8 @@ const ChatList = ({ chats, setChats, setCurrentChat }) => {
 			</Accordion>
 			<List>
 				{chats.map((chat) => (
-					<ListItemButton key={chat.chat_id} onClick={() => setCurrentChat(chat.id)}>
-						<ListItemText primary={chat.name} />
+					<ListItemButton key={chat.chat_id} onClick={() => setCurrentChat(chat.chat_id)}>
+						<ListItemText primary={chat.user2} />
 					</ListItemButton>
 				))}
 			</List>

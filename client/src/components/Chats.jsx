@@ -5,7 +5,6 @@ import ChatWindow from './ChatWindow'
 import api from '../api/api'
 import {
 	Grid,
-	Divider
 } from '@mui/material'
 
 export const Chats = () => {
