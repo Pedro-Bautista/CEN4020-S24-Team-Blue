@@ -31,6 +31,6 @@ def configure_messages_routes(app: Flask):
         data = request.get_json()
         user1 = token.user_id
         chat_id = data.get('chat_id')
-        messages_in_chat = MessagesService.get_messages_by_chat_id(user1, chat_id)
+        messages_in_chat = MessagesService.get_messages(user1, chat_id)
         messages_serial = [vars(message) for message in messages_in_chat]
         return jsonify({'message': messages_serial})

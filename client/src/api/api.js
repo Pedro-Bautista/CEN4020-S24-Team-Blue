@@ -199,7 +199,7 @@ const getUserData = async (UserData) => {
 const getAcceptedProfiles = async (AcceptedData) => {
 	try {
 		const response = await api.post('/get_connection_profiles', AcceptedData);
-		return response.data
+		return response.data.message;
 	} catch (error) {
 		console.log(error);
 		throw error;
@@ -211,6 +211,69 @@ const changeConnStatus = async (statusData) => {
 	try {
 		const response = await api.post('/change_conn_status', statusData);
 		return response
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+};
+
+const createChat = async (user2_id) => {
+	try {
+		const chatData = {
+			user2: user2_id
+		}
+		const response = await api.post('/create_chat', chatData);
+		return response.data.message;
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+};
+
+const getChatList = async () => {
+	try {
+		const response = await api.post('/get_chat_list', {});
+		return response.data.message;
+	} catch (error) {
+		console.log(error);
+		if(error.response.status === 404)
+			return [];
+		throw error;
+	}
+};
+
+const sendMessage = async (messageData) => {
+	try {
+		const response = await api.post('/send_message', messageData);
+		return response.data;
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+};
+
+const fetchMessages = async (chat_id) => {
+	try {
+		const chatData = {
+			chat_id: chat_id
+		}
+		const response = await api.post('/get_messages', chatData);
+		return response.data.message;
+	} catch (error) {
+		console.log(error);
+		if(error.response.status === 404)
+			return [];
+		throw error;
+	}
+};
+
+const deleteMessage = async (message_id) => {
+	try {
+		const messageData = {
+			message_id: message_id
+		}
+		const response = await api.post('/delete_message', messageData);
+		return response.data;
 	} catch (error) {
 		console.log(error);
 		throw error;
@@ -235,4 +298,9 @@ export default {
 	getUserData,
 	getAcceptedProfiles,
 	changeConnStatus,
+	createChat,
+	getChatList,
+	sendMessage,
+	fetchMessages,
+	deleteMessage
 }

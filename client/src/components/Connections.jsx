@@ -19,7 +19,7 @@ export const Connections = () => {
             try {
                 const responseData = await api.getAcceptedProfiles({});
                 console.log("Accepted List", responseData);
-                setConnections(responseData.message)
+                setConnections(responseData)
             } catch (error) {
                 console.log(error);
             }
