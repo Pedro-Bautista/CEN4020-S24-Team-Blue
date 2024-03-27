@@ -34,3 +34,25 @@ def configure_messages_routes(app: Flask):
         messages_in_chat = MessagesService.get_messages(user1, chat_id)
         messages_serial = [vars(message) for message in messages_in_chat]
         return jsonify({'message': messages_serial})
+    
+    @app.route('/change_read_status', methods = ['POST'])
+    @token_required
+    def handle_change_read_status(token: AuthJWT):
+        data = request.get_json()
+        user1 = token.user_id
+        chat_id = data.get('chat_id')
+        status = data.get('status')
+        message_id = data.get('message_id')
+        MessagesService.change_read_status(user1, chat_id, message_id, status)
+        return jsonify()
+    
+    @app.route('/get_unread', methods = ['POST'])
+    @token_required
+    def handle_get_unread(token: AuthJWT):
+        data = request.get_json()
+        user1 = token.user_id
+        chat_id = data.get('chat_id')
+        MessagesService.get_unread(user1, chat_id)
+        unread_messages = MessagesService.get_unread(user1, chat_id)
+        unread_messages_serial = [vars(message) for message in unread_messages]
+        return jsonify({'message': unread_messages_serial})
