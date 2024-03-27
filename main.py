@@ -12,6 +12,8 @@ from incollege.controllers.JobController import configure_job_routes
 from incollege.controllers.JobSaveController import configure_job_save_routes
 from incollege.controllers.UserController import configure_user_routes
 from incollege.controllers.ConnectionsController import configure_connection_routes
+from incollege.controllers.ChatsController import configure_chats_routes
+from incollege.controllers.MessagesController import configure_messages_routes
 
 # Configure endpoints
 app = Flask(__name__)
@@ -22,7 +24,8 @@ configure_user_routes(app)
 configure_connection_routes(app)
 configure_application_routes(app)
 configure_job_save_routes(app)
-
+configure_chats_routes(app)
+configure_messages_routes(app)
 
 # Controller Error Handler
 configure_controller_advice(app)

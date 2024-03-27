@@ -43,6 +43,11 @@ def get_connections_by_user_id(user_id):
     if results:
         return results
 
-
 def update_connection_request(mutated_connection_request):
     UNIVERSAL.insert_update_object(mutated_connection_request)
+
+def connection_check(user1, user2):
+    result = UNIVERSAL.get_objects_intersection({'sender_user_id': user1, 'recipient_user_id' : user2, 'status': ConnectionRequestStatus.ACCEPTED})
+    if result:
+        return result[0]
+    return None
