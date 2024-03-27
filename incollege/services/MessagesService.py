@@ -4,6 +4,7 @@ from typing import List
 from incollege.entity.Messages import Messages
 from incollege.exceptions.ContentException import ContentException
 from incollege.repositories import UserRepository, ChatsRepository, MessagesRepository
+from incollege.entity.enum.MessagesStatus import MessageStatus, from_string
 
 def create_message_id():
     return str(uuid.uuid4())
@@ -47,3 +48,30 @@ def delete_message(user1: str, message_id: str):
     if not message:
         raise ContentException('No such message.', 404)
     MessagesRepository.delete_message(message)
+    
+def change_read_status(user1, chat_id, message_id, status):
+    if not user1 or not chat_id or not message_id or not status:
+        raise ContentException('Cannot change status with information provided', 400)
+    user = UserRepository.get_user(user1)
+    if not user:
+        raise ContentException('Do not have sufficient permissions to change read status', 400)
+    message = MessagesRepository.get_message(message_id)
+    if not message:
+        raise ContentException('Message does not exist.', 404)
+    message.status = from_string(status)
+        
+    MessagesRepository.change_read_status(message)
+    
+def get_unread(user1, chat_id):
+    if not user1 or not chat_id:
+        raise ContentException('Cannot get unread messages with information provided', 400)
+    user = UserRepository.get_user(user1)
+    if not user:
+        raise ContentException('Do not have sufficient permissions to get messages', 400)   
+    chat = ChatsRepository.get_chat(chat_id)
+    if not chat:
+        raise ContentException('Chat does not exist', 404)
+    
+    result = MessagesRepository.get_unread(chat_id)
+    
+    return result
