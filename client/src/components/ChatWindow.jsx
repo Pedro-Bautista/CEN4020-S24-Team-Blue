@@ -20,6 +20,12 @@ const ChatWindow = ({ chatId, userId }) => {
 			const data = await api.fetchMessages(chatId);
 			setMessages(data);
 			scrollToBottom();
+
+			for (let msg of data) {
+                if (msg.status === '0') {
+                    await api.changeReadStatus(chatId, msg.message_id, 'read');
+                }
+            }
 		};
 
 		fetchMessages();
