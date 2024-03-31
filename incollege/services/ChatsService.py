@@ -21,13 +21,16 @@ def create_chat(user1, user2):
     if ChatsRepository.get_chat_by_both_users(user2, user1):
         raise ContentException('Chat between users already exists', 409)
     user = UserRepository.get_user(user1)
+    user_2 = UserRepository.get_user(user2)
+    user1_name = user.first_name + ' ' + user.last_name
+    user2_name = user_2.first_name + ' ' + user_2.last_name
     user_tier = user.tier 
     if user_tier == 'standard':
         if not ConnectionRepository.connection_check(user1, user2) and not ConnectionRepository.connection_check(user2, user1):
             raise ContentException('Cannot create chat if not connected', 404)
-    
+        
     chat_id = create_chat_id()
-    chat = Chats(chat_id, user1, user2)
+    chat = Chats(chat_id, user1, user2, user1_name, user2_name)
 
     ChatsRepository.create_chat(chat)
     
