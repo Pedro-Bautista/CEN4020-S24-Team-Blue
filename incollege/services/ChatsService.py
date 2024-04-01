@@ -6,8 +6,10 @@ from incollege.exceptions.ContentException import ContentException
 from incollege.repositories import ConnectionRepository, UserRepository, ChatsRepository
 from incollege.entity.Chats import Chats
 
+
 def create_chat_id():
     return str(uuid.uuid4())
+
 
 def create_chat(user1, user2):
     if not user1 or not user2:
@@ -24,28 +26,30 @@ def create_chat(user1, user2):
     user_2 = UserRepository.get_user(user2)
     user1_name = user.first_name + ' ' + user.last_name
     user2_name = user_2.first_name + ' ' + user_2.last_name
-    user_tier = user.tier 
+    user_tier = user.tier
     if user_tier == 'standard':
-        if not ConnectionRepository.connection_check(user1, user2) and not ConnectionRepository.connection_check(user2, user1):
+        if not ConnectionRepository.connection_check(user1, user2) and not ConnectionRepository.connection_check(user2,
+                                                                                                                 user1):
             raise ContentException('Cannot create chat if not connected', 404)
-        
+
     chat_id = create_chat_id()
     chat = Chats(chat_id, user1, user2, user1_name, user2_name)
 
     ChatsRepository.create_chat(chat)
-    
+
 
 def get_chat_list(user1):
     result = ChatsRepository.get_chats_by_user(user1)
     if not result:
         raise ContentException('No matching chats found', 404)
     return result
-    
+
+
 def get_chat(chat_id: str):
     if not chat_id:
         raise ContentException('Required chat identifier information not provided.', 400)
     chat = ChatsRepository.get_chat(chat_id)
     if not chat:
         raise ContentException('No such chat.', 404)
-    
+
     return chat
