@@ -280,6 +280,34 @@ const deleteMessage = async (message_id) => {
 	}
 };
 
+const changeReadStatus = async (chat_id, message_id, status) => {
+	try {
+		const messageData = {
+			chat_id: chat_id,
+			message_id: message_id,
+			status: status
+		}
+		const response = await api.post('/change_read_status', messageData);
+		return response.data;
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+};
+
+const getUnreadMessages = async (chat_id) => {
+	try {
+		const chatData = {
+			chat_id: chat_id
+		}
+		const response = await api.post('/get_unread', chatData);
+		return response.data.message;
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+}
+
 export default {
 	login,
 	signup,
@@ -302,5 +330,7 @@ export default {
 	getChatList,
 	sendMessage,
 	fetchMessages,
-	deleteMessage
+	deleteMessage,
+	changeReadStatus,
+	getUnreadMessages
 }

@@ -71,6 +71,8 @@ CREATE TABLE IF NOT EXISTS chats (
     chat_id TEXT,
     user1 TEXT,
     user2 TEXT, 
+    user1_name TEXT,
+    user2_name TEXT,
     FOREIGN KEY(user1) REFERENCES users(user_id),
     FOREIGN KEY(user2) REFERENCES users(user_id),
     PRIMARY KEY(chat_id, user1, user2)
@@ -79,8 +81,11 @@ CREATE TABLE IF NOT EXISTS chats (
 CREATE TABLE IF NOT EXISTS messages (
     chat_id TEXT,
     message_id TEXT,
+    sender_id TEXT,
     content TEXT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     status TEXT DEFAULT 'UNREAD',
     FOREIGN KEY (chat_id) REFERENCES chats(chat_id),
+    FOREIGN KEY (sender_id) REFERENCES users(user_id),
     PRIMARY KEY (chat_id, message_id)
 );

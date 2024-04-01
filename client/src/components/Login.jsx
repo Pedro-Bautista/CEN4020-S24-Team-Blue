@@ -1,6 +1,7 @@
 import { useReducer, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { AuthData } from "../auth/AuthWrapper"
+import api from "../api/api"
 
 export const Login = () => {
 
@@ -14,6 +15,17 @@ export const Login = () => {
 		try {
 			await login(formData.userName, formData.password)
 			navigate("/profile")
+
+			const data = await api.getChatList();
+				let totalUnreadMessages = 0;
+				for (const chat of data) {
+					const unreadMessages = await api.getUnreadMessages(chat.chat_id);
+					totalUnreadMessages += unreadMessages.length;
+				}
+	
+				if (totalUnreadMessages > 0) {
+					alert(`You have ${totalUnreadMessages} unread messages.`);
+				}
 		} catch (error) {
 			setErrorMessage(error.response.data.error.description)
 		}

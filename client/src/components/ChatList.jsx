@@ -32,6 +32,14 @@ const ChatList = ({ chats, setChats, setCurrentChat }) => {
 	}, []);
 
 	const handleCreateChat = async (user2_id) => {
+		for (let chat of chats) {
+			console.log(chat);
+			if (chat.user2 == user2_id || chat.user1 == user2_id) {
+				setCurrentChat(chat.chat_id);
+				return;
+			}
+		}
+		
 		await api.createChat(user2_id);
 		const data = await api.getChatList();
 		setChats(data);

@@ -1,7 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, TextField, Button, Typography, Paper } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import {
+	Box,
+	TextField,
+	Button,
+	Typography,
+	Paper,
+	IconButton
+} from '@mui/material';
 import api from '../api/api';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const ChatWindow = ({ chatId, userId }) => {
 	const [messages, setMessages] = useState([]);
@@ -13,6 +20,12 @@ const ChatWindow = ({ chatId, userId }) => {
 			const data = await api.fetchMessages(chatId);
 			setMessages(data);
 			scrollToBottom();
+
+			for (let msg of data) {
+                if (msg.status === '0') {
+                    await api.changeReadStatus(chatId, msg.message_id, 'read');
+                }
+            }
 		};
 
 		fetchMessages();
@@ -32,8 +45,16 @@ const ChatWindow = ({ chatId, userId }) => {
 		setMessages(data);
 	};
 
+	const handleDelete = async (message_id) => {
+        if (window.confirm("Do you want to delete this message?")) {
+            await api.deleteMessage(message_id);
+            const data = await api.fetchMessages(chatId);
+            setMessages(data);
+        }
+    };
+
 	return (
-		<Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', p: 2 }}>
+		<Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', px: 2 }}>
 			<Box sx={{ flexGrow: 1, overflowY: 'auto', mb: 2 }}>
 				{messages.map((msg, index) => (
 					<Paper
@@ -41,16 +62,23 @@ const ChatWindow = ({ chatId, userId }) => {
 						elevation={1}
 						sx={{
 							p: 1,
-							mb: 1,
-							border: '1px solid rgba(0,0,0,0.12)',
-							backgroundColor: msg.user_id === userId ? 'rgba(63, 81, 181, 0.05)' : '#fff',
-							alignSelf: msg.user_id === userId ? 'flex-end' : 'flex-start',
-							maxWidth: '75%',
-							ml: msg.user_id === userId ? 'auto' : 0,
-							mr: msg.user_id === userId ? 0 : 'auto',
+                            mb: 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                            border: '1px solid rgba(0,0,0,0.12)',
+                            backgroundColor: msg.user_id === userId ? 'rgba(63, 81, 181, 0.05)' : '#fff',
+                            alignSelf: msg.user_id === userId ? 'flex-end' : 'flex-start',
+                            maxWidth: '75%',
+                            ml: msg.user_id === userId ? 'auto' : 0,
+                            mr: msg.user_id === userId ? 0 : 'auto',
 						}}
 					>
-						<Typography variant="body2">{msg.content}</Typography>
+						<Typography variant="body2" sx={{ flexGrow: 1 }}>
+							{msg.content}
+						</Typography>
+						<IconButton onClick={() => handleDelete(msg.message_id)} size="small">
+                            <DeleteIcon />
+                        </IconButton>
 					</Paper>
 				))}
 				<div ref={endOfMessagesRef}></div>

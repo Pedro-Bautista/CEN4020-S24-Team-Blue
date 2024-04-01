@@ -21,7 +21,7 @@ def create_message(user1: str, chat_id: str, content: str):
     if len(content) > 1000:
         raise ContentException('Message content must not exceed 1000 characters',404)
     message_id = create_message_id()
-    message = Messages(chat_id, message_id, content)
+    message = Messages(chat_id, message_id, user1, content)
     MessagesRepository.create_message(message)
     
 def get_messages(user1: str, chat_id: str):
