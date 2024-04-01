@@ -56,13 +56,14 @@ def test_create_chat_existing_chat(mock_get_chat_by_both_users, mock_get_user, m
         create_chat('user1', 'user2')
 
 
+@patch('incollege.repositories.ConnectionRepository.connection_check')
 @patch('incollege.repositories.UserRepository.get_user')
 @patch('incollege.repositories.ChatsRepository.get_chat_by_both_users')
-def test_create_chat_not_connected(mock_get_chat_by_both_users, mock_get_user,
+def test_create_chat_not_connected(mock_get_chat_by_both_users, mock_get_user, mock_connection_check,
                                    mock_user_repository, mock_chats_repository, mock_connection_repository):
-    mock_user_repository.get_user.return_value = test_user
-    mock_get_chat_by_both_users.return_value = N
-    mock_connection_repository.connection_check.return_value = False
+    mock_get_user.return_value = test_user
+    mock_get_chat_by_both_users.return_value = None
+    mock_connection_check.return_value = None
     with pytest.raises(ContentException):
         create_chat('user1', 'user2')
 

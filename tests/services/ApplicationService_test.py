@@ -74,11 +74,13 @@ def test_get_applications_by_user_id_no_applications(mock_get_applications_by_us
 @patch('incollege.repositories.ApplicationRepository.create_application')
 @patch('incollege.repositories.JobRepository.get_job')
 @patch('incollege.repositories.UserRepository.get_user')
-def test_create_application_valid(mock_get_user, mock_get_job, mock_create_application, mock_application_repository):
+@patch('incollege.repositories.ApplicationRepository.get_application_by_job_and_user_id')
+def test_create_application_valid(mock_get_application_by_job_and_user_id, mock_get_user, mock_get_job,
+                                  mock_create_application, mock_application_repository):
     mock_get_job.return_value = test_job
     mock_get_user.return_value = test_user
     mock_create_application.return_value = None
-    mock_application_repository.get_application_by_job_and_user_id.return_value = None
+    mock_get_application_by_job_and_user_id.return_value = None
     with patch('incollege.repositories.ApplicationRepository', mock_application_repository), \
             patch('incollege.repositories.JobRepository', MagicMock()), \
             patch('incollege.repositories.UserRepository', MagicMock()):
@@ -101,18 +103,23 @@ def test_create_application_job_not_found(mock_get_job, mock_user_repository):
 
 
 @patch('incollege.repositories.UserRepository.get_user')
-def test_create_application_user_not_found(mock_get_user, mock_job_repository):
+@patch('incollege.repositories.JobRepository.get_job')
+def test_create_application_user_not_found(mock_get_job, mock_get_user, mock_job_repository):
     mock_get_user.return_value = None
+    mock_get_job.return_value = test_job
     with patch('incollege.repositories.JobRepository', MagicMock()):
         with pytest.raises(ContentException):
             create_application("job_id", "user_id", "grad_date", "start_date", "paragraph")
 
 
+@patch('incollege.repositories.JobRepository.get_job')
 @patch('incollege.repositories.ApplicationRepository.get_application_by_job_and_user_id')
-def test_create_application_existing_application(mock_get_application_by_job_and_user_id, mock_job_repository,
-                                                 mock_user_repository):
+@patch('incollege.repositories.UserRepository.get_user')
+def test_create_application_existing_application(mock_get_application_by_job_and_user_id, mock_get_job,
+                                                 mock_get_user, mock_job_repository, mock_user_repository):
     mock_job_repository.get_job.return_value = {}
-    mock_user_repository.get_user.return_value = {}
+    mock_get_user.return_value = test_user
+    mock_get_job.return_value = test_job
     mock_get_application_by_job_and_user_id.return_value = Application(
         "job_id", "user_id", "grad_date", "start_date", "paragraph"
     )
