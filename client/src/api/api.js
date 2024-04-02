@@ -196,6 +196,16 @@ const getUserData = async (UserData) => {
 	}
 }
 
+const getUserConnectionProfile = async () => {
+	try {
+		const response = await api.post('/get_user_profile_status');
+		return response.data;
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+}
+
 const getAcceptedProfiles = async (AcceptedData) => {
 	try {
 		const response = await api.post('/get_connection_profiles', AcceptedData);
@@ -324,6 +334,7 @@ export default {
 	requestConnection,
 	getRequests,
 	getUserData,
+	getUserConnectionProfile,
 	getAcceptedProfiles,
 	changeConnStatus,
 	createChat,
