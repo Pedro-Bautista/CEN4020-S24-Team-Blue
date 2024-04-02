@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS users (
     sms_pref TEXT,
     targeted_adv_pref TEXT,
     tier TEXT,
+    created_profile TEXT,
     PRIMARY KEY (user_id)
 );
 

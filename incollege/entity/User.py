@@ -29,7 +29,7 @@ class User:
     def __init__(self, user_id: str, username: str, first_name: str, last_name: str, university: str = '',
                  major: str = '', bio: str = '', experience: str = '', education: str = '',
                  language_pref: str = 'english', email_pref: int = 1, sms_pref: int = 1,
-                 targeted_adv_pref: int = 1, tier : str = 'standard'):
+                 targeted_adv_pref: int = 1, tier : str = 'standard', created_profile = 0):
         """Generate an instance based on the specified parameters.
 
         Args:
@@ -70,3 +70,4 @@ class User:
         self.sms_pref = sms_pref
         self.targeted_adv_pref = targeted_adv_pref
         self.tier = tier
+        self.created_profile = created_profile

@@ -66,3 +66,10 @@ def configure_user_routes(app: Flask):
         user_data = UserService.get_user(user_id)
         users_serial = vars(user_data)
         return jsonify({'user': users_serial})
+
+    @app.route('/get_user_profile_status', methods=['POST'])
+    @token_required
+    def handle_get_profile_status(token):
+        user_id = token.user_id
+        profile_status = UserService.get_user_profile_status(user_id)
+        return jsonify(profile_status)

@@ -30,7 +30,11 @@ export const Login = () => {
 				if(applied_jobs.length == 0) {
 					alert("You have not applied for any jobs. Remember it is always a good time to apply!")
 				}
-				
+			
+			const profile_status = await api.getUserConnectionProfile();
+				if(profile_status == 0) {
+					alert("Remember to create a profile!")
+				}
 		} catch (error) {
 			setErrorMessage(error.response.data.error.description)
 		}

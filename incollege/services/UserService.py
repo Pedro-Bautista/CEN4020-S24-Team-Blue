@@ -31,6 +31,8 @@ def update_preference(user_id, preference_name, preference_value):
     if not hasattr(user, preference_name):
         raise ContentException('No such preference.', 404)
     setattr(user, preference_name, preference_value)
+    if preference_name == "education" or preference_name == "experience" or preference_name == "bio" or preference_name == "major" or preference_name == "university":
+        setattr(user, "created_profile", 1)
     UserRepository.update_user(user)
 
 
@@ -39,3 +41,7 @@ def get_user(user_id):
     if not result:
         raise ContentException('No such user.', 404)
     return result
+
+def get_user_profile_status(user_id):
+    user = UserRepository.get_user(user_id)
+    return user.created_profile
