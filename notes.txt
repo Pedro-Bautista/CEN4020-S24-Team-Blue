@@ -1,0 +1,78 @@
+Front end:
+
+    Authwrapper
+        - using wrapper for centralized authentication management 
+        - use wrapper for other components? 
+            --> prob not necessary
+
+    api.js
+        - moved token to interceptors so it updates with every login/logout
+        ** delete anywhere w header for the token 
+        ** edit post/get/put/delete differences (also in backend)
+        ** change the in-ine css edits to css file
+
+
+Backend: 
+˜
+    Controllers:
+        - methods: request.getjson() 
+            gets the parameters/message body 
+        - return: jsonify something in response to success 
+        - to make the controller available for client, must update in main.py file
+
+        controller is being an interface to pass data to service and back again
+
+    Services: 
+        perform logic here: verify parameters, do arithmetic, check password etc
+        ** prob need updates for parameter checking on latest functions
+
+    Repos: 
+        calls actual methods to get the info the function needs 
+        methods are in the Universal Helper 
+    
+    UniversalRepoHelper
+        file is class so much construct the class: 
+            params: table name, entity, primary key (or list of keys)
+
+        is_alive - verify we have access to db (its open and we can read from it)
+            params: none
+            returns: bool
+
+        get_record_count - gets count based on table name 
+            params: none 
+            returns: int 
+
+        get_objects - retrieves objects from db that meets those requirements 
+            params: dictionary of keys { 'fieldName': Value } --> can have multiple fields
+            returns: list of object results (object is instance of their entity, can access attributes with .user_id etc)
+
+        does_record_exist
+            params: dictionary of keys { 'fieldName': Value } --> can have multiple fields
+            returns: bool (exist or not)
+
+        creat_object
+            params: actual object (instance of the entity like user, job, request etc)
+            returns: none
+
+        update_keys
+            params: internal call from insert_update_object
+            returns: none
+
+        insert_update_object
+            params: actual object with changed values (instance of the entity like user, job, request etc)
+            return: none 
+
+        delete_entry 
+            params: dictionary of keys { 'fieldName': Value } --> can have multiple fields
+            return: none
+
+            will delete all rows that match the condition
+
+        get_objects2 (partial retrieval of results (only need partial match))
+
+        
+
+
+    
+
+

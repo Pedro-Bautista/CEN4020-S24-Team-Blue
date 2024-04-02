@@ -45,6 +45,8 @@ export const Jobs = () => {
 		application_paragraph: ''
 	});
 
+	const [appliedJobsCount, setAppliedJobsCount] = useState(0);
+
 	const handleOpenApplyDialog = (jobId) => {
 		setApplicationData(prevData => ({ ...prevData, job_id: jobId }));
 		setOpenApplyDialog(true);
@@ -176,7 +178,10 @@ export const Jobs = () => {
 		const fetchAppliedJobs = async () => {
 			try {
 				const fetchedAppliedJobs = await api.fetchAppliedJobs();
+				console.log('Number of applied jobs:', fetchedAppliedJobs.length);
 				setAppliedJobs(fetchedAppliedJobs);
+				setAppliedJobsCount(fetchedAppliedJobs.length);
+				alert(`You have applied for ${fetchedAppliedJobs.length} job(s).`);
 			} catch (error) {
 				console.error('Error fetching applied jobs:', error);
 			}
@@ -199,6 +204,7 @@ export const Jobs = () => {
 			setMessage('Failed to delete job. Please try again.');
 		}
 	}
+
 
 	return (
 		<div className="page">
