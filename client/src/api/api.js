@@ -145,7 +145,7 @@ const fetchAppliedJobs = async () => {
 		return response.data.message;
 	} catch (error) {
 		console.log(error);
-		if(error.response.status === 404)
+		if(error.response.status === 400)
 			return [];
 		throw error;
 	}
