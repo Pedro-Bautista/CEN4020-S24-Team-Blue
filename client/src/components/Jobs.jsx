@@ -58,6 +58,8 @@ export const Jobs = () => {
 			await api.applyToJob(applicationData);
 			setOpenApplyDialog(false);
 			setApplicationData({ job_id: '', graduation_date: '', start_working_date: '', application_paragraph: '' });
+
+			window.location.reload();
 		} catch (error) {
 			console.error('Error applying to job:', error);
 			setMessage('Failed to apply to job. Please try again.');
@@ -96,6 +98,8 @@ export const Jobs = () => {
 				location: '',
 				salary: ''
 			});
+
+			window.location.reload();
 		} catch (error) {
 			console.error('Error posting job:', error);
 			setMessage('Failed to post job. Please try again.');
