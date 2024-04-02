@@ -45,6 +45,8 @@ export const Jobs = () => {
 		application_paragraph: ''
 	});
 
+	const [appliedJobsCount, setAppliedJobsCount] = useState(0);
+
 	const handleOpenApplyDialog = (jobId) => {
 		setApplicationData(prevData => ({ ...prevData, job_id: jobId }));
 		setOpenApplyDialog(true);
@@ -56,6 +58,8 @@ export const Jobs = () => {
 			await api.applyToJob(applicationData);
 			setOpenApplyDialog(false);
 			setApplicationData({ job_id: '', graduation_date: '', start_working_date: '', application_paragraph: '' });
+
+			window.location.reload();
 		} catch (error) {
 			console.error('Error applying to job:', error);
 			setMessage('Failed to apply to job. Please try again.');
@@ -94,6 +98,8 @@ export const Jobs = () => {
 				location: '',
 				salary: ''
 			});
+
+			window.location.reload();
 		} catch (error) {
 			console.error('Error posting job:', error);
 			setMessage('Failed to post job. Please try again.');
@@ -176,7 +182,10 @@ export const Jobs = () => {
 		const fetchAppliedJobs = async () => {
 			try {
 				const fetchedAppliedJobs = await api.fetchAppliedJobs();
+				console.log('Number of applied jobs:', fetchedAppliedJobs.length);
 				setAppliedJobs(fetchedAppliedJobs);
+				setAppliedJobsCount(fetchedAppliedJobs.length);
+				alert(`You have applied for ${fetchedAppliedJobs.length} job(s).`);
 			} catch (error) {
 				console.error('Error fetching applied jobs:', error);
 			}
@@ -199,6 +208,7 @@ export const Jobs = () => {
 			setMessage('Failed to delete job. Please try again.');
 		}
 	}
+
 
 	return (
 		<div className="page">

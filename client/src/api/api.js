@@ -235,7 +235,7 @@ const getChatList = async () => {
 		const response = await api.post('/get_chat_list', {});
 		return response.data.message;
 	} catch (error) {
-		console.log(error);
+		console.log(error.response.status);
 		if(error.response.status === 404)
 			return [];
 		throw error;
@@ -304,6 +304,8 @@ const getUnreadMessages = async (chat_id) => {
 		return response.data.message;
 	} catch (error) {
 		console.log(error);
+		if(error.response.status === 404)
+			return [];
 		throw error;
 	}
 }

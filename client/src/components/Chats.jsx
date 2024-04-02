@@ -15,6 +15,7 @@ export const Chats = () => {
 	useEffect(() => {
 		const fetchChats = async () => {
 			const data = await api.getChatList();
+			console.log(data);
 			setChats(data);
 		};
 
