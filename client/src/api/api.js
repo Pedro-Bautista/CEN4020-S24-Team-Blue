@@ -145,7 +145,7 @@ const fetchAppliedJobs = async () => {
 		return response.data.message;
 	} catch (error) {
 		console.log(error);
-		if(error.response.status === 404)
+		if(error.response.status === 400)
 			return [];
 		throw error;
 	}
@@ -189,6 +189,16 @@ const getRequests = async (getReqData) => {
 const getUserData = async (UserData) => {
 	try {
 		const response = await api.post('/get_user_data', UserData);
+		return response.data;
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+}
+
+const getUserConnectionProfile = async () => {
+	try {
+		const response = await api.post('/get_user_profile_status');
 		return response.data;
 	} catch (error) {
 		console.log(error);
@@ -326,6 +336,7 @@ export default {
 	requestConnection,
 	getRequests,
 	getUserData,
+	getUserConnectionProfile,
 	getAcceptedProfiles,
 	changeConnStatus,
 	createChat,

@@ -22,15 +22,17 @@ def update_preference(user_id, preference_name, preference_value):
     if preference_name == "experience" and len(preference_value)>100:
         raise ContentException('Experience must not exceed 100 characters',404)
     if preference_name is None or preference_name == '' or preference_value is None or preference_value == '':
-        #Since these values can be empty, will raise only when name is not any of them.
-        if (preference_name == "experience") or (preference_name == "bio") or (preference_name == "major") or (preference_name == "university"):
+        # Since these values can be empty, will raise only when name is not any of them.
+        if ((preference_name == "experience") or (preference_name == "bio") or (preference_name == "major") or
+                (preference_name == "university")):
             print(preference_name, preference_value)
         else:
-
             raise ContentException('Required preference parameters not provided.', 400)
     if not hasattr(user, preference_name):
         raise ContentException('No such preference.', 404)
     setattr(user, preference_name, preference_value)
+    if preference_name == "education" or preference_name == "experience" or preference_name == "bio" or preference_name == "major" or preference_name == "university":
+        setattr(user, "created_profile", 1)
     UserRepository.update_user(user)
 
 
@@ -39,3 +41,7 @@ def get_user(user_id):
     if not result:
         raise ContentException('No such user.', 404)
     return result
+
+def get_user_profile_status(user_id):
+    user = UserRepository.get_user(user_id)
+    return user.created_profile
