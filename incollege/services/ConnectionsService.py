@@ -21,7 +21,11 @@ def send_connection_request(sender_user_id, recipient_user_id):
         existing_reverse_connection_request.status = ConnectionRequestStatus.ACCEPTED
         ConnectionRepository.update_connection_request(existing_reverse_connection_request)
     else:
-        connection_request = ConnectionRequest(sender_user_id, recipient_user_id, ConnectionRequestStatus.PENDING)
+        sender = UserRepository.get_user(sender_user_id)
+        recipient = UserRepository.get_user(recipient_user_id)
+        sender_name = sender.first_name + ' ' + sender.last_name
+        recipient_name = recipient.first_name + ' ' + recipient.last_name
+        connection_request = ConnectionRequest(sender_user_id, recipient_user_id, sender_name, recipient_name, ConnectionRequestStatus.PENDING)
         ConnectionRepository.create_connection_request(connection_request)
 
 
