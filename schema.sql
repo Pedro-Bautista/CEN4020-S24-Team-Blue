@@ -40,6 +40,8 @@ CREATE TABLE IF NOT EXISTS jobs (
 CREATE TABLE IF NOT EXISTS connections (
     sender_user_id TEXT,
     recipient_user_id TEXT,
+    sender_name TEXT,
+    recipient_name TEXT,
     status TEXT DEFAULT 'PENDING',
     FOREIGN KEY (sender_user_id) REFERENCES users(user_id),
     FOREIGN KEY (recipient_user_id) REFERENCES users(user_id),

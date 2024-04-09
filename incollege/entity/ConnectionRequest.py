@@ -10,7 +10,7 @@ class ConnectionRequest:
         status (int): Current status of request as specified by :class:`~ConnectionRequestStatus`.
     """
 
-    def __init__(self, sender_user_id: str, recipient_user_id: str, status: int = ConnectionRequestStatus.PENDING):
+    def __init__(self, sender_user_id: str, recipient_user_id: str, sender_name: str, recipient_name: str, status: int = ConnectionRequestStatus.PENDING):
         """Generate an instance based on the specified parameters.
 
         Args:
@@ -22,3 +22,5 @@ class ConnectionRequest:
         self.sender_user_id = sender_user_id
         self.recipient_user_id = recipient_user_id
         self.status = status
+        self.sender_name = sender_name
+        self.recipient_name = recipient_name

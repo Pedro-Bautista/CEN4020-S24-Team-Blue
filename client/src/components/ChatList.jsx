@@ -70,7 +70,7 @@ const ChatList = ({ chats, setChats, setCurrentChat }) => {
 			<List>
 				{chats.map((chat) => (
 					<ListItemButton key={chat.chat_id} onClick={() => setCurrentChat(chat.chat_id)}>
-						<ListItemText primary={chat.user2} />
+						<ListItemText primary={chat.user2_name + ' ' + chat.user1_name + ' chat'} />
 					</ListItemButton>
 				))}
 			</List>

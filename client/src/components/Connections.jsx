@@ -113,8 +113,8 @@ export const Connections = () => {
                                 {requests.map((request, index) => (
                                     <div key={index} className="request-box">
                                         <div className="request-text">
-                                            <strong>Sender:</strong> {request.sender_user_id}<br/>
-                                            <strong>Receiver:</strong> {request.recipient_user_id}<br/>
+                                            <strong>Sender:</strong> {request.sender_name}<br/>
+                                            <strong>Receiver:</strong> {request.recipient_name}<br/>
                                         </div>
                                         <div className="button-container">
                                             <button onClick={() => handleAccept(request.sender_user_id)}>Accept</button>
